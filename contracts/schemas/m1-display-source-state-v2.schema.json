@@ -1,0 +1,973 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "revision",
+    "selected_source",
+    "double_click",
+    "lanes",
+    "runtime"
+  ],
+  "properties": {
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "selected_source": {
+      "enum": [
+        "original",
+        "user"
+      ]
+    },
+    "double_click": {
+      "enum": [
+        "none",
+        "switch_display"
+      ]
+    },
+    "lanes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/lane"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "slot": {
+                "const": 0
+              }
+            },
+            "required": [
+              "slot"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "slot": {
+                "const": 1
+              }
+            },
+            "required": [
+              "slot"
+            ]
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "selected_source",
+        "mcu_supported",
+        "confirmed",
+        "confirmation",
+        "lanes"
+      ],
+      "properties": {
+        "profile": {
+          "enum": [
+            "legacy",
+            "dual"
+          ]
+        },
+        "selected_source": {
+          "enum": [
+            "original",
+            "user"
+          ]
+        },
+        "mcu_supported": {
+          "type": "boolean"
+        },
+        "confirmed": {
+          "type": "boolean"
+        },
+        "confirmation": {
+          "enum": [
+            "mcu_readback",
+            "pending_mcu_readback",
+            "requires_mcu_upgrade"
+          ]
+        },
+        "lanes": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/runtime_lane"
+          },
+          "allOf": [
+            {
+              "contains": {
+                "properties": {
+                  "slot": {
+                    "const": 0
+                  }
+                },
+                "required": [
+                  "slot"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "properties": {
+                  "slot": {
+                    "const": 1
+                  }
+                },
+                "required": [
+                  "slot"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mcu_supported": {
+                "const": false
+              }
+            },
+            "required": [
+              "mcu_supported"
+            ]
+          },
+          "then": {
+            "properties": {
+              "confirmed": {
+                "const": false
+              },
+              "confirmation": {
+                "const": "requires_mcu_upgrade"
+              },
+              "lanes": {
+                "items": {
+                  "properties": {
+                    "effective": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "confirmed": {
+                "const": true
+              }
+            },
+            "required": [
+              "confirmed"
+            ]
+          },
+          "then": {
+            "properties": {
+              "profile": {
+                "const": "dual"
+              },
+              "mcu_supported": {
+                "const": true
+              },
+              "confirmation": {
+                "const": "mcu_readback"
+              },
+              "lanes": {
+                "items": {
+                  "properties": {
+                    "confirmed": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "confirmation": {
+                "const": "mcu_readback"
+              }
+            },
+            "required": [
+              "confirmation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "confirmed": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mcu_supported": {
+                "const": true
+              },
+              "confirmed": {
+                "const": false
+              }
+            },
+            "required": [
+              "mcu_supported",
+              "confirmed"
+            ]
+          },
+          "then": {
+            "properties": {
+              "confirmation": {
+                "const": "pending_mcu_readback"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "profile": {
+                "const": "dual"
+              },
+              "mcu_supported": {
+                "const": true
+              },
+              "lanes": {
+                "items": {
+                  "properties": {
+                    "confirmed": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "profile",
+              "mcu_supported",
+              "lanes"
+            ]
+          },
+          "then": {
+            "properties": {
+              "confirmed": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/m1-display-source-state-v2.schema.json",
+  "title": "M1 display_source.get desired configuration and runtime",
+  "$defs": {
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot",
+        "source",
+        "device_id",
+        "metric",
+        "unit",
+        "decimals",
+        "scale",
+        "ttl_seconds",
+        "color"
+      ],
+      "properties": {
+        "slot": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "source": {
+          "enum": [
+            "none",
+            "local",
+            "mqtt",
+            "api"
+          ]
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "metric": {
+          "enum": [
+            "temperature",
+            "humidity",
+            "pm25",
+            "formaldehyde",
+            "co2",
+            "pressure",
+            "power",
+            "energy",
+            "tvoc",
+            "pm10",
+            "custom",
+            "fan_speed_percent"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "",
+            "°C",
+            "%",
+            "µg/m³",
+            "mg/m³",
+            "ppm",
+            "Pa",
+            "W",
+            "kWh",
+            "ppb"
+          ]
+        },
+        "decimals": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "scale": {
+          "type": "integer",
+          "enum": [
+            1,
+            1000
+          ]
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        },
+        "color": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode",
+                "value"
+              ],
+              "properties": {
+                "mode": {
+                  "const": "fixed"
+                },
+                "value": {
+                  "enum": [
+                    "off",
+                    "red",
+                    "green",
+                    "yellow"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode",
+                "low",
+                "high"
+              ],
+              "properties": {
+                "mode": {
+                  "const": "thresholds"
+                },
+                "low": {
+                  "type": "number"
+                },
+                "high": {
+                  "type": "number"
+                }
+              },
+              "x-orderedFields": [
+                "low",
+                "high"
+              ]
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "mqtt"
+              }
+            },
+            "required": [
+              "source"
+            ]
+          },
+          "then": {
+            "properties": {
+              "device_id": {
+                "pattern": "^[0-9a-f]{12}$",
+                "minLength": 12,
+                "maxLength": 12
+              },
+              "metric": {
+                "enum": [
+                  "temperature",
+                  "humidity",
+                  "pm25",
+                  "formaldehyde",
+                  "co2",
+                  "pressure",
+                  "power",
+                  "energy",
+                  "tvoc",
+                  "pm10",
+                  "fan_speed_percent"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "enum": [
+                  "none",
+                  "local",
+                  "api"
+                ]
+              }
+            },
+            "required": [
+              "source"
+            ]
+          },
+          "then": {
+            "properties": {
+              "device_id": {
+                "const": ""
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "none"
+              }
+            },
+            "required": [
+              "source"
+            ]
+          },
+          "then": {
+            "properties": {
+              "metric": {
+                "const": "custom"
+              },
+              "unit": {
+                "const": ""
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "local"
+              }
+            },
+            "required": [
+              "source"
+            ]
+          },
+          "then": {
+            "properties": {
+              "metric": {
+                "enum": [
+                  "temperature",
+                  "humidity",
+                  "pm25",
+                  "formaldehyde",
+                  "co2",
+                  "pressure"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "custom"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "source": {
+                "enum": [
+                  "none",
+                  "api"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "temperature"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "°C"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "humidity"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "%"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "pm25"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "µg/m³"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "formaldehyde"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "mg/m³"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "co2"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "ppm"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "pressure"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "Pa"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "power"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "W"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "energy"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "kWh"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "tvoc"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "ppb"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "pm10"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "µg/m³"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "metric": {
+                "const": "fan_speed_percent"
+              }
+            },
+            "required": [
+              "metric"
+            ]
+          },
+          "then": {
+            "properties": {
+              "unit": {
+                "const": "%"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "runtime_lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot",
+        "valid",
+        "value",
+        "unit",
+        "age_ms",
+        "remaining_ttl_seconds",
+        "effective",
+        "reason",
+        "number",
+        "format",
+        "color",
+        "confirmed"
+      ],
+      "properties": {
+        "slot": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "",
+            "°C",
+            "%",
+            "µg/m³",
+            "mg/m³",
+            "ppm",
+            "Pa",
+            "W",
+            "kWh",
+            "ppb"
+          ]
+        },
+        "age_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "remaining_ttl_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60
+        },
+        "effective": {
+          "type": "boolean"
+        },
+        "reason": {
+          "enum": [
+            "ok",
+            "disabled",
+            "missing",
+            "stale",
+            "offline",
+            "invalid",
+            "out_of_range",
+            "unsupported"
+          ]
+        },
+        "number": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 999
+        },
+        "format": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "enum": [
+            null,
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ]
+        },
+        "color": {
+          "enum": [
+            null,
+            "off",
+            "red",
+            "green",
+            "yellow"
+          ]
+        },
+        "confirmed": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "effective": {
+                "const": true
+              }
+            },
+            "required": [
+              "effective"
+            ]
+          },
+          "then": {
+            "properties": {
+              "valid": {
+                "const": true
+              },
+              "confirmed": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "valid": {
+                "const": true
+              }
+            },
+            "required": [
+              "valid"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number",
+                "minimum": 0
+              },
+              "age_ms": {
+                "type": "integer"
+              },
+              "remaining_ttl_seconds": {
+                "minimum": 1
+              },
+              "reason": {
+                "const": "ok"
+              },
+              "number": {
+                "type": "integer"
+              },
+              "format": {
+                "enum": [
+                  0,
+                  1,
+                  2,
+                  4,
+                  5,
+                  6
+                ]
+              },
+              "color": {
+                "enum": [
+                  "off",
+                  "red",
+                  "green",
+                  "yellow"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "const": null
+              },
+              "remaining_ttl_seconds": {
+                "const": 0
+              },
+              "effective": {
+                "const": false
+              },
+              "reason": {
+                "not": {
+                  "const": "ok"
+                }
+              },
+              "number": {
+                "const": null
+              },
+              "format": {
+                "const": null
+              },
+              "color": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/sensor-values-v1.schema.json",
+  "title": "TMCP schema 1 typed physical sensor values including TC1 power",
+  "type": "object",
+  "required": [
+    "schema",
+    "device_id",
+    "boot",
+    "sequence",
+    "sensors"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1,
+      "type": "integer"
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{12}$",
+      "minLength": 12,
+      "maxLength": 12
+    },
+    "boot": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "model": {
+      "enum": [
+        "m1",
+        "daikin",
+        "tc1",
+        "a1"
+      ]
+    },
+    "sensors": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "temperature": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "°C"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": -40,
+                    "maximum": 125
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "humidity": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "%"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "pm25": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "µg/m³"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "formaldehyde": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "mg/m³"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "co2": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "ppm"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 65535
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "pressure": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "Pa"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "power": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "W"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "energy": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "kWh"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "tvoc": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "ppb"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "pm10": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "µg/m³"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "fan_speed_percent": {
+          "type": "object",
+          "required": [
+            "valid",
+            "value",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "%"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "valid"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "temperature"
+          ]
+        },
+        {
+          "required": [
+            "humidity"
+          ]
+        },
+        {
+          "required": [
+            "pm25"
+          ]
+        },
+        {
+          "required": [
+            "formaldehyde"
+          ]
+        },
+        {
+          "required": [
+            "co2"
+          ]
+        },
+        {
+          "required": [
+            "pressure"
+          ]
+        },
+        {
+          "required": [
+            "power"
+          ]
+        },
+        {
+          "required": [
+            "energy"
+          ]
+        },
+        {
+          "required": [
+            "tvoc"
+          ]
+        },
+        {
+          "required": [
+            "pm10"
+          ]
+        },
+        {
+          "required": [
+            "fan_speed_percent"
+          ]
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "m1"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sensors": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "power"
+                  ]
+                },
+                {
+                  "required": [
+                    "energy"
+                  ]
+                },
+                {
+                  "required": [
+                    "tvoc"
+                  ]
+                },
+                {
+                  "required": [
+                    "pm10"
+                  ]
+                },
+                {
+                  "required": [
+                    "fan_speed_percent"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "daikin"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sensors": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "power"
+                  ]
+                },
+                {
+                  "required": [
+                    "energy"
+                  ]
+                },
+                {
+                  "required": [
+                    "fan_speed_percent"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "tc1"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sensors": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "temperature"
+                  ]
+                },
+                {
+                  "required": [
+                    "humidity"
+                  ]
+                },
+                {
+                  "required": [
+                    "pm25"
+                  ]
+                },
+                {
+                  "required": [
+                    "formaldehyde"
+                  ]
+                },
+                {
+                  "required": [
+                    "co2"
+                  ]
+                },
+                {
+                  "required": [
+                    "pressure"
+                  ]
+                },
+                {
+                  "required": [
+                    "tvoc"
+                  ]
+                },
+                {
+                  "required": [
+                    "pm10"
+                  ]
+                },
+                {
+                  "required": [
+                    "fan_speed_percent"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model": {
+            "const": "a1"
+          }
+        },
+        "required": [
+          "model"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sensors": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "temperature"
+                  ]
+                },
+                {
+                  "required": [
+                    "humidity"
+                  ]
+                },
+                {
+                  "required": [
+                    "pm25"
+                  ]
+                },
+                {
+                  "required": [
+                    "formaldehyde"
+                  ]
+                },
+                {
+                  "required": [
+                    "co2"
+                  ]
+                },
+                {
+                  "required": [
+                    "pressure"
+                  ]
+                },
+                {
+                  "required": [
+                    "power"
+                  ]
+                },
+                {
+                  "required": [
+                    "energy"
+                  ]
+                },
+                {
+                  "required": [
+                    "tvoc"
+                  ]
+                },
+                {
+                  "required": [
+                    "pm10"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

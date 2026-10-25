@@ -44,6 +44,38 @@ M1 accepts only live messages from the configured source in its account. Ignore 
 
 Some existing implementations also expose flat sensor fields. New v1 integrations should use the `sensors` structure. A retained online snapshot cannot prove sample freshness.
 
+<a id="sensor-values-v1"></a>
+
+## Generic typed feed: sensor-values-v1
+
+Additive profile `sensor-values-v1` uses the same account-scoped topic and wire schema1, defining multiple optional physical quantities without changing `sensor-co2-v1` or putting power in CO₂ fields. Messages are non-retained; retained device snapshots cannot replace this feed. `device_id` must match the topic, not an `id` field. Optional `model` is one of m1/daikin/tc1/a1 and grants no cross-account access. When present, known metrics must match its producer subset: M1 climate/PM2.5/HCHO/CO₂/pressure; DAIKIN also PM10/TVOC; TC1 power/energy; A1 fan_speed_percent. Unknown models or mismatching known metrics are not accepted as valid readings and cannot renew leases.
+
+```json
+{"schema":1,"device_id":"001122334455","model":"tc1","boot":123,"sequence":1,"sensors":{"power":{"valid":true,"value":12.3,"unit":"W","age_ms":100}}}
+{"schema":1,"device_id":"aabbccddeeff","model":"a1","boot":456,"sequence":2,"sensors":{"fan_speed_percent":{"valid":true,"value":60,"unit":"%","age_ms":0}}}
+```
+
+Every declared known field requires strict boolean `valid`, `value`, exact `unit`, and nonnegative integer `age_ms`. valid=true requires a finite number, exact unit, source age below20000ms and the bounds below. valid=false requires value=null, never fake zero. Include at least one known metric. Unknown additive fields may be ignored without skipping validation of known fields.
+
+| Sensors field | Unit | Range and meaning |
+| --- | --- | --- |
+| `temperature`, `humidity` | `°C`, `%` | -40..125, 0..100 |
+| `pm25`, `pm10` | `µg/m³` | Finite, nonnegative |
+| `formaldehyde` | `mg/m³` | Finite, nonnegative |
+| `co2` | `ppm` | 1..65535 |
+| `pressure` | `Pa` | Finite, nonnegative; convert other units numerically before labeling Pa |
+| `power`, `energy` | `W`, `kWh` | Finite, nonnegative; the current new TC1 producer publishes power only |
+| `tvoc` | `ppb` | Finite, nonnegative, according to real module capability |
+| `fan_speed_percent` | `%` | 0..100; A1 effective main-fan output `effective_on ? effective_speed : 0`, matching status.percentage; not measured RPM or fresh-air-fan RPM |
+
+M1 local sources resolve its own climate, PM2.5, HCHO and optional SCD40 CO₂, with local BMP3 pressure numerically converted to Pa. This M1 firmware change does not publish those readings on the generic `sensor/<device_id>/state` topic; accepting valid M1 typed messages does not establish an existing producer. DAIKIN may also provide PM10/TVOC according to installed modules. Consumers use actual fields and validity. TC1 reports power=null/valid=false before a real computed power sample, on invalid sampling or when source age reaches20s. No new pulses must not continually relabel old power as age0, and initial zero is not measurement readiness. A1 reports an effective-output snapshot and uses null/false before readiness.
+
+Boot and sequence are strict JSON integers1..4294967295, not strings or floating-point tokens. Sequence increments with uint32 wrap, skipping zero. Within one boot, use wrap-aware ordering; duplicates/older values do not renew leases. New boots retire previous boots; a bounded RAM cache rejects recent retired-boot replay. Never emit negative counters through a signed32-bit JSON constructor.
+
+Compute leases from source age plus monotonic elapsed time after receipt, bounded by both20s and the lane's configured TTL. Duplicates, retained replay, availability=online alone and reconnects cannot refresh an old value. Reconnect clears caches until fresh data arrives. A new invalid field invalidates its metric. Resolve both lanes from one accepted frame without dropping the second through global deduplication. Never republish user display values as physical measurements.
+
+The [Schema](contracts/schemas/sensor-values-v1.schema.json) checks structure/ranges. Account authorization, topic identity, replay, source health, configured TTL and live publication remain runtime checks. This development extension does not establish implementation or hardware acceptance across older devices.
+
 ## Legacy
 
 TC1 retains Legacy `device/ztc1/<MAC>/...` and existing HA identities. Legacy and TMCP are separate; upgrading firmware does not silently convert the protocol. M1/A1 do not impersonate Legacy TC1. The cloud platform continues to accept v0.9.x devices.
