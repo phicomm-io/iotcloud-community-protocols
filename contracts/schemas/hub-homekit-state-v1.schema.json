@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/hub-homekit-state-v1.schema.json",
+  "title": "GET /api/hub/homekit response",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "enabled",
+    "protocol",
+    "ready",
+    "code",
+    "paired",
+    "devices",
+    "port"
+  ],
+  "properties": {
+    "enabled": {
+      "type": "boolean"
+    },
+    "protocol": {
+      "const": "hap"
+    },
+    "ready": {
+      "type": "boolean"
+    },
+    "code": {
+      "enum": [
+        "disabled",
+        "ok",
+        "storage_error",
+        "identity_changed",
+        "invalid_params",
+        "restart_required"
+      ]
+    },
+    "paired": {
+      "type": "boolean"
+    },
+    "devices": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12
+    },
+    "port": {
+      "const": 51826,
+      "type": "integer"
+    },
+    "setup_code": {
+      "type": "string",
+      "pattern": "^[0-9]{3}-[0-9]{2}-[0-9]{3}$",
+      "maxLength": 10
+    },
+    "setup_uri": {
+      "type": "string",
+      "pattern": "^X-HM://",
+      "minLength": 8
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "enabled": {
+                "const": false
+              }
+            }
+          },
+          {
+            "properties": {
+              "ready": {
+                "const": false
+              }
+            }
+          },
+          {
+            "properties": {
+              "paired": {
+                "const": true
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "setup_code"
+              ]
+            },
+            {
+              "required": [
+                "setup_uri"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/hub-bemfa-set-v1.schema.json",
+  "title": "PUT /api/integrations/bemfa body",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "enabled",
+    "mappings"
+  ],
+  "properties": {
+    "enabled": {
+      "type": "boolean"
+    },
+    "api_key": {
+      "anyOf": [
+        {
+          "const": ""
+        },
+        {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128,
+          "not": {
+            "pattern": "[^A-Za-z0-9_-]"
+          }
+        }
+      ]
+    },
+    "mappings": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device",
+          "channel",
+          "topic"
+        ],
+        "properties": {
+          "device": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mac",
+              "model",
+              "version",
+              "status",
+              "username"
+            ],
+            "properties": {
+              "mac": {
+                "type": "string",
+                "minLength": 12,
+                "maxLength": 12,
+                "not": {
+                  "anyOf": [
+                    {
+                      "pattern": "[^0-9a-f]"
+                    },
+                    {
+                      "enum": [
+                        "000000000000",
+                        "ffffffffffff"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "model": {
+                "enum": [
+                  "tc1",
+                  "a1",
+                  "m1",
+                  "daikin"
+                ]
+              },
+              "version": {
+                "const": "v2"
+              },
+              "status": {
+                "const": "active"
+              },
+              "username": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 32,
+                "not": {
+                  "pattern": "[^A-Za-z0-9_]"
+                }
+              }
+            }
+          },
+          "channel": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "topic": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 64,
+            "not": {
+              "pattern": "[^A-Za-z0-9_]"
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "device": {
+                  "properties": {
+                    "model": {
+                      "const": "tc1"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "topic": {
+                  "pattern": "001$"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "device": {
+                  "properties": {
+                    "model": {
+                      "const": "a1"
+                    }
+                  }
+                },
+                "channel": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "channel": {
+                        "const": 0
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "topic": {
+                        "pattern": "003$"
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "topic": {
+                        "pattern": "002$"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "enabled": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "api_key"
+        ],
+        "properties": {
+          "mappings": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Enabled empty key requires an existing saved key. Device objects must match owner registration. Topics and device/channel pairs must be unique."
+}

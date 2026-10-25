@@ -1,0 +1,261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/m1-alarm-state-v1.schema.json",
+  "title": "M1 alarm.get data object",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "hcho_configured",
+    "pm25_configured",
+    "hcho_buzzer_enabled",
+    "pm25_buzzer_enabled",
+    "buzzer_supported",
+    "buzzer_confirmed",
+    "uart_sent",
+    "hcho_yellow",
+    "hcho_red",
+    "pm25_yellow",
+    "pm25_red",
+    "revision",
+    "mcu_alarm_schema",
+    "buzzer_confirmation",
+    "unit",
+    "confirmation",
+    "mcu_hcho_buzzer_enabled",
+    "mcu_pm25_buzzer_enabled",
+    "mcu_buzzer_mask",
+    "sensor_alarm_active"
+  ],
+  "properties": {
+    "hcho_configured": {
+      "type": "boolean"
+    },
+    "pm25_configured": {
+      "type": "boolean"
+    },
+    "hcho_buzzer_enabled": {
+      "type": "boolean"
+    },
+    "pm25_buzzer_enabled": {
+      "type": "boolean"
+    },
+    "buzzer_supported": {
+      "type": "boolean"
+    },
+    "buzzer_confirmed": {
+      "type": "boolean"
+    },
+    "uart_sent": {
+      "type": "boolean"
+    },
+    "hcho_yellow": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "hcho_red": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "pm25_yellow": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "pm25_red": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "mcu_alarm_schema": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "buzzer_confirmation": {
+      "enum": [
+        "mcu_readback",
+        "pending_mcu_readback",
+        "requires_mcu_upgrade"
+      ]
+    },
+    "unit": {
+      "const": "main_controller_raw_u16"
+    },
+    "confirmation": {
+      "const": "uart_send_only"
+    },
+    "mcu_hcho_buzzer_enabled": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "mcu_pm25_buzzer_enabled": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "mcu_buzzer_mask": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 7
+    },
+    "sensor_alarm_active": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "buzzer_supported": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "mcu_alarm_schema": {
+            "const": 0
+          },
+          "buzzer_confirmed": {
+            "const": false
+          },
+          "buzzer_confirmation": {
+            "const": "requires_mcu_upgrade"
+          },
+          "mcu_hcho_buzzer_enabled": {
+            "type": "null"
+          },
+          "mcu_pm25_buzzer_enabled": {
+            "type": "null"
+          },
+          "mcu_buzzer_mask": {
+            "type": "null"
+          },
+          "sensor_alarm_active": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "mcu_alarm_schema": {
+            "const": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "buzzer_confirmed": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "buzzer_supported": {
+            "const": true
+          },
+          "buzzer_confirmation": {
+            "const": "mcu_readback"
+          },
+          "mcu_hcho_buzzer_enabled": {
+            "type": "boolean"
+          },
+          "mcu_pm25_buzzer_enabled": {
+            "type": "boolean"
+          },
+          "mcu_buzzer_mask": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7
+          },
+          "sensor_alarm_active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "buzzer_confirmation": {
+            "enum": [
+              "pending_mcu_readback",
+              "requires_mcu_upgrade"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "mcu_hcho_buzzer_enabled": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "properties": {
+              "mcu_pm25_buzzer_enabled": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "properties": {
+              "mcu_buzzer_mask": {
+                "type": "null"
+              }
+            }
+          },
+          {
+            "properties": {
+              "sensor_alarm_active": {
+                "type": "null"
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "mcu_hcho_buzzer_enabled": {
+            "type": "null"
+          },
+          "mcu_pm25_buzzer_enabled": {
+            "type": "null"
+          },
+          "mcu_buzzer_mask": {
+            "type": "null"
+          },
+          "sensor_alarm_active": {
+            "type": "null"
+          },
+          "buzzer_confirmed": {
+            "const": false
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Runtime establishes freshness, current revision, desired/actual equality and mask bit interpretation. Extra response fields remain extensible."
+}

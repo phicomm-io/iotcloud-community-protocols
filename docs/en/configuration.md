@@ -43,4 +43,6 @@ The v1 development route is `/ota/v1/<model>/<variant>/latest.json`. After forma
 
 Select OTA by model, variant, signature and version. DAIKIN `hub` is a separate variant; ordinary `full` devices do not automatically cross-upgrade. The browser fetches and verifies release differences directly; when unavailable, explain the failure and require additional confirmation.
 
+DAIKIN `full` development firmware declaring `ota_variant_conversion:"full-to-hub"` may use the dedicated [explicit signed conversion endpoint](device-http.md#explicit-daikin-full-hub-conversion). Ordinary signed/unsigned OTA preserves the variant. Conversion does not alter the partition table and does not support `hub` → `full`.
+
 Record Wi-Fi firmware, sensor MCU and frontend versions independently. Firmware consumes a full-commit, SHA-256-pinned frontend release. A successful build or UART transfer does not prove the new application is running.

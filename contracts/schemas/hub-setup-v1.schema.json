@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/hub-setup-v1.schema.json",
+  "title": "Local hub owner setup body",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "username",
+    "password"
+  ],
+  "properties": {
+    "username": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 32,
+      "not": {
+        "pattern": "[^A-Za-z0-9_]"
+      }
+    },
+    "password": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 63,
+      "not": {
+        "pattern": "\u0000"
+      },
+      "$comment": "Firmware enforces UTF-8 byte length; JSON Schema measures Unicode code points."
+    }
+  }
+}

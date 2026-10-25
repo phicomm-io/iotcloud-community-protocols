@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "contract": "daikin-hub-v1",
+  "status": "implemented-unreleased",
+  "variant": "hub",
+  "matter": false,
+  "owner": {
+    "count": 1,
+    "cloud_authorization": false,
+    "namespace_prefix": "phicomm/v2/u_<username-UTF8-hex>/",
+    "per_device_credentials": false,
+    "registered_mac_acl": false
+  },
+  "http": {
+    "owner_authentication": "Authorization: Bearer <session>",
+    "session_response_header": "X-IotCloud-Session",
+    "session_hex_characters": 64,
+    "max_sessions": 4,
+    "session_lifetime_ms": 43200000,
+    "body_bytes": 12288,
+    "cross_origin": false,
+    "setup_requires_device_basic": true
+  },
+  "broker": {
+    "tcp_port": 1883,
+    "websocket_port": 9001,
+    "websocket_path": "/mqtt",
+    "mqtt_protocol": "3.1.1",
+    "clean_session_required": true,
+    "max_clients": 8,
+    "max_subscriptions_per_client": 24,
+    "topic_bytes": 512,
+    "packet_bytes": 8192,
+    "max_retained_messages": 128,
+    "retained_bytes": 49152,
+    "receive_bytes": 24576,
+    "will_bytes": 4096,
+    "subscription_bytes": 8192
+  },
+  "routes": {
+    "max_routes": 8,
+    "forward_out_origins": [
+      "Local",
+      "Internal"
+    ],
+    "injected_origin": "Upstream",
+    "retained_replay_is_forward_event": false,
+    "echo_cache_entries": 16,
+    "echo_window_ms": 5000,
+    "retained_command_suffixes_forbidden": [
+      "/command",
+      "/set"
+    ]
+  },
+  "bemfa": {
+    "max_mappings": 8,
+    "device_evidence_origins": [
+      "Local",
+      "Internal"
+    ],
+    "state_age_less_than_ms": 20000,
+    "receipt_timeout_ms": 10000,
+    "receipt_is_output_confirmation": false,
+    "command_brightness_unit": "percent_0_100",
+    "reported_brightness_unit": "raw_0_255"
+  },
+  "homekit": {
+    "protocol": "hap",
+    "port": 51826,
+    "evidence_origins": [
+      "Local",
+      "Internal"
+    ],
+    "tc1_service": "Switch",
+    "tc1_service_names": [
+      "Outlet 1",
+      "Outlet 2",
+      "Outlet 3",
+      "Outlet 4",
+      "Outlet 5",
+      "Outlet 6"
+    ],
+    "tc1_outlet_in_use": false,
+    "state_timeout_ms": 30000,
+    "sensor_total_age_less_than_ms": 20000,
+    "control_timeout_ms": 2500,
+    "control_confirmation": [
+      "matching_successful_receipt",
+      "fresh_applied_snapshot_after_receipt_or_status_query"
+    ],
+    "batched_power_and_level_mutations": 1,
+    "explicit_off_precedence": true,
+    "storage_failure_behavior": "stop HAP listeners and sessions; disable pairing and controls",
+    "pairing_reset_behavior": "stop before erase; failure stays disabled"
+  },
+  "pairing_storage": {
+    "flash_bytes": 4194304,
+    "required_installed_partition_layout": "DAIKIN/partitions.csv (wired-install layout; never infer from firmware size)",
+    "application_slot_bytes": 1966080,
+    "tail_offset": 3997696,
+    "tail_length": 196608,
+    "unknown_nonempty_tail": "preserve; refuse HAP initialization",
+    "default_nvs_erase": false,
+    "included_in_configuration_backup": false
+  },
+  "validation_boundary": "Schemas and wire vectors do not establish account ownership, runtime freshness, persistence rollback, physical output or Apple Home acceptance."
+}

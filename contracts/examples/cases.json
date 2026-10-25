@@ -436,6 +436,1552 @@
         "revision": 0
       },
       "valid": false
+    },
+    {
+      "name": "owner setup",
+      "schema": "hub-setup-v1",
+      "data": {
+        "username": "local",
+        "password": "local-password"
+      },
+      "valid": true
+    },
+    {
+      "name": "short username",
+      "schema": "hub-setup-v1",
+      "data": {
+        "username": "ab",
+        "password": "local-password"
+      },
+      "valid": false
+    },
+    {
+      "name": "nonlocal username",
+      "schema": "hub-setup-v1",
+      "data": {
+        "username": "cloud@example.org",
+        "password": "local-password"
+      },
+      "valid": false
+    },
+    {
+      "name": "newline username",
+      "schema": "hub-setup-v1",
+      "data": {
+        "username": "local\n",
+        "password": "local-password"
+      },
+      "valid": false
+    },
+    {
+      "name": "short password",
+      "schema": "hub-setup-v1",
+      "data": {
+        "username": "local",
+        "password": "1234567"
+      },
+      "valid": false
+    },
+    {
+      "name": "NUL password",
+      "schema": "hub-setup-v1",
+      "data": {
+        "username": "local",
+        "password": "password\u0000"
+      },
+      "valid": false
+    },
+    {
+      "name": "numeric password",
+      "schema": "hub-setup-v1",
+      "data": {
+        "username": "local",
+        "password": 12345678
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown setup field",
+      "schema": "hub-setup-v1",
+      "data": {
+        "username": "local",
+        "password": "local-password",
+        "cloud_token": "token"
+      },
+      "valid": false
+    },
+    {
+      "name": "explicit outbound route preserving password",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "disabled empty bridge",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": false,
+        "mappings": []
+      },
+      "valid": true
+    },
+    {
+      "name": "numeric enabled",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": 1,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "float port",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883.0,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "port overflow",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 65536,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "NUL upstream password",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream",
+          "password": "a\u0000b"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "wildcard route",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/+",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "bidirectional route",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "both",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "retained command route",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "device/command",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "retained remote set route",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "device/set",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown route field",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false,
+            "secret": true
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "route capacity",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          },
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          },
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          },
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          },
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          },
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          },
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          },
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          },
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "unretained command route",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "device/command",
+            "remote_topic": "home/remote",
+            "retain": false,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "registered TC1 channel",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 5,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "preserve existing Bemfa key",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 5,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "disabled empty Bemfa",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": false,
+        "mappings": []
+      },
+      "valid": true
+    },
+    {
+      "name": "short API key",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "short",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 5,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "TC1 channel overflow",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 6,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "boolean channel",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": true,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "TC1 wrong suffix",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 5,
+            "topic": "socket002"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "uppercase MAC",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456ABCDEF",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 5,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "zero MAC",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "000000000000",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 5,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "sensor Bemfa mapping",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "m1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 5,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "newline device owner",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local\n"
+            },
+            "channel": 5,
+            "topic": "socket001"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "enabled no mappings",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": []
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown Bemfa field",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "tc1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 5,
+            "topic": "socket001"
+          }
+        ],
+        "unknown": true
+      },
+      "valid": false
+    },
+    {
+      "name": "A1 fan mapping",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "a1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 0,
+            "topic": "fan003"
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "A1 fan light suffix mismatch",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "a1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 0,
+            "topic": "fan002"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "A1 light mapping",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "a1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 1,
+            "topic": "light002"
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "A1 channel overflow",
+      "schema": "hub-bemfa-set-v1",
+      "data": {
+        "enabled": true,
+        "api_key": "0123456789abcdef",
+        "mappings": [
+          {
+            "device": {
+              "mac": "123456abcdef",
+              "model": "a1",
+              "version": "v2",
+              "status": "active",
+              "username": "local"
+            },
+            "channel": 2,
+            "topic": "light002"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "enable HAP",
+      "schema": "hub-homekit-set-v1",
+      "data": {
+        "enabled": true
+      },
+      "valid": true
+    },
+    {
+      "name": "disable HAP",
+      "schema": "hub-homekit-set-v1",
+      "data": {
+        "enabled": false
+      },
+      "valid": true
+    },
+    {
+      "name": "missing HAP enabled",
+      "schema": "hub-homekit-set-v1",
+      "data": {},
+      "valid": false
+    },
+    {
+      "name": "numeric HAP enabled",
+      "schema": "hub-homekit-set-v1",
+      "data": {
+        "enabled": 1
+      },
+      "valid": false
+    },
+    {
+      "name": "client supplied pairing code",
+      "schema": "hub-homekit-set-v1",
+      "data": {
+        "enabled": true,
+        "setup_code": "123-45-678"
+      },
+      "valid": false
+    },
+    {
+      "name": "Matter is not HAP configuration",
+      "schema": "hub-homekit-set-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "matter"
+      },
+      "valid": false
+    },
+    {
+      "name": "explicit pairing erase",
+      "schema": "hub-homekit-reset-v1",
+      "data": {
+        "confirm": true
+      },
+      "valid": true
+    },
+    {
+      "name": "missing erase confirmation",
+      "schema": "hub-homekit-reset-v1",
+      "data": {},
+      "valid": false
+    },
+    {
+      "name": "refused erase",
+      "schema": "hub-homekit-reset-v1",
+      "data": {
+        "confirm": false
+      },
+      "valid": false
+    },
+    {
+      "name": "numeric erase confirmation",
+      "schema": "hub-homekit-reset-v1",
+      "data": {
+        "confirm": 1
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown erase option",
+      "schema": "hub-homekit-reset-v1",
+      "data": {
+        "confirm": true,
+        "factory": true
+      },
+      "valid": false
+    },
+    {
+      "name": "healthy unpaired HAP",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "hap",
+        "ready": true,
+        "code": "ok",
+        "paired": false,
+        "devices": 2,
+        "port": 51826,
+        "setup_code": "321-45-678",
+        "setup_uri": "X-HM://001234567ABCD"
+      },
+      "valid": true
+    },
+    {
+      "name": "paired HAP hides credentials",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "hap",
+        "ready": true,
+        "code": "ok",
+        "paired": true,
+        "devices": 2,
+        "port": 51826
+      },
+      "valid": true
+    },
+    {
+      "name": "failed storage HAP",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "hap",
+        "ready": false,
+        "code": "storage_error",
+        "paired": false,
+        "devices": 2,
+        "port": 51826
+      },
+      "valid": true
+    },
+    {
+      "name": "paired credentials leak",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "hap",
+        "ready": true,
+        "code": "ok",
+        "paired": true,
+        "devices": 2,
+        "port": 51826,
+        "setup_code": "321-45-678",
+        "setup_uri": "X-HM://001234567ABCD"
+      },
+      "valid": false
+    },
+    {
+      "name": "unready credentials leak",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "hap",
+        "ready": false,
+        "code": "ok",
+        "paired": false,
+        "devices": 2,
+        "port": 51826,
+        "setup_code": "321-45-678",
+        "setup_uri": "X-HM://001234567ABCD"
+      },
+      "valid": false
+    },
+    {
+      "name": "disabled credentials leak",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": false,
+        "protocol": "hap",
+        "ready": true,
+        "code": "ok",
+        "paired": false,
+        "devices": 2,
+        "port": 51826,
+        "setup_code": "321-45-678",
+        "setup_uri": "X-HM://001234567ABCD"
+      },
+      "valid": false
+    },
+    {
+      "name": "wrong home protocol",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "matter",
+        "ready": true,
+        "code": "ok",
+        "paired": false,
+        "devices": 2,
+        "port": 51826,
+        "setup_code": "321-45-678",
+        "setup_uri": "X-HM://001234567ABCD"
+      },
+      "valid": false
+    },
+    {
+      "name": "HAP roster overflow",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "hap",
+        "ready": true,
+        "code": "ok",
+        "paired": false,
+        "devices": 13,
+        "port": 51826,
+        "setup_code": "321-45-678",
+        "setup_uri": "X-HM://001234567ABCD"
+      },
+      "valid": false
+    },
+    {
+      "name": "float HAP port",
+      "schema": "hub-homekit-state-v1",
+      "data": {
+        "enabled": true,
+        "protocol": "hap",
+        "ready": true,
+        "code": "ok",
+        "paired": false,
+        "devices": 2,
+        "port": 51826.0,
+        "setup_code": "321-45-678",
+        "setup_uri": "X-HM://001234567ABCD"
+      },
+      "valid": false
+    },
+    {
+      "name": "default OFF sensor reminder",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "revision": 0,
+        "buzzer_enabled": false
+      },
+      "valid": true
+    },
+    {
+      "name": "omitted switch preserves legacy caller",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "revision": 0
+      },
+      "valid": true
+    },
+    {
+      "name": "maximum raw thresholds",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "hcho",
+        "yellow": 65535,
+        "red": 65535,
+        "revision": 2147483647,
+        "buzzer_enabled": true
+      },
+      "valid": true
+    },
+    {
+      "name": "unsupported reminder sensor",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "co2",
+        "yellow": 75,
+        "red": 150,
+        "revision": 0,
+        "buzzer_enabled": false
+      },
+      "valid": false
+    },
+    {
+      "name": "negative threshold",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": -1,
+        "red": 150,
+        "revision": 0,
+        "buzzer_enabled": false
+      },
+      "valid": false
+    },
+    {
+      "name": "zero red threshold",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 0,
+        "revision": 0,
+        "buzzer_enabled": false
+      },
+      "valid": false
+    },
+    {
+      "name": "threshold overflow",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 65536,
+        "revision": 0,
+        "buzzer_enabled": false
+      },
+      "valid": false
+    },
+    {
+      "name": "float threshold",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75.0,
+        "red": 150,
+        "revision": 0,
+        "buzzer_enabled": false
+      },
+      "valid": false
+    },
+    {
+      "name": "boolean revision",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "revision": true,
+        "buzzer_enabled": false
+      },
+      "valid": false
+    },
+    {
+      "name": "revision overflow",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "revision": 2147483648,
+        "buzzer_enabled": false
+      },
+      "valid": false
+    },
+    {
+      "name": "numeric buzzer switch",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "revision": 0,
+        "buzzer_enabled": 0
+      },
+      "valid": false
+    },
+    {
+      "name": "string buzzer switch",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "revision": 0,
+        "buzzer_enabled": "false"
+      },
+      "valid": false
+    },
+    {
+      "name": "null buzzer switch",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "revision": 0,
+        "buzzer_enabled": null
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown alarm write field",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "revision": 0,
+        "buzzer_enabled": false,
+        "unknown": false
+      },
+      "valid": false
+    },
+    {
+      "name": "missing alarm revision",
+      "schema": "m1-alarm-set-v1",
+      "data": {
+        "sensor": "pm25",
+        "yellow": 75,
+        "red": 150,
+        "buzzer_enabled": false
+      },
+      "valid": false
+    },
+    {
+      "name": "legacy MCU desired OFF actual unknown",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": false,
+        "mcu_alarm_schema": 0,
+        "buzzer_confirmed": false,
+        "buzzer_confirmation": "requires_mcu_upgrade",
+        "mcu_hcho_buzzer_enabled": null,
+        "mcu_pm25_buzzer_enabled": null,
+        "mcu_buzzer_mask": null,
+        "sensor_alarm_active": null,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": true
+    },
+    {
+      "name": "new MCU pending independent read",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": true,
+        "mcu_alarm_schema": 1,
+        "buzzer_confirmed": false,
+        "buzzer_confirmation": "pending_mcu_readback",
+        "mcu_hcho_buzzer_enabled": null,
+        "mcu_pm25_buzzer_enabled": null,
+        "mcu_buzzer_mask": null,
+        "sensor_alarm_active": null,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": true
+    },
+    {
+      "name": "fresh independently confirmed OFF",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": true,
+        "mcu_alarm_schema": 1,
+        "buzzer_confirmed": true,
+        "buzzer_confirmation": "mcu_readback",
+        "mcu_hcho_buzzer_enabled": false,
+        "mcu_pm25_buzzer_enabled": false,
+        "mcu_buzzer_mask": 0,
+        "sensor_alarm_active": false,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": true
+    },
+    {
+      "name": "forward response field allowed",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": true,
+        "mcu_alarm_schema": 1,
+        "buzzer_confirmed": true,
+        "buzzer_confirmation": "mcu_readback",
+        "mcu_hcho_buzzer_enabled": false,
+        "mcu_pm25_buzzer_enabled": false,
+        "mcu_buzzer_mask": 0,
+        "sensor_alarm_active": false,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only",
+        "future_diagnostic": "value"
+      },
+      "valid": true
+    },
+    {
+      "name": "legacy cannot claim confirmation",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": false,
+        "mcu_alarm_schema": 0,
+        "buzzer_confirmed": true,
+        "buzzer_confirmation": "requires_mcu_upgrade",
+        "mcu_hcho_buzzer_enabled": null,
+        "mcu_pm25_buzzer_enabled": null,
+        "mcu_buzzer_mask": null,
+        "sensor_alarm_active": null,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown actual fields must remain null together",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": false,
+        "mcu_alarm_schema": 0,
+        "buzzer_confirmed": false,
+        "buzzer_confirmation": "requires_mcu_upgrade",
+        "mcu_hcho_buzzer_enabled": null,
+        "mcu_pm25_buzzer_enabled": null,
+        "mcu_buzzer_mask": 0,
+        "sensor_alarm_active": null,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": false
+    },
+    {
+      "name": "pending cannot claim readback",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": true,
+        "mcu_alarm_schema": 1,
+        "buzzer_confirmed": false,
+        "buzzer_confirmation": "mcu_readback",
+        "mcu_hcho_buzzer_enabled": null,
+        "mcu_pm25_buzzer_enabled": null,
+        "mcu_buzzer_mask": null,
+        "sensor_alarm_active": null,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": false
+    },
+    {
+      "name": "actual mask overflow",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": true,
+        "mcu_alarm_schema": 1,
+        "buzzer_confirmed": true,
+        "buzzer_confirmation": "mcu_readback",
+        "mcu_hcho_buzzer_enabled": false,
+        "mcu_pm25_buzzer_enabled": false,
+        "mcu_buzzer_mask": 8,
+        "sensor_alarm_active": false,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": false
+    },
+    {
+      "name": "numeric actual alarm flag",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": true,
+        "mcu_alarm_schema": 1,
+        "buzzer_confirmed": true,
+        "buzzer_confirmation": "mcu_readback",
+        "mcu_hcho_buzzer_enabled": false,
+        "mcu_pm25_buzzer_enabled": false,
+        "mcu_buzzer_mask": 0,
+        "sensor_alarm_active": 1,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": false
+    },
+    {
+      "name": "confirmed cannot have unknown actual",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": true,
+        "mcu_alarm_schema": 1,
+        "buzzer_confirmed": true,
+        "buzzer_confirmation": "mcu_readback",
+        "mcu_hcho_buzzer_enabled": false,
+        "mcu_pm25_buzzer_enabled": null,
+        "mcu_buzzer_mask": 0,
+        "sensor_alarm_active": false,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "uart_send_only"
+      },
+      "valid": false
+    },
+    {
+      "name": "threshold confirmation stays send only",
+      "schema": "m1-alarm-state-v1",
+      "data": {
+        "revision": 1,
+        "hcho_configured": false,
+        "pm25_configured": true,
+        "hcho_yellow": 0,
+        "hcho_red": 0,
+        "pm25_yellow": 75,
+        "pm25_red": 150,
+        "hcho_buzzer_enabled": false,
+        "pm25_buzzer_enabled": false,
+        "buzzer_supported": true,
+        "mcu_alarm_schema": 1,
+        "buzzer_confirmed": true,
+        "buzzer_confirmation": "mcu_readback",
+        "mcu_hcho_buzzer_enabled": false,
+        "mcu_pm25_buzzer_enabled": false,
+        "mcu_buzzer_mask": 0,
+        "sensor_alarm_active": false,
+        "uart_sent": true,
+        "unit": "main_controller_raw_u16",
+        "confirmation": "mcu_readback"
+      },
+      "valid": false
+    },
+    {
+      "name": "512-byte ASCII local_topic",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "513-byte ASCII local_topic",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "remote_topic": "home/remote",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "512-byte ASCII remote_topic",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "513-byte ASCII remote_topic",
+      "schema": "hub-bridge-set-v1",
+      "data": {
+        "enabled": true,
+        "mqtt": {
+          "host": "broker.lan",
+          "port": 1883,
+          "user": "upstream"
+        },
+        "mappings": [
+          {
+            "direction": "out",
+            "local_topic": "home/local",
+            "remote_topic": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "retain": true,
+            "allow_retained": false
+          }
+        ]
+      },
+      "valid": false
     }
   ]
 }

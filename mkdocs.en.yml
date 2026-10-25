@@ -19,5 +19,5 @@ nav:
       - UART and capabilities: m1-uart.md
       - Display sources and buttons: m1-display.md
   - Platform and hub:
-      - Platform API and hub draft: platform-hub.md
+      - Platform API and hub: platform-hub.md
       - Schemas and examples: contracts.md

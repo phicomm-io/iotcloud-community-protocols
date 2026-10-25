@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "specification": "1.0.0-dev.1",
+  "specification": "1.0.0-dev.2",
   "repository": "phicomm-io/iotcloud-community-protocols",
   "contracts": [
     {
@@ -18,7 +18,15 @@
         "firmware/M1/http.c",
         "firmware/A1/http.c",
         "firmware/TC1/http_server/app_httpd.c",
-        "firmware/common/service.c"
+        "firmware/common/service.c",
+        "firmware/DAIKIN/src/main.cpp",
+        "firmware/DAIKIN/src/http.inc",
+        "firmware/DAIKIN/src/commands.inc",
+        "firmware/DAIKIN/include/firmware_identity.h",
+        "firmware/common/ota/signed_ota.c"
+      ],
+      "verification": [
+        "firmware/DAIKIN/tests/test_ota_identity.py"
       ]
     },
     {
@@ -88,7 +96,18 @@
       ],
       "implementation": [
         "mcu/src/debug.c",
-        "firmware/M1/mcu.c"
+        "firmware/M1/mcu.c",
+        "mcu/src/pm_filter.c",
+        "mcu/src/runtime.c"
+      ],
+      "verification": [
+        "mcu/tests/test_core.c",
+        "mcu/tests/test_pm_filter.c",
+        "mcu/tests/test_runtime.c"
+      ],
+      "artifacts": [
+        "contracts/m1-uart-v1.json",
+        "contracts/vectors/m1-uart-v1.json"
       ]
     },
     {
@@ -155,22 +174,102 @@
       ],
       "implementation": [
         "platform/backend/auth.go",
-        "frontend/frontend/src/account.js"
+        "frontend/frontend/src/account.js",
+        "platform/backend/main.go",
+        "platform/backend/util.go",
+        "platform/backend/i18n.go",
+        "platform/backend/verification_emails.go",
+        "platform/backend/account_aliases.go",
+        "platform/backend/handler_register.go",
+        "platform/backend/handler_admin.go",
+        "platform/backend/github_auth.go"
+      ],
+      "verification": [
+        "platform/backend/i18n_test.go",
+        "platform/backend/verification_emails_test.go",
+        "platform/backend/account_username_test.go"
       ]
     },
     {
       "id": "daikin-hub-v1",
       "version": 1,
-      "status": "draft",
+      "status": "implemented-unreleased",
       "document": "platform-hub.md",
       "producers": [
         "firmware"
       ],
       "consumers": [
         "frontend",
-        "platform"
+        "firmware"
       ],
-      "implementation": []
+      "implementation": [
+        "firmware/DAIKIN/include/hub_service.h",
+        "firmware/DAIKIN/include/hub_broker.h",
+        "firmware/DAIKIN/include/hub_transport.h",
+        "firmware/DAIKIN/include/hub_relay.h",
+        "firmware/DAIKIN/include/hub_home.h",
+        "firmware/DAIKIN/src/hub.inc",
+        "firmware/DAIKIN/src/home.inc",
+        "firmware/DAIKIN/src/http.inc",
+        "firmware/DAIKIN/include/hub_home_storage.h"
+      ],
+      "verification": [
+        "firmware/DAIKIN/tests/hub/service.cpp",
+        "firmware/DAIKIN/tests/hub/relay.cpp",
+        "firmware/DAIKIN/tests/hub/home.cpp",
+        "firmware/DAIKIN/tests/test_hub_mqtt.py",
+        "firmware/DAIKIN/tests/hub/server.cpp",
+        "firmware/DAIKIN/tests/test_hub_topic_budget.py",
+        "firmware/DAIKIN/tests/hub/topic_budget.cpp"
+      ],
+      "artifacts": [
+        "contracts/daikin-hub-v1.json",
+        "contracts/schemas/hub-setup-v1.schema.json",
+        "contracts/schemas/hub-bridge-set-v1.schema.json",
+        "contracts/schemas/hub-bemfa-set-v1.schema.json",
+        "contracts/schemas/hub-homekit-set-v1.schema.json",
+        "contracts/schemas/hub-homekit-reset-v1.schema.json",
+        "contracts/schemas/hub-homekit-state-v1.schema.json"
+      ]
+    },
+    {
+      "id": "m1-sensor-alarm-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "device-http.md",
+      "producers": [
+        "firmware",
+        "mcu"
+      ],
+      "consumers": [
+        "frontend",
+        "firmware"
+      ],
+      "implementation": [
+        "firmware/common/service_product.inc",
+        "firmware/M1/mcu.c",
+        "firmware/M1/main.c",
+        "mcu/src/debug.c",
+        "mcu/src/runtime.c"
+      ],
+      "verification": [
+        "firmware/tests/test_stock_runtime.py",
+        "firmware/tests/test_stock_protocol.c",
+        "frontend/tests/test_m1_thresholds.cjs",
+        "mcu/tests/test_core.c",
+        "mcu/tests/test_runtime.c"
+      ],
+      "artifacts": [
+        "contracts/schemas/m1-alarm-set-v1.schema.json",
+        "contracts/schemas/m1-alarm-state-v1.schema.json"
+      ]
     }
-  ]
+  ],
+  "repositories": {
+    "firmware": "phicomm-io/iotcloud-community-firmware",
+    "mcu": "phicomm-io/phicomm_m1_mcu_atsamd20",
+    "frontend": "phicomm-io/iotcloud-community-frontend",
+    "platform": "phicomm-io/iotcloud-community-mqtt"
+  },
+  "reference_policy": "Source paths are repository-alias relative. A consumer pins this specification with a full commit and registry SHA-256. Record the implementation commit and any dirty patch digest separately; source references do not imply published capability."
 }

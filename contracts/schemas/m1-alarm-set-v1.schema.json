@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/m1-alarm-set-v1.schema.json",
+  "title": "M1 alarm.set params",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sensor",
+    "yellow",
+    "red",
+    "revision"
+  ],
+  "properties": {
+    "sensor": {
+      "enum": [
+        "hcho",
+        "pm25"
+      ]
+    },
+    "yellow": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "red": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 65535
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "buzzer_enabled": {
+      "type": "boolean"
+    }
+  },
+  "$comment": "Also enforce yellow <= red at runtime. Omitted buzzer_enabled preserves the selected sensor desired setting."
+}

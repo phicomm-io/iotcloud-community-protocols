@@ -21,10 +21,10 @@ This is the development specification for v1.0.0. `implemented-unreleased` ident
 
 | Repository | Responsibility |
 | --- | --- |
-| [phicomm-community-firmware](https://github.com/phicomm-io/phicomm-community-firmware) | Wi-Fi firmware, device interfaces, migration, OTA and hub |
+| [iotcloud-community-firmware](https://github.com/phicomm-io/iotcloud-community-firmware) | Wi-Fi firmware, device interfaces, migration, OTA and hub |
 | [phicomm_m1_mcu_atsamd20](https://github.com/phicomm-io/phicomm_m1_mcu_atsamd20) | M1 sensor MCU, display, buttons and MCU updates |
-| [phicomm-community-frontend](https://github.com/phicomm-io/phicomm-community-frontend) | Device WebUI, platform frontend and demos |
-| [phicomm-community-mqtt](https://github.com/phicomm-io/phicomm-community-mqtt) | Cloud accounts, device registration, Broker ACLs and platform API |
+| [iotcloud-community-frontend](https://github.com/phicomm-io/iotcloud-community-frontend) | Device WebUI, platform frontend and demos |
+| [iotcloud-community-mqtt](https://github.com/phicomm-io/iotcloud-community-mqtt) | Cloud accounts, device registration, Broker ACLs and platform API |
 | [phicomm-io.github.io](https://github.com/phicomm-io/phicomm-io.github.io) | User guides and downloads |
 
 Implementations pin a specification commit. User instructions remain on the project website. Device IDs, accounts and readings in examples are synthetic.

@@ -164,6 +164,257 @@
       "role": "button_event",
       "hex": "23 71 01 02 00 00 64 01 00 00 00 00 00 00 00 00 00 00 00 21",
       "valid": false
+    },
+    {
+      "name": "sensor alarm read",
+      "role": "request",
+      "hex": "23 70 14 ff 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 20,
+        "sequence": 255,
+        "mode": 0,
+        "mask": 0
+      }
+    },
+    {
+      "name": "sensor alarm write mask 0",
+      "role": "request",
+      "hex": "23 70 14 ff 01 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 0
+      }
+    },
+    {
+      "name": "sensor alarm write mask 1",
+      "role": "request",
+      "hex": "23 70 14 ff 01 01 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 1
+      }
+    },
+    {
+      "name": "sensor alarm write mask 2",
+      "role": "request",
+      "hex": "23 70 14 ff 01 02 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 2
+      }
+    },
+    {
+      "name": "sensor alarm write mask 3",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 3
+      }
+    },
+    {
+      "name": "sensor alarm write mask 4",
+      "role": "request",
+      "hex": "23 70 14 ff 01 04 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 4
+      }
+    },
+    {
+      "name": "sensor alarm write mask 7",
+      "role": "request",
+      "hex": "23 70 14 ff 01 07 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 7
+      }
+    },
+    {
+      "name": "sensor alarm read nonzero mask",
+      "role": "request",
+      "hex": "23 70 14 ff 00 01 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm mode unsupported",
+      "role": "request",
+      "hex": "23 70 14 ff 02 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved mask bit",
+      "role": "request",
+      "hex": "23 70 14 ff 01 08 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A2",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 01 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A3",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A4",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 00 01 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A5",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 00 00 01 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A6",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm actual mask 0",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 0,
+        "schema": 1,
+        "actual_mask": 0,
+        "alarm_latched": 0
+      }
+    },
+    {
+      "name": "sensor alarm actual mask 3",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 03 01 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 0,
+        "schema": 1,
+        "actual_mask": 3,
+        "alarm_latched": 1
+      }
+    },
+    {
+      "name": "sensor alarm actual mask 7",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 07 01 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 0,
+        "schema": 1,
+        "actual_mask": 7,
+        "alarm_latched": 1
+      }
+    },
+    {
+      "name": "sensor alarm error status 1",
+      "role": "reply",
+      "hex": "23 70 14 ff 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 1
+      }
+    },
+    {
+      "name": "sensor alarm error status 2",
+      "role": "reply",
+      "hex": "23 70 14 ff 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 2
+      }
+    },
+    {
+      "name": "sensor alarm error status 3",
+      "role": "reply",
+      "hex": "23 70 14 ff 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 3
+      }
+    },
+    {
+      "name": "sensor alarm reply wrong schema",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reply overflowing mask",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 08 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reply nonboolean latch",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 00 02 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reply unknown status",
+      "role": "reply",
+      "hex": "23 70 14 ff 06 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm error stale payload",
+      "role": "reply",
+      "hex": "23 70 14 ff 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reply reserved D13",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 00 00 00 00 00 00 00 00 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "capability reply sensor alarm schema 0",
+      "role": "reply",
+      "hex": "23 70 00 01 00 02 ff ff 27 10 01 01 07 09 01 0f 01 00 00 21",
+      "valid": true,
+      "expected": {
+        "protocol": 2,
+        "sensor_alarm_schema": 0
+      }
+    },
+    {
+      "name": "capability reply sensor alarm schema 1",
+      "role": "reply",
+      "hex": "23 70 00 01 00 02 ff ff 27 10 01 01 07 09 01 0f 01 01 00 21",
+      "valid": true,
+      "expected": {
+        "protocol": 2,
+        "sensor_alarm_schema": 1
+      }
+    },
+    {
+      "name": "capability reply unknown alarm schema",
+      "role": "reply",
+      "hex": "23 70 00 01 00 02 ff ff 27 10 01 01 07 09 01 0f 01 02 00 21",
+      "valid": false
+    },
+    {
+      "name": "capability reply reserved D13",
+      "role": "reply",
+      "hex": "23 70 00 01 00 02 ff ff 27 10 01 01 07 09 01 0f 01 01 01 21",
+      "valid": false
     }
   ]
 }

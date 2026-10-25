@@ -22,7 +22,9 @@
     "footer": 33,
     "status_offset": 4,
     "data_offset": 5,
-    "data_length": 14
+    "data_length": 14,
+    "op_offset": 2,
+    "sequence_offset": 3
   },
   "statuses": {
     "0": "accepted",
@@ -48,6 +50,18 @@
     "display_schema": {
       "data_offset": 11,
       "value": 1
+    },
+    "sensor_alarm_schema": {
+      "data_offset": 12,
+      "values": [
+        0,
+        1
+      ],
+      "required_value_for_operation_20": 1
+    },
+    "reserved": {
+      "data_offset": 13,
+      "value": 0
     }
   },
   "operations": [
@@ -60,7 +74,88 @@
           "bytes": 7,
           "value": 0
         }
-      ]
+      ],
+      "reply": [
+        {
+          "name": "protocol",
+          "offset": 0,
+          "bytes": 1,
+          "value": 2
+        },
+        {
+          "name": "legacy_bitmap",
+          "offset": 1,
+          "bytes": 2,
+          "value": 65535
+        },
+        {
+          "name": "max_lease_ms",
+          "offset": 3,
+          "bytes": 2,
+          "value": 10000
+        },
+        {
+          "name": "buzzer_pwm",
+          "offset": 5,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "sensor_frame_schema",
+          "offset": 6,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "sensor_kinds",
+          "offset": 7,
+          "bytes": 1,
+          "minimum": 1,
+          "maximum": 255
+        },
+        {
+          "name": "sensor_chunk",
+          "offset": 8,
+          "bytes": 1,
+          "value": 9
+        },
+        {
+          "name": "button_schema",
+          "offset": 9,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "button_kinds",
+          "offset": 10,
+          "bytes": 1,
+          "value": 15
+        },
+        {
+          "name": "display_schema",
+          "offset": 11,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "sensor_alarm_schema",
+          "offset": 12,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 13,
+          "bytes": 1,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true
     },
     {
       "op": 17,
@@ -144,6 +239,80 @@
           "value": 0
         }
       ]
+    },
+    {
+      "op": 20,
+      "name": "sensor_alarm.configure",
+      "capability": {
+        "data_offset": 12,
+        "value": 1
+      },
+      "arguments": [
+        {
+          "name": "mode",
+          "offset": 0,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "mask",
+          "offset": 1,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 7
+        },
+        {
+          "offset": 2,
+          "bytes": 5,
+          "value": 0
+        }
+      ],
+      "conditions": [
+        {
+          "when": {
+            "mode": 0
+          },
+          "require": {
+            "mask": 0
+          }
+        }
+      ],
+      "reply": [
+        {
+          "name": "schema",
+          "offset": 0,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "actual_mask",
+          "offset": 1,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 7
+        },
+        {
+          "name": "alarm_latched",
+          "offset": 2,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 3,
+          "bytes": 11,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true,
+      "cold_start_mask": 0,
+      "storage": "volatile RAM",
+      "write_ack_is_readback": false
     }
   ],
   "button_event": {

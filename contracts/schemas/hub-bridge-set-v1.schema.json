@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/hub-bridge-set-v1.schema.json",
+  "title": "PUT /api/hub/bridge body",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "enabled",
+    "mappings"
+  ],
+  "properties": {
+    "enabled": {
+      "type": "boolean"
+    },
+    "mappings": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "direction",
+          "local_topic",
+          "remote_topic",
+          "retain",
+          "allow_retained"
+        ],
+        "properties": {
+          "direction": {
+            "enum": [
+              "in",
+              "out"
+            ]
+          },
+          "local_topic": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "not": {
+              "pattern": "[\u0000+#]"
+            },
+            "$comment": "Firmware enforces UTF-8 byte length; JSON Schema measures Unicode code points."
+          },
+          "remote_topic": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "not": {
+              "pattern": "[\u0000+#]"
+            },
+            "$comment": "Firmware enforces UTF-8 byte length; JSON Schema measures Unicode code points."
+          },
+          "retain": {
+            "type": "boolean"
+          },
+          "allow_retained": {
+            "type": "boolean"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "local_topic": {
+                      "pattern": "/(command|set)$"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "remote_topic": {
+                      "pattern": "/(command|set)$"
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "retain": {
+                  "const": false
+                },
+                "allow_retained": {
+                  "const": false
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "mqtt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "host",
+        "port",
+        "user"
+      ],
+      "properties": {
+        "host": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 127,
+          "not": {
+            "pattern": "\u0000"
+          },
+          "$comment": "Firmware enforces UTF-8 byte length; JSON Schema measures Unicode code points."
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "user": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 63,
+          "not": {
+            "pattern": "\u0000"
+          },
+          "$comment": "Firmware enforces UTF-8 byte length; JSON Schema measures Unicode code points."
+        },
+        "password": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 128,
+          "not": {
+            "pattern": "\u0000"
+          },
+          "$comment": "Firmware enforces UTF-8 byte length; JSON Schema measures Unicode code points."
+        }
+      }
+    }
+  },
+  "$comment": "Runtime enforces owner namespace and unique directional source topics. Omitted mqtt.password preserves the saved value."
+}
