@@ -58,6 +58,28 @@ HTTP 和 TMCP 共用动作及 JSON 信封：
 
 与 `free_memory` 同级的可选状态字段 `minimum_free_memory`（启动以来最低空闲堆）和 `max_free_block`（当前最大可分配连续堆块）均为以字节计的非负整数；客户端须兼容字段缺失。
 
+### 复位原因
+
+支持此诊断的大金固件可返回只读 `status.reset_reason`，在 `status.get {}` 响应中位于 `data.reset_reason`。它是 `unsigned(esp_reset_reason())` 提供的非负 JSON 整数，表示上次复位原因。旧固件可能省略该字段，缺失时表示此诊断不可用。
+
+以下数字对应大金 ESP32 所用 ESP-IDF 4.4.7 的 `esp_reset_reason_t`，不是跨机型或跨 SDK 共用的复位原因枚举。无法识别的数值按未知诊断保留。见[官方 SDK 参考](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/system.html#reset-reason)与[固定版本枚举定义](https://github.com/espressif/esp-idf/blob/38eeba213aa695aabfd6d89aa9f5078dbe5a94c3/components/esp_system/include/esp_system.h#L41-L53)。
+
+| 数字 | SDK 枚举 | 含义 |
+| --- | --- | --- |
+| 0 | `ESP_RST_UNKNOWN` | 原因无法确定 |
+| 1 | `ESP_RST_POWERON` | 上电 |
+| 2 | `ESP_RST_EXT` | 外部引脚复位，不适用于 ESP32 |
+| 3 | `ESP_RST_SW` | 经 `esp_restart()` 触发的软件复位 |
+| 4 | `ESP_RST_PANIC` | 异常或 panic |
+| 5 | `ESP_RST_INT_WDT` | 中断看门狗 |
+| 6 | `ESP_RST_TASK_WDT` | 任务看门狗 |
+| 7 | `ESP_RST_WDT` | 其他看门狗 |
+| 8 | `ESP_RST_DEEPSLEEP` | 从深度睡眠唤醒 |
+| 9 | `ESP_RST_BROWNOUT` | 欠压复位 |
+| 10 | `ESP_RST_SDIO` | SDIO 复位 |
+
+实现见[大金状态诊断](https://github.com/phicomm-io/iotcloud-community-firmware/blob/508dfed3597bb64bdfb3f29e10f2ee46c90189c2/DAIKIN/src/commands.inc#L28)。此可选诊断不改变必需合同字段，消费者现有规范 pin 无需因此更新。
+
 ## DAIKIN 显式 full → hub 转换
 
 此接口属于未正式发布的开发扩展。仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
