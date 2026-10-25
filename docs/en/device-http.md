@@ -58,6 +58,20 @@ Implementation: `otaPartitionStatus()` and `state()` in `firmware/DAIKIN/src/com
 
 Optional sibling status fields `minimum_free_memory` (lowest free heap since boot) and `max_free_block` (largest currently allocatable contiguous heap block) are nonnegative integers in bytes, alongside `free_memory`; clients must handle their absence.
 
+### Hub byte-addressable heap
+
+Supporting DAIKIN `hub` firmware adds three optional, read-only nonnegative JSON integers under the status object's `hub`, or `data.hub` in a `status.get {}` reply. All sizes are bytes and use the combined ESP-IDF capabilities `MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT`: internal memory accessible through byte reads and writes.
+
+| Field in `data.hub` | Meaning |
+| --- | --- |
+| `free_byte_heap` | Total currently free heap with these capabilities |
+| `largest_byte_block` | Largest currently allocatable contiguous block with these capabilities |
+| `min_byte_heap` | SDK low-water statistic since boot: the sum of matching regions' minimum free sizes |
+
+Regional low-water marks can occur at different times, so `min_byte_heap` need not equal the lowest simultaneous total. The existing sibling `free_memory`, `minimum_free_memory` and `max_free_block` retain their original ESP getter semantics; they are not aliases for these capability-specific values. Clients must tolerate missing `hub` or missing fields on older firmware and other variants. Do not apply these ESP32 meanings to other device models.
+
+See the [fixed implementation](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/commands.inc#L63-L67), [SDK heap reference](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/mem_alloc.html) and [Hub connection admission](platform-hub.md#hub-memory-diagnostics). These optional diagnostics do not change required contract fields or consumer pins.
+
 ### Reset reason
 
 DAIKIN firmware supporting this diagnostic may include read-only `status.reset_reason`, or `data.reset_reason` in a `status.get {}` reply. It is a nonnegative JSON integer from `unsigned(esp_reset_reason())`, describing the last reset. Older firmware may omit the field; absence means the diagnostic is unavailable.

@@ -58,6 +58,22 @@ HTTP 和 TMCP 共用动作及 JSON 信封：
 
 与 `free_memory` 同级的可选状态字段 `minimum_free_memory`（启动以来最低空闲堆）和 `max_free_block`（当前最大可分配连续堆块）均为以字节计的非负整数；客户端须兼容字段缺失。
 
+<a id="hub-byte-addressable-heap"></a>
+
+### 中枢可按字节访问的堆
+
+支持此扩展的大金 `hub` 固件在状态对象的 `hub` 中增加三个可选、只读的非负 JSON 整数，`status.get {}` 响应中位于 `data.hub`。单位均为字节，统计范围为 ESP-IDF 组合能力 `MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT`，即内部且支持按字节读写的内存。
+
+| `data.hub` 中的字段 | 含义 |
+| --- | --- |
+| `free_byte_heap` | 当前该能力范围的空闲堆总量 |
+| `largest_byte_block` | 当前该能力范围可分配的最大连续块 |
+| `min_byte_heap` | SDK 自启动以来的低水位统计，即符合条件的各内存区域最低空闲量之和 |
+
+各区域的低水位可能发生在不同时刻，因此 `min_byte_heap` 不一定等于某一时刻最低的空闲总量。既有同级 `free_memory`、`minimum_free_memory` 和 `max_free_block` 保留原 ESP getter 语义，不是这些按能力统计字段的别名。旧固件或其他变体可能缺少 `hub` 或其中字段，客户端须兼容；其他机型不能直接套用这些 ESP32 含义。
+
+见[固定实现](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/commands.inc#L63-L67)、[SDK 堆参考](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/mem_alloc.html)与[中枢连接准入说明](platform-hub.md#hub-memory-diagnostics)。这些可选诊断不改变必需合同字段或消费者 pin。
+
 ### 复位原因
 
 支持此诊断的大金固件可返回只读 `status.reset_reason`，在 `status.get {}` 响应中位于 `data.reset_reason`。它是 `unsigned(esp_reset_reason())` 提供的非负 JSON 整数，表示上次复位原因。旧固件可能省略该字段，缺失时表示此诊断不可用。
