@@ -1,0 +1,10 @@
+:root { --bs-primary: #176b68; --bs-link-color: #176b68; }
+body { font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans SC", sans-serif; }
+main { line-height: 1.8; }
+pre, code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+pre { line-height: 1.55; }
+table { display: block; max-width: 100%; overflow-x: auto; }
+th { white-space: nowrap; }
+.navbar-brand { letter-spacing: .015em; }
+h1, h2, h3 { scroll-margin-top: 5rem; }
+@media (max-width: 767px) { h1 { font-size: 1.8rem; } .container { padding-inline: 1rem; } }

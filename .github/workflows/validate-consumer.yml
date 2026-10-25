@@ -1,0 +1,38 @@
+name: Validate pinned interface contracts
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: consumer
+          persist-credentials: false
+      - name: Read full specification pin
+        id: pin
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          lock = json.loads(Path('consumer/protocols.lock.json').read_text())
+          if lock.get('schema') != 1 or lock.get('repository') != 'phicomm-io/iotcloud-community-protocols':
+              raise SystemExit('Invalid protocol repository or lock schema')
+          if not re.fullmatch('[0-9a-f]{40}', lock.get('commit', '')):
+              raise SystemExit('Pin a full specification commit')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('commit=' + lock['commit'] + '\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: phicomm-io/iotcloud-community-protocols
+          ref: ${{ steps.pin.outputs.commit }}
+          path: protocols
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install jsonschema==4.25.1
+      - run: python protocols/tools/validate.py --consumer consumer

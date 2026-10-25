@@ -1,0 +1,441 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "fresh CO2",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "zero value",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 0,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "overflow value",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 65536,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "wrong units",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "mg/m³",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "string valid flag",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": "true",
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "numeric valid flag",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": 1,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "expired sample",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 20000
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "negative age",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": -1
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "wrapped age",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 4294967296
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "wrong schema",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 2,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "string schema",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": "1",
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "zero boot",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 0,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "sequence overflow",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 4294967296,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "uppercase ID",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456ABCDEF",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "embedded NUL ID",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef\u0000",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": true,
+            "value": 1234,
+            "unit": "ppm",
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "explicit invalid sample",
+      "schema": "sensor-co2-v1",
+      "data": {
+        "schema": 1,
+        "device_id": "123456abcdef",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "co2": {
+            "valid": false,
+            "unit": "ppm",
+            "age_ms": 20000
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "external source",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt",
+        "device_id": "123456abcdef",
+        "double_click": "switch_display",
+        "revision": 0
+      },
+      "valid": true
+    },
+    {
+      "name": "local source",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "local",
+        "device_id": "",
+        "double_click": "none",
+        "revision": 7
+      },
+      "valid": true
+    },
+    {
+      "name": "source enum",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "wifi",
+        "device_id": "123456abcdef",
+        "double_click": "switch_display",
+        "revision": 0
+      },
+      "valid": false
+    },
+    {
+      "name": "upper ID",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt",
+        "device_id": "123456ABCDEF",
+        "double_click": "switch_display",
+        "revision": 0
+      },
+      "valid": false
+    },
+    {
+      "name": "NUL source",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt\u0000",
+        "device_id": "123456abcdef",
+        "double_click": "switch_display",
+        "revision": 0
+      },
+      "valid": false
+    },
+    {
+      "name": "NUL ID",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt",
+        "device_id": "123456abcdef\u0000",
+        "double_click": "switch_display",
+        "revision": 0
+      },
+      "valid": false
+    },
+    {
+      "name": "string revision",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt",
+        "device_id": "123456abcdef",
+        "double_click": "switch_display",
+        "revision": "0"
+      },
+      "valid": false
+    },
+    {
+      "name": "negative revision",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt",
+        "device_id": "123456abcdef",
+        "double_click": "switch_display",
+        "revision": -1
+      },
+      "valid": false
+    },
+    {
+      "name": "revision overflow",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt",
+        "device_id": "123456abcdef",
+        "double_click": "switch_display",
+        "revision": 2147483648
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown action",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt",
+        "device_id": "123456abcdef",
+        "double_click": "toggle",
+        "revision": 0
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown write field",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "mqtt",
+        "device_id": "123456abcdef",
+        "double_click": "switch_display",
+        "revision": 0,
+        "unknown": 1
+      },
+      "valid": false
+    },
+    {
+      "name": "local with external ID",
+      "schema": "m1-co2-source-set-v1",
+      "data": {
+        "source": "local",
+        "device_id": "123456abcdef",
+        "double_click": "switch_display",
+        "revision": 0
+      },
+      "valid": false
+    }
+  ]
+}

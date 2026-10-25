@@ -1,0 +1,44 @@
+site_name: IoTCloud 开发文档
+site_description: 固件、MCU、WebUI 与管理平台的接口、协议和兼容性约定。
+site_url: https://phicomm-io.github.io/iotcloud-community-protocols/
+repo_url: https://github.com/phicomm-io/iotcloud-community-protocols
+repo_name: GitHub
+edit_uri: blob/main/docs/zh/
+docs_dir: docs/zh
+site_dir: build/site
+use_directory_urls: true
+theme:
+  name: mkdocs
+  locale: zh_CN
+  color_mode: auto
+  user_color_mode_toggle: true
+  navigation_depth: 2
+  highlightjs: true
+plugins:
+  - search:
+      lang: en
+      min_search_length: 2
+hooks:
+  - tools/docs_hooks.py
+markdown_extensions:
+  - tables
+  - fenced_code
+  - admonition
+  - toc:
+      permalink: true
+extra_css:
+  - assets/style.css
+nav:
+  - 开发约定:
+      - 概览: index.md
+      - 接口演进与跨仓库协作: conventions.md
+  - 设备接口:
+      - HTTP 与命令: device-http.md
+      - MQTT 与传感器: mqtt.md
+      - 备份、语言与升级: configuration.md
+  - MCU 协议:
+      - UART 与能力查询: m1-uart.md
+      - 显示源与按钮事件: m1-display.md
+  - 平台与中枢:
+      - 平台接口与中枢草案: platform-hub.md
+      - Schema 与样例: contracts.md

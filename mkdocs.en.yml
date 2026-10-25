@@ -1,0 +1,23 @@
+INHERIT: mkdocs.yml
+site_name: IoTCloud Developer Docs
+site_description: Interfaces, protocols and compatibility across firmware, MCU, WebUI and platform.
+site_url: https://phicomm-io.github.io/iotcloud-community-protocols/en/
+edit_uri: blob/main/docs/en/
+docs_dir: docs/en
+site_dir: build/en
+theme:
+  locale: en
+nav:
+  - Development:
+      - Overview: index.md
+      - Evolution and coordination: conventions.md
+  - Device interfaces:
+      - HTTP and commands: device-http.md
+      - MQTT and sensors: mqtt.md
+      - Backups, language and updates: configuration.md
+  - MCU protocols:
+      - UART and capabilities: m1-uart.md
+      - Display sources and buttons: m1-display.md
+  - Platform and hub:
+      - Platform API and hub draft: platform-hub.md
+      - Schemas and examples: contracts.md

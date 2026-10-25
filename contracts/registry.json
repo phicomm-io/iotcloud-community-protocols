@@ -1,0 +1,176 @@
+{
+  "schema": 1,
+  "specification": "1.0.0-dev.1",
+  "repository": "phicomm-io/iotcloud-community-protocols",
+  "contracts": [
+    {
+      "id": "device-http-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "device-http.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/M1/http.c",
+        "firmware/A1/http.c",
+        "firmware/TC1/http_server/app_httpd.c",
+        "firmware/common/service.c"
+      ]
+    },
+    {
+      "id": "tmcp-v2",
+      "version": 2,
+      "status": "implemented-unreleased",
+      "document": "mqtt.md",
+      "producers": [
+        "firmware",
+        "platform"
+      ],
+      "consumers": [
+        "frontend",
+        "platform",
+        "firmware"
+      ],
+      "implementation": [
+        "firmware/common/mqtt_account.h",
+        "platform/docs/MQTT_ACCOUNT_TOPICS.md"
+      ]
+    },
+    {
+      "id": "sensor-co2-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "mqtt.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "firmware",
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/common/runtime.c",
+        "firmware/M1/co2_source.c",
+        "firmware/tests/test_m1_external_co2_mqtt.py"
+      ]
+    },
+    {
+      "id": "m1-co2-source-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "device-http.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/M1/co2_source.c",
+        "frontend/M1/web/page.js"
+      ]
+    },
+    {
+      "id": "m1-uart-v2",
+      "version": 2,
+      "status": "implemented-unreleased",
+      "document": "m1-uart.md",
+      "producers": [
+        "mcu"
+      ],
+      "consumers": [
+        "firmware",
+        "frontend"
+      ],
+      "implementation": [
+        "mcu/src/debug.c",
+        "firmware/M1/mcu.c"
+      ]
+    },
+    {
+      "id": "m1-display-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "m1-display.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "mcu"
+      ],
+      "implementation": [
+        "mcu/src/debug.c",
+        "mcu/src/display.c",
+        "firmware/M1/display_source.h",
+        "firmware/tests/test_m1_display_source.py"
+      ]
+    },
+    {
+      "id": "m1-buttons-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "m1-display.md",
+      "producers": [
+        "mcu"
+      ],
+      "consumers": [
+        "firmware"
+      ],
+      "implementation": [
+        "mcu/src/runtime.c",
+        "mcu/tests/test_runtime.c",
+        "firmware/M1/mcu.c"
+      ]
+    },
+    {
+      "id": "configuration-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "configuration.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/common/backup.h",
+        "firmware/common/i18n.h"
+      ]
+    },
+    {
+      "id": "platform-session-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "platform-hub.md",
+      "producers": [
+        "platform"
+      ],
+      "consumers": [
+        "frontend"
+      ],
+      "implementation": [
+        "platform/backend/auth.go",
+        "frontend/frontend/src/account.js"
+      ]
+    },
+    {
+      "id": "daikin-hub-v1",
+      "version": 1,
+      "status": "draft",
+      "document": "platform-hub.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "frontend",
+        "platform"
+      ],
+      "implementation": []
+    }
+  ]
+}

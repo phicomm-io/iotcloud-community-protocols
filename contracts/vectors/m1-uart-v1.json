@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "vectors": [
+    {
+      "name": "capability query",
+      "role": "request",
+      "hex": "23 70 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 0,
+        "sequence": 0
+      }
+    },
+    {
+      "name": "1234 ppm policy frame",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 17,
+        "sequence": 1,
+        "number": 123,
+        "format": 1,
+        "color": 3,
+        "ttl_seconds": 20,
+        "slot": 0
+      }
+    },
+    {
+      "name": "select Wi-Fi",
+      "role": "request",
+      "hex": "23 70 12 02 01 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 18,
+        "sequence": 2,
+        "source": 1
+      }
+    },
+    {
+      "name": "select original",
+      "role": "request",
+      "hex": "23 70 12 ff 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 18,
+        "sequence": 255,
+        "source": 0
+      }
+    },
+    {
+      "name": "display query",
+      "role": "request",
+      "hex": "23 70 13 03 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 19,
+        "sequence": 3
+      }
+    },
+    {
+      "name": "invalidate cache",
+      "role": "request",
+      "hex": "23 70 11 04 00 00 00 00 00 01 00 21",
+      "valid": true,
+      "expected": {
+        "op": 17,
+        "number": 0,
+        "ttl_seconds": 0,
+        "slot": 1
+      }
+    },
+    {
+      "name": "number too large",
+      "role": "request",
+      "hex": "23 70 11 01 03 e8 00 00 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "decimal 3",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 03 03 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "unknown format bit",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 08 03 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "color too large",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 04 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "TTL too large",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 3d 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "slot too large",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 02 00 21",
+      "valid": false
+    },
+    {
+      "name": "reserved write argument",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "third source rejected",
+      "role": "request",
+      "hex": "23 70 12 01 02 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reserved source byte",
+      "role": "request",
+      "hex": "23 70 12 01 01 01 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reserved query byte",
+      "role": "request",
+      "hex": "23 70 13 01 01 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "wrong frame footer",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 00 00 00",
+      "valid": false
+    },
+    {
+      "name": "truncated request",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 00 00",
+      "valid": false
+    },
+    {
+      "name": "double click with sequence wrap",
+      "role": "button_event",
+      "hex": "23 71 01 02 00 00 64 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 2,
+        "sequence": 0,
+        "held_ms": 100
+      }
+    },
+    {
+      "name": "unknown button kind",
+      "role": "button_event",
+      "hex": "23 71 01 05 00 00 64 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reserved event byte",
+      "role": "button_event",
+      "hex": "23 71 01 02 00 00 64 01 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    }
+  ]
+}

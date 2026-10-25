@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/sensor-co2-v1.schema.json",
+  "title": "TMCP schema 1 CO2 ingress profile",
+  "type": "object",
+  "required": [
+    "schema",
+    "device_id",
+    "boot",
+    "sequence",
+    "sensors"
+  ],
+  "properties": {
+    "schema": {
+      "const": 1,
+      "type": "integer"
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{12}$"
+    },
+    "boot": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "sensors": {
+      "type": "object",
+      "required": [
+        "co2"
+      ],
+      "properties": {
+        "co2": {
+          "type": "object",
+          "required": [
+            "valid",
+            "unit",
+            "age_ms"
+          ],
+          "properties": {
+            "valid": {
+              "type": "boolean"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "const": "ppm"
+            },
+            "age_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "valid": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "value"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 65535
+                  },
+                  "age_ms": {
+                    "maximum": 19999
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "endianness": "big",
+  "request": {
+    "length": 12,
+    "header": [
+      35,
+      112
+    ],
+    "footer": 33,
+    "op_offset": 2,
+    "sequence_offset": 3,
+    "arguments_offset": 4,
+    "arguments_length": 7
+  },
+  "reply": {
+    "length": 20,
+    "header": [
+      35,
+      112
+    ],
+    "footer": 33,
+    "status_offset": 4,
+    "data_offset": 5,
+    "data_length": 14
+  },
+  "statuses": {
+    "0": "accepted",
+    "1": "invalid_params",
+    "2": "ota_busy",
+    "3": "unsupported",
+    "4": "peripheral_failed",
+    "5": "generation_changed"
+  },
+  "capabilities": {
+    "protocol": {
+      "data_offset": 0,
+      "value": 2
+    },
+    "button_schema": {
+      "data_offset": 9,
+      "value": 1
+    },
+    "button_kinds": {
+      "data_offset": 10,
+      "value": 15
+    },
+    "display_schema": {
+      "data_offset": 11,
+      "value": 1
+    }
+  },
+  "operations": [
+    {
+      "op": 0,
+      "name": "capabilities",
+      "arguments": [
+        {
+          "offset": 0,
+          "bytes": 7,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "op": 17,
+      "name": "display.write",
+      "arguments": [
+        {
+          "name": "number",
+          "offset": 0,
+          "bytes": 2,
+          "minimum": 0,
+          "maximum": 999
+        },
+        {
+          "name": "format",
+          "offset": 2,
+          "bytes": 1,
+          "values": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "color",
+          "offset": 3,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 3
+        },
+        {
+          "name": "ttl_seconds",
+          "offset": 4,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 60
+        },
+        {
+          "name": "slot",
+          "offset": 5,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "offset": 6,
+          "bytes": 1,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "op": 18,
+      "name": "display.select",
+      "arguments": [
+        {
+          "name": "source",
+          "offset": 0,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 1,
+          "bytes": 6,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "op": 19,
+      "name": "display.query",
+      "arguments": [
+        {
+          "offset": 0,
+          "bytes": 7,
+          "value": 0
+        }
+      ]
+    }
+  ],
+  "button_event": {
+    "length": 20,
+    "header": [
+      35,
+      113,
+      1
+    ],
+    "footer": 33,
+    "kind_offset": 3,
+    "kinds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "sequence_offset": 4,
+    "held_offset": 5,
+    "held_bytes": 2,
+    "reserved_offset": 7,
+    "reserved_length": 12
+  }
+}

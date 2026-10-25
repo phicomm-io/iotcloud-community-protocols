@@ -1,0 +1,19 @@
+name: 接口定义 / Interface definition
+description: 提议或修正跨仓库接口、协议与兼容行为。
+body:
+  - type: textarea
+    attributes:
+      label: 接口和使用场景 / Interface and use case
+      description: 接口 ID、生产者/消费者，以及具体请求和响应。
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 兼容与失败行为 / Compatibility and failure handling
+      description: 旧版本、权限、时效、重试、存储及错误处理。
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 实现与验证 / Implementations and validation
+      description: 受影响仓库、实现链接和可执行样例；不要填写真实凭据。
