@@ -150,7 +150,7 @@ X-IoTCloud-Confirm: full-to-hub
 {"request_id":"web_124","action":"co2_source.set","params":{"source":"mqtt","device_id":"123456abcdef","double_click":"switch_display","revision":0}}
 ```
 
-禁止选择自身设备；`local` 必须清空 `device_id`。修订不匹配返回 `conflict`，成功返回递增后的配置。OTA、配置重启或 Wi-Fi 试连接占用时返回 `busy`；持久化失败不发布新配置。修改后清除旧来源缓存，等待新数据。
+禁止选择自身设备；`local` 必须清空 `device_id`。修订不匹配返回 `conflict`，成功返回递增后的配置。OTA、配置重启或 Wi-Fi 试连接占用时返回 `busy`；请求失败时保留当前 RAM 配置，Flash 提交结果按[存储说明](configuration.md#storage-commit-results)判断。修改后清除旧来源缓存，等待新数据。
 
 显示模式、替换位置、阈值和交替周期由 `co2_display.get` / `co2_display.set` 管理。显示开关不改变真实甲醛、PM 或 CO₂ 采样。MCU 来源与按钮规则见 [显示源](m1-display.md)。
 
@@ -223,7 +223,7 @@ GET 的配置字段仍在根：revision、selected_source、double_click、lanes
 
 配置保存后独立 GET 核对 revision 和完整配置；数值写入后再 GET 核对该路 valid/value/unit/租期，MCU 确认仍须独立 UART 查询。旧 MCU 可保留 desired 配置，但不得声称双路已生效。失效不改持久选择，仅恢复对应原始读数；没有可靠离线事件时按 TTL 失效，不伪造 offline 判断。
 
-成功的新 SET 持久选择 dual；成功旧 CO₂ SET 选择 legacy并保留双路配置。profile 与配置同笔保存；CAS冲突、busy或storage_error完整回滚，不产生半路更新或失败后切换。两路配置追加到 M1 存储v9，v8迁移与备份兼容见[配置说明](configuration.md#m1-display-storage-v9)。
+成功的新 SET 持久选择 dual；成功旧 CO₂ SET 选择 legacy并保留双路配置。profile 与配置同笔保存；CAS冲突或busy不提交候选配置。`accepted` / `storage_error` 遵循[存储提交结果](configuration.md#storage-commit-results)，不能仅凭 `storage_error` 断言 Flash 已回滚。两路配置追加到 M1 存储v9，v8迁移与备份兼容见[配置说明](configuration.md#m1-display-storage-v9)。
 
 ## M1 传感器提醒
 
@@ -233,7 +233,7 @@ GET 的配置字段仍在根：revision、selected_source、double_click、lanes
 {"request_id":"web_alarm_1","action":"alarm.set","params":{"sensor":"pm25","yellow":75,"red":150,"revision":0,"buzzer_enabled":false}}
 ```
 
-成功持久保存后返回 `accepted` 及递增后的完整配置。修订不匹配、修订达到上限或运行时被占用返回 `busy`；存储失败返回 `storage_error` 并完整回滚。阈值单位保持 `main_controller_raw_u16`，不能根据传感器名称擅自换算。旧配置或未知扩展 schema 的两个期望蜂鸣器开关均按默认 OFF 迁移，保留原阈值和修订号。
+成功持久保存后返回 `accepted` 及递增后的完整配置。修订不匹配、修订达到上限或运行时被占用返回 `busy`；存储失败返回 `storage_error`，其可确认故障与提交结果不确定的区别见[存储说明](configuration.md#storage-commit-results)。阈值单位保持 `main_controller_raw_u16`，不能根据传感器名称擅自换算。旧配置或未知扩展 schema 的两个期望蜂鸣器开关均按默认 OFF 迁移，保留原阈值和修订号。
 
 | `alarm.get` 数据字段 | 含义 |
 | --- | --- |

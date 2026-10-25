@@ -29,11 +29,21 @@ DAIKIN uses a separate JSON envelope with `schema`, `model`, `variant`, `firmwar
 
 Append dual configuration after the v8 payload without moving its prefix or CO₂ fields. Migrating v8 preserves ordinary settings, legacy CO₂, thresholds, buzzer choices, automation and revisions. Keep legacy profile active; new lanes default to none without RAM leases. Only explicit new SET enables dual.
 
-A full v8 backup is an explicit compatibility exception: validate original model/variant, exact v8 length, CRC and legacy semantics before bounded migration into v9 with an initialized tail. V9 backups still require exact v9 length and semantics; reject unknown future versions. Persist profile/settings together with complete rollback on failure. Leased API values and remaining lifetimes are excluded from backups.
+A full v8 backup is an explicit compatibility exception: validate original model/variant, exact v8 length, CRC and legacy semantics before bounded migration into v9 with an initialized tail. V9 backups still require exact v9 length and semantics; reject unknown future versions. Persist profile/settings together and interpret the result using the commit boundaries below. Leased API values and remaining lifetimes are excluded from backups.
+
+<a id="storage-commit-results"></a>
+
+## MiCO storage commit results
+
+These rules apply to TC1 / A1 / M1 development implementations with the transactional storage fix. CAS conflicts or `busy` reject the candidate before writing. For an update from a valid stored configuration, if the candidate is confirmed uncommitted, `storage_error` restores the old RAM configuration and preserves at least one valid copy of the old configuration.
+
+Once the complete primary contents and its CRC commit record are confirmed, the configuration is committed: return `accepted` and retain the new RAM configuration. A failure refreshing the secondary copy leaves the result accepted. Acceptance does not guarantee that both copies are healthy.
+
+Persistent read failures after writing the commit record can leave the result indeterminate. Return the existing `storage_error` and restore old RAM settings, but Flash may contain the old or new configuration. Lock further writes for this boot, enter read-only recovery with `migration_state=confirmation_required`, and preserve readable copies. Ordinary GET reads RAM and cannot prove Flash rollback. After reboot successfully completes configuration reads and any required copy repair, independently GET and compare revision and full configuration. This adds no error code or automatic rewrite of old settings.
 
 ## Recovery mode
 
-`config.get.migration_state` is `ready` or `confirmation_required`. The latter means recoverable provisioning is using RAM defaults while original storage awaits user action. Show explicit confirmation before clearing. Ordinary settings and background tasks must not overwrite original Flash in recovery mode.
+`config.get.migration_state` is `ready` or `confirmation_required`. The latter indicates configuration recovery: provisioning may use RAM defaults, or an indeterminate commit may preserve old RAM settings as described above. Clearing original storage still requires explicit confirmation. Ordinary settings and background tasks must not overwrite original Flash in recovery mode.
 
 ## Language
 
