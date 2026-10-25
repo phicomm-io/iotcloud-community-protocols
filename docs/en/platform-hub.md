@@ -2,11 +2,15 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/platform-hub/)
 
-Hub contracts are **implemented-unreleased**: they describe development source, without a new v1 firmware release or acceptance of Apple Home pairing, physical outputs or long-running operation. Registry paths beginning `firmware/` identify the [firmware repository](https://github.com/phicomm-io/phicomm-community-firmware). Consumers pin this specification through `protocols.lock.json` and record the implementation commit separately at delivery.
+Hub contracts are **implemented-unreleased**: they describe development source, without a new v1 firmware release or acceptance of Apple Home pairing, physical outputs or long-running operation. Registry paths beginning `firmware/` identify the [firmware repository](https://github.com/phicomm-io/iotcloud-community-firmware). Consumers pin this specification through `protocols.lock.json` and record the implementation commit separately at delivery.
 
 ## Shared platform integration
 
 The frontend uses `apiOrigin` and `mqttWS`. Shared endpoints include `/api/auth/login`, `me`, `logout`, `password`, `mqtt-password`, `/api/devices` and `/api/integrations/bemfa`. Cloud platforms may provide cookies, Bearer and cross-origin access. The hub described below provides same-origin HTTP and Bearer sessions; cloud cookies and administrator permissions do not apply.
+
+New cloud primary account names and MQTT aliases must match `^[A-Za-z0-9_.-]{3,32}$`, preserving case. Only these ASCII characters are accepted, so 3–32 characters occupy 3–32 bytes. Reject the `__` prefix and configured bootstrap/Broker administrator names. Apply the same rule to new accounts through `POST /api/register`, `POST /api/admin/users`, `POST /api/auth/github/complete` and new MQTT aliases through `PUT /api/auth/alias`. Invalid names return HTTP 400 with stable `code` / `message_key` `e.1ef6a7c0d805` before account/database/Broker changes.
+
+Verified email login aliases use the platform's email format and a separate limit of 254 bytes. They do not create MQTT principals; a 255-byte email returns HTTP 400 `e.132431225954`. Existing primary names longer than 32 bytes remain unchanged and retain password and previously linked GitHub login; they may add a short MQTT alias. Clients must not truncate or rename existing accounts. The hub's local owner follows its own character rule below.
 
 Platform HTTP selects `en` / `zh-CN` through `Accept-Language`, defaulting to `zh-CN` when absent or unrecognized. Responses include `Content-Language` and `Vary: Accept-Language`. Error `error` and success `message` fields are translated text; stable `code` / `message_key` values do not change with language. Success responses may add `message_key`. Clients branch on stable fields and preserve user-authored account/device names.
 
@@ -55,8 +59,10 @@ Apart from the documented setup/public endpoints, these require a local session.
 | WebSocket | `ws://<host>:9001/mqtt`, WebSocket 13, subprotocol `mqtt` |
 | MQTT | 3.1.1; Clean Session, nonempty client ID, username and password required; QoS 0/1 publication and QoS 0 subscription grants; no TLS or persistent sessions |
 | Authentication | Owner's MQTT password; initially the account password, independently changeable |
-| Limits | 8 connections, 24 subscriptions/client, 256-byte topics, 8192-byte packet/message boundary, at most 128 retained entries totaling 49152 bytes |
+| Limits | 8 connections, 24 subscriptions/client, 512-byte topics, 8192-byte packet/message boundary, at most 128 retained entries totaling 49152 bytes |
 | Shared budgets | Receive 24576, wills 4096, subscription strings 8192 bytes; refuse/close on exhaustion, without offline-delivery guarantees |
+
+Topic and subscription-filter lengths count UTF-8 bytes, excluding NUL terminators and the MQTT two-byte length prefix. Exactly 512 bytes is valid; 513 bytes is rejected. Longer individual topics do not increase any shared storage budget.
 
 TMCP publication/delivery is restricted to `phicomm/v2/u_<username-UTF8-hex>/...`. Wildcard delivery still checks the actual topic. Authenticated owners may use non-`phicomm/v2/` topics for HA and custom routes. This is one owner's trusted LAN Broker, without per-device credentials or registered-MAC ACLs. Registration/deletion affects management, Bemfa and HomeKit; it does not revoke other MQTT clients' access to the same owner's namespace.
 
@@ -68,7 +74,7 @@ LWT, wildcard subscriptions and retained messages obey these permissions. Retain
 {"enabled":true,"mqtt":{"host":"broker.lan","port":1883,"user":"upstream","password":"upstream-password"},"mappings":[{"direction":"out","local_topic":"home/local","remote_topic":"home/remote","retain":true,"allow_retained":false}]}
 ```
 
-PUT requires `enabled` and `mappings`, at most eight routes. Optional `mqtt` requires `host`, `port`, `user`; omitted `password` preserves the saved value. GET exposes only `password_set`. Use concrete topics without `+`, `#` or NUL. Unique source keys are remote topic for `in`, local topic for `out`. TMCP local topics must belong to the owner.
+PUT requires `enabled` and `mappings`, at most eight routes. Optional `mqtt` requires `host`, `port`, `user`; omitted `password` preserves the saved value. GET exposes only `password_set`. Use concrete topics of 1–512 UTF-8 bytes without `+`, `#` or NUL. Unique source keys are remote topic for `in`, local topic for `out`. TMCP local topics must belong to the owner.
 
 - `out` forwards local/internal publications upstream. Its retained flag is the intersection of publication retained and route `retain`.
 - `in` injects upstream events locally. Reject upstream retained unless `allow_retained:true`; the local retained flag follows route `retain`.

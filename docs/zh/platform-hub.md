@@ -2,11 +2,15 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/platform-hub/)
 
-本页的中枢接口状态为 **implemented-unreleased**：对应开发实现，尚未发布新的 v1 固件，也不代表 Apple Home 配对、物理输出或长期运行已经验收。接口索引中的 `firmware/` 路径对应 [固件仓库](https://github.com/phicomm-io/phicomm-community-firmware)，由实现仓库的 `protocols.lock.json` 固定本规范提交；交付时另记录实际实现提交。
+本页的中枢接口状态为 **implemented-unreleased**：对应开发实现，尚未发布新的 v1 固件，也不代表 Apple Home 配对、物理输出或长期运行已经验收。接口索引中的 `firmware/` 路径对应 [固件仓库](https://github.com/phicomm-io/iotcloud-community-firmware)，由实现仓库的 `protocols.lock.json` 固定本规范提交；交付时另记录实际实现提交。
 
 ## 管理平台接入面
 
 共享前端使用 `apiOrigin` 和 `mqttWS`。账户 API 包括 `/api/auth/login`、`me`、`logout`、`password`、`mqtt-password`、`/api/devices` 和 `/api/integrations/bemfa`。云平台可使用 Cookie、Bearer 和跨域配置；以下中枢只提供同源 HTTP 与 Bearer 会话，不能套用云平台的 Cookie 或管理权限。
+
+云端新建主账号名与 MQTT alias 必须匹配 `^[A-Za-z0-9_.-]{3,32}$`，保留大小写。只允许上述 ASCII 字符，3–32 个字符即 3–32 字节；拒绝 `__` 前缀和已配置的初始化/Broker 管理员名。`POST /api/register`、`POST /api/admin/users`、`POST /api/auth/github/complete` 的新建账号，以及 `PUT /api/auth/alias` 的新 MQTT alias 使用同一规则。无效名称在账户/数据库/Broker 变更前返回 HTTP 400，稳定 `code` / `message_key` 为 `e.1ef6a7c0d805`。
+
+已验证邮箱的登录 alias 独立检查平台邮箱格式和 254 字节上限，不创建 MQTT principal；255 字节邮箱返回 HTTP 400 `e.132431225954`。既有超过 32 字节的主账号原样保留，仍可使用密码或已绑定的 GitHub 登录，也可增加短 MQTT alias。客户端不得截断或改名旧账号；中枢本地 owner 使用下文的独立字符规则。
 
 平台 HTTP 按 `Accept-Language` 选择 `en` / `zh-CN`，未指定或无法识别时默认 `zh-CN`；响应携带 `Content-Language` 和 `Vary: Accept-Language`。错误响应的 `error` 与成功响应的 `message` 是可翻译文本，稳定的 `code` / `message_key` 不随语言改变；成功响应可选附加 `message_key`。客户端按稳定字段判断结果，不匹配译文，也不翻译用户名、设备名等用户原文。
 
@@ -55,8 +59,10 @@ HTTP 检查 Host 为设备 IP、AP IP 或 `daikin-<device_id>.local`；携带 Or
 | WebSocket | `ws://<host>:9001/mqtt`，WebSocket 13，子协议 `mqtt` |
 | MQTT | 3.1.1，必须 Clean Session、非空 client ID、用户名与密码；发布 QoS 0/1，订阅授予 QoS 0；不提供 TLS 或持久会话 |
 | 认证 | 本地 owner 的 MQTT 密码；初始与账户密码相同，可独立修改 |
-| 上限 | 8 连接；每连接 24 订阅；主题 256 字节；包/消息边界 8192 字节；retained 最多 128 条、总计 49152 字节 |
+| 上限 | 8 连接；每连接 24 订阅；主题 512 字节；包/消息边界 8192 字节；retained 最多 128 条、总计 49152 字节 |
 | 共享预算 | 接收 24576、遗嘱 4096、订阅字符串 8192 字节；超限拒绝或关闭连接，不保证离线投递 |
+
+主题与订阅过滤器按 UTF-8 字节计长，不计 NUL 终止符和 MQTT 的两字节长度前缀。512 字节有效，513 字节拒绝；单条主题变长不增加任何共享存储预算。
 
 TMCP 发布/投递限于 `phicomm/v2/u_<用户名UTF8十六进制>/...`；通配订阅投递时仍检查实际主题。非 `phicomm/v2/` 主题对已认证 owner 开放，供 HA 与自定义路由使用。这里是一个账户的可信 LAN Broker，不提供逐设备凭据或按登记 MAC 的 ACL；登记/删除用于管理列表、Bemfa 和 HomeKit，不撤销同 owner 下其他 MQTT 客户端的命名空间权限。
 
@@ -68,7 +74,7 @@ TMCP 发布/投递限于 `phicomm/v2/u_<用户名UTF8十六进制>/...`；通配
 {"enabled":true,"mqtt":{"host":"broker.lan","port":1883,"user":"upstream","password":"upstream-password"},"mappings":[{"direction":"out","local_topic":"home/local","remote_topic":"home/remote","retain":true,"allow_retained":false}]}
 ```
 
-PUT 的 `enabled` 与 `mappings` 必填，最多八条；可选 `mqtt` 要求 `host`、`port`、`user`，`password` 省略则保留。GET 只返回 `password_set`。主题必须为具体主题，禁止 `+`、`#` 和 NUL。`in` 的唯一来源键为 remote topic，`out` 为 local topic；不能重复。TMCP local topic 必须属于 owner。
+PUT 的 `enabled` 与 `mappings` 必填，最多八条；可选 `mqtt` 要求 `host`、`port`、`user`，`password` 省略则保留。GET 只返回 `password_set`。主题必须为 1–512 个 UTF-8 字节的具体主题，禁止 `+`、`#` 和 NUL。`in` 的唯一来源键为 remote topic，`out` 为 local topic；不能重复。TMCP local topic 必须属于 owner。
 
 - `out`：本地/内部发布到上游；保留位为原发布 retained 与规则 `retain` 的交集。
 - `in`：上游到本地；上游 retained 默认拒绝，只在 `allow_retained:true` 时允许；写入本地的保留位由规则 `retain` 决定。

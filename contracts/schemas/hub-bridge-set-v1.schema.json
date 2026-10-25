@@ -35,7 +35,7 @@
           "local_topic": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 256,
+            "maxLength": 512,
             "not": {
               "pattern": "[\u0000+#]"
             },
@@ -44,7 +44,7 @@
           "remote_topic": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 256,
+            "maxLength": 512,
             "not": {
               "pattern": "[\u0000+#]"
             },

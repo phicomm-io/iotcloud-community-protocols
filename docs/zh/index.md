@@ -21,10 +21,10 @@
 
 | 仓库 | 职责 |
 | --- | --- |
-| [phicomm-community-firmware](https://github.com/phicomm-io/phicomm-community-firmware) | Wi-Fi 固件、设备接口、配置迁移、OTA、中枢 |
+| [iotcloud-community-firmware](https://github.com/phicomm-io/iotcloud-community-firmware) | Wi-Fi 固件、设备接口、配置迁移、OTA、中枢 |
 | [phicomm_m1_mcu_atsamd20](https://github.com/phicomm-io/phicomm_m1_mcu_atsamd20) | M1 传感器 MCU、显示、按键与主控升级 |
-| [phicomm-community-frontend](https://github.com/phicomm-io/phicomm-community-frontend) | 设备 WebUI、管理平台前端与演示 |
-| [phicomm-community-mqtt](https://github.com/phicomm-io/phicomm-community-mqtt) | 云账户、设备登记、Broker 权限与平台 API |
+| [iotcloud-community-frontend](https://github.com/phicomm-io/iotcloud-community-frontend) | 设备 WebUI、管理平台前端与演示 |
+| [iotcloud-community-mqtt](https://github.com/phicomm-io/iotcloud-community-mqtt) | 云账户、设备登记、Broker 权限与平台 API |
 | [phicomm-io.github.io](https://github.com/phicomm-io/phicomm-io.github.io) | 使用指南、下载与用户入口 |
 
 接口定义以本仓库的固定提交为准，设备使用说明在项目主页维护。文档中的设备 ID、用户名和数值均为示例。

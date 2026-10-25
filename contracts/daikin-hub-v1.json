@@ -29,10 +29,13 @@
     "clean_session_required": true,
     "max_clients": 8,
     "max_subscriptions_per_client": 24,
-    "topic_bytes": 256,
+    "topic_bytes": 512,
     "packet_bytes": 8192,
     "max_retained_messages": 128,
-    "retained_bytes": 49152
+    "retained_bytes": 49152,
+    "receive_bytes": 24576,
+    "will_bytes": 4096,
+    "subscription_bytes": 8192
   },
   "routes": {
     "max_routes": 8,

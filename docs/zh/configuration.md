@@ -43,4 +43,6 @@ v1 开发约定使用 `/ota/v1/<model>/<variant>/latest.json`。旧路径在正�
 
 OTA 选择必须同时核对机型、variant、签名和版本。DAIKIN `hub` 是独立中枢版本，不能由普通 `full` 自动跨变体升级。浏览器直接读取并校验发布差异；不可用时说明原因并要求额外确认。
 
+声明 `ota_variant_conversion:"full-to-hub"` 的 DAIKIN `full` 开发固件可使用独立的[显式签名转换接口](device-http.md#daikin-full-hub)。普通签名/未签名 OTA 仍保持同 variant；转换不改分区表，且不支持 `hub` → `full`。
+
 Wi-Fi 固件、传感器 MCU 和前端制品分别记录版本。固件使用完整提交与 SHA-256 固定的前端发布制品；构建或 UART 接收成功不代表新固件已经运行。
