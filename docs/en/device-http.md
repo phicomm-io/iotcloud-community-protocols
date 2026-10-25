@@ -148,7 +148,7 @@ Write all four configuration fields through `co2_source.set`, including the late
 {"request_id":"web_124","action":"co2_source.set","params":{"source":"mqtt","device_id":"123456abcdef","double_click":"switch_display","revision":0}}
 ```
 
-Reject the device's own ID; `local` requires an empty ID. A stale revision returns `conflict`; success returns the incremented revision. OTA, pending reboot or Wi-Fi trial may return `busy`. Persistence failure does not publish a new configuration. Changing source clears cached remote data.
+Reject the device's own ID; `local` requires an empty ID. A stale revision returns `conflict`; success returns the incremented revision. OTA, pending reboot or Wi-Fi trial may return `busy`. A failed request preserves the current RAM configuration; interpret the Flash outcome using [storage commit results](configuration.md#storage-commit-results). Changing source clears cached remote data.
 
 `co2_display.get` / `co2_display.set` manage mode, position, thresholds and interval. Display overrides do not modify physical HCHO, PM or CO₂ measurements. See [display sources](m1-display.md) for MCU behavior and button priority.
 
@@ -221,7 +221,7 @@ With `valid=true`, value, age and encoded fields are present, the remaining leas
 
 After saving, independently GET and compare revision/full configuration. After writing a value, GET and compare that lane's valid/value/unit/lease; MCU confirmation still requires independent UART queries. Old MCUs may retain desired settings without claiming dual control. Expiry preserves desired selection and restores only the affected position. Without reliable offline events, use TTL rather than inventing offline detection.
 
-Successful new SET persistently selects dual. Successful legacy CO₂ SET selects legacy and preserves dual configuration. Commit profile/settings together; conflicts, busy and storage_error roll back completely. Dual configuration appends M1 storagev9; see [v8 migration and backups](configuration.md#m1-display-storage-v9).
+Successful new SET persistently selects dual. Successful legacy CO₂ SET selects legacy and preserves dual configuration. Commit profile/settings together; CAS conflicts or busy do not commit the candidate. Interpret `accepted` / `storage_error` using [storage commit results](configuration.md#storage-commit-results); `storage_error` alone does not prove Flash rollback. Dual configuration appends M1 storagev9; see [v8 migration and backups](configuration.md#m1-display-storage-v9).
 
 ## M1 sensor reminders
 
@@ -231,7 +231,7 @@ Successful new SET persistently selects dual. Successful legacy CO₂ SET select
 {"request_id":"web_alarm_1","action":"alarm.set","params":{"sensor":"pm25","yellow":75,"red":150,"revision":0,"buzzer_enabled":false}}
 ```
 
-Successful persistence returns `accepted` and the full configuration with incremented revision. Revision mismatch, exhausted revision or occupied runtime returns `busy`; storage failure returns `storage_error` and rolls back completely. Threshold units remain `main_controller_raw_u16`; do not infer unit conversions from sensor names. Old configurations and unknown extension schemas migrate both desired buzzer switches to default OFF while preserving thresholds and revision.
+Successful persistence returns `accepted` and the full configuration with incremented revision. Revision mismatch, exhausted revision or occupied runtime returns `busy`; storage failure returns `storage_error`. See [storage commit results](configuration.md#storage-commit-results) for confirmed failures versus indeterminate commits. Threshold units remain `main_controller_raw_u16`; do not infer unit conversions from sensor names. Old configurations and unknown extension schemas migrate both desired buzzer switches to default OFF while preserving thresholds and revision.
 
 | `alarm.get` data field | Meaning |
 | --- | --- |
