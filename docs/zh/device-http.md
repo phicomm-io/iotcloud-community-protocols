@@ -57,3 +57,30 @@ HTTP 和 TMCP 共用动作及 JSON 信封：
 禁止选择自身设备；`local` 必须清空 `device_id`。修订不匹配返回 `conflict`，成功返回递增后的配置。OTA、配置重启或 Wi-Fi 试连接占用时返回 `busy`；持久化失败不发布新配置。修改后清除旧来源缓存，等待新数据。
 
 显示模式、替换位置、阈值和交替周期由 `co2_display.get` / `co2_display.set` 管理。显示开关不改变真实甲醛、PM 或 CO₂ 采样。MCU 来源与按钮规则见 [显示源](m1-display.md)。
+
+## M1 传感器提醒
+
+`alarm.get {}` 读取阈值和可选传感器蜂鸣器开关。`alarm.set` 必须包含 `sensor`（`hcho` / `pm25`）、`yellow`（整数 0..65535）、`red`（整数 1..65535 且不小于 `yellow`）、最近的 `revision`（整数 0..2147483647）；可选 `buzzer_enabled` 必须为 JSON 布尔值，只修改指定传感器，省略则保留原设置。禁止未知字段、字符串/浮点数冒充整数和数值冒充布尔值。
+
+```json
+{"request_id":"web_alarm_1","action":"alarm.set","params":{"sensor":"pm25","yellow":75,"red":150,"revision":0,"buzzer_enabled":false}}
+```
+
+成功持久保存后返回 `accepted` 及递增后的完整配置。修订不匹配、修订达到上限或运行时被占用返回 `busy`；存储失败返回 `storage_error` 并完整回滚。阈值单位保持 `main_controller_raw_u16`，不能根据传感器名称擅自换算。旧配置或未知扩展 schema 的两个期望蜂鸣器开关均按默认 OFF 迁移，保留原阈值和修订号。
+
+| `alarm.get` 数据字段 | 含义 |
+| --- | --- |
+| `revision` | 当前配置修订号 |
+| `hcho_configured` / `pm25_configured` | 对应阈值是否已配置 |
+| `hcho_yellow` / `hcho_red` / `pm25_yellow` / `pm25_red` | 各传感器阈值 |
+| `hcho_buzzer_enabled` / `pm25_buzzer_enabled` | 已持久保存的期望开关，默认 false |
+| `buzzer_supported` / `mcu_alarm_schema` | MCU 能力是否支持，以及 0 / 1 schema |
+| `buzzer_confirmed` | 新鲜独立读回与当前修订、期望位图均一致 |
+| `buzzer_confirmation` | `mcu_readback` / `pending_mcu_readback` / `requires_mcu_upgrade` |
+| `mcu_hcho_buzzer_enabled` / `mcu_pm25_buzzer_enabled` | 实际开关；未知或读回满 15 秒为 null |
+| `mcu_buzzer_mask` | 实际 0..7 位图；未知为 null |
+| `sensor_alarm_active` | MCU 最近轮询的传感器提醒条件；未知为 null，不表示实际声音检测 |
+| `uart_sent` / `confirmation` | 兼容的阈值发送结果；`confirmation` 始终为 `uart_send_only` |
+| `unit` | `main_controller_raw_u16` |
+
+Wi-Fi 端先保存期望值，再按 MCU 能力发送 [OP `14`](m1-uart.md#op-14)，最后独立只读核对；写应答不产生 `buzzer_confirmed:true`。阈值 `uart_sent:true` 同样不代表蜂鸣器读回。旧 MCU 仍可保存期望设置，但 `buzzer_supported:false`、`buzzer_confirmation:"requires_mcu_upgrade"`，实际字段均为 null。客户端应保留“期望 OFF、实际未知”的区别，不宣称关闭成功。

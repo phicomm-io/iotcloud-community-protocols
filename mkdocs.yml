@@ -40,5 +40,5 @@ nav:
       - UART 与能力查询: m1-uart.md
       - 显示源与按钮事件: m1-display.md
   - 平台与中枢:
-      - 平台接口与中枢草案: platform-hub.md
+      - 平台接口与中枢: platform-hub.md
       - Schema 与样例: contracts.md
