@@ -23,6 +23,14 @@ MiCO devices (TC1/A1/M1) use a 104-byte header and a model-specific native paylo
 
 DAIKIN uses a separate JSON envelope with `schema`, `model`, `variant`, `firmware`, `config_version`, `config`. MiCO files and DAIKIN `full` / future `hub` files are not interchangeable. Validate the entire candidate before a single persistence operation; preserve old settings on failure.
 
+<a id="m1-display-storage-v9"></a>
+
+## M1 dual display storagev9
+
+Append dual configuration after the v8 payload without moving its prefix or CO₂ fields. Migrating v8 preserves ordinary settings, legacy CO₂, thresholds, buzzer choices, automation and revisions. Keep legacy profile active; new lanes default to none without RAM leases. Only explicit new SET enables dual.
+
+A full v8 backup is an explicit compatibility exception: validate original model/variant, exact v8 length, CRC and legacy semantics before bounded migration into v9 with an initialized tail. V9 backups still require exact v9 length and semantics; reject unknown future versions. Persist profile/settings together with complete rollback on failure. Leased API values and remaining lifetimes are excluded from backups.
+
 ## Recovery mode
 
 `config.get.migration_state` is `ready` or `confirmation_required`. The latter means recoverable provisioning is using RAM defaults while original storage awaits user action. Show explicit confirmation before clearing. Ordinary settings and background tasks must not overwrite original Flash in recovery mode.

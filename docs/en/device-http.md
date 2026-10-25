@@ -152,6 +152,77 @@ Reject the device's own ID; `local` requires an empty ID. A stale revision retur
 
 `co2_display.get` / `co2_display.set` manage mode, position, thresholds and interval. Display overrides do not modify physical HCHO, PM or CO₂ measurements. See [display sources](m1-display.md) for MCU behavior and button priority.
 
+<a id="m1-dual-display-api"></a>
+
+## M1 dual user display API
+
+Development contract `m1-display-v2` adds `display_source.get {}`, `display_source.set` and `display_data.set`. Require these actions in `capabilities.actions`; their presence does not prove sensor MCU support. `mcu.version.get` adds `display_source_schema` (2 or 0) and `dual_display_source_supported`. Existing `display_source_supported` still means scalar schema1. Control also requires [dual negotiation and readback](m1-display.md).
+
+`display_source.set` replaces both persisted lane configurations with the latest revision. slot0 is HCHO, slot1 PM2.5; include each exactly once. Defaults are selected_source=`original`, double_click=`none`; each lane uses source=`none`, device_id=`""`, metric=`custom`, unit=`""`, decimals0, scale1, ttl_seconds20 and color=`{"mode":"fixed","value":"off"}`.
+
+```json
+{"request_id":"display_cfg_1","action":"display_source.set","params":{"revision":0,"selected_source":"user","double_click":"switch_display","lanes":[{"slot":0,"source":"mqtt","device_id":"001122334455","metric":"power","unit":"W","decimals":2,"scale":1000,"ttl_seconds":15,"color":{"mode":"thresholds","low":100,"high":1000}},{"slot":1,"source":"api","device_id":"","metric":"custom","unit":"%","decimals":1,"scale":1,"ttl_seconds":10,"color":{"mode":"fixed","value":"green"}}]}}
+```
+
+| Configuration field | Rule |
+| --- | --- |
+| `revision` | Strict JSON integer 0..2147483647, compare-and-swap; advances on success |
+| `selected_source` | `original` / `user`, global for both lanes |
+| `double_click` | `none` / `switch_display`; cancel a ringing alarm first without toggling |
+| `lanes[].source` | `none` / `local` / `mqtt` / `api`; none always retains original readings |
+| `device_id` | mqtt requires an external lowercase 12-hex ID in the same account, excluding self; otherwise empty |
+| `metric`, `unit` | Fixed pairs below; custom only for api/none, and none requires custom with empty unit |
+| `decimals`, `scale` | Integers 0..2 and 1 or1000; display `value / scale`, without changing physical units or alarms |
+| `ttl_seconds` | Integer1..60 maximum data lifetime; physical sources retain stricter freshness limits |
+| `color` | fixed requires value off/red/green/yellow; thresholds requires finite low<high, comparing unscaled values for green/yellow/red |
+
+| Metric | Unit | Sources and range |
+| --- | --- | --- |
+| `temperature` | `°C` | local/mqtt/api; physical -40..125, negative values cannot render in generic positions and fall back |
+| `humidity` | `%` | local/mqtt/api; 0..100 |
+| `pm25`, `formaldehyde` | `µg/m³`, `mg/m³` | local/mqtt/api; finite, nonnegative |
+| `co2` | `ppm` | local/mqtt/api; 1..65535, local requires real SCD40 support |
+| `pressure` | `Pa` | local/mqtt/api; finite, nonnegative; numerically convert centi-Pa/hPa before labeling Pa |
+| `power`, `energy` | `W`, `kWh` | mqtt/api; finite, nonnegative; current new TC1 feed publishes power only, without claiming energy |
+| `tvoc`, `pm10` | `ppb`, `µg/m³` | mqtt/api; finite, nonnegative, according to actual producer fields |
+| `fan_speed_percent` | `%` | A1 mqtt or api; finite0..100; A1 effective main-fan output percentage, not measured RPM, including fresh-air variants |
+| `custom` | Allowlist | api only; unit is `""`, `°C`, `%`, `µg/m³`, `mg/m³`, `ppm`, `Pa`, `W`, `kWh` or `ppb` |
+
+Local means this M1, permitting only climate, PM2.5, HCHO, CO₂ and pressure. Missing capability or fresh samples makes it invalid. MQTT consumes only the same-account [typed feed](mqtt.md#sensor-values-v1), never arbitrary topics, URLs or JSONPath. none permits only custom/empty unit and is not writable. Reject unknown fields, wrong types, mismatching units, duplicate slots and low>=high.
+
+Each lane has three nonnegative digits; encoding outside0..999 restores only that lane. Firmware derives native legends from the real slot, metric, unit and scale1. The glass has no selectable W, ℃ or % glyphs. Clients must explain logical units and scale; see [representation limits](m1-display.md#display-representation).
+
+`display_data.set` leases RAM data only to a lane configured as api. Require matching configuration revision/unit and TTL no greater than its configured limit. Optional color directly overrides this lease. A value write requires value, unit and1..60-second TTL. Clearing has a separate shape without fake zero:
+
+```json
+{"request_id":"display_value_1","action":"display_data.set","params":{"revision":1,"slot":1,"value":45.6,"unit":"%","ttl_seconds":10,"color":"yellow"}}
+{"request_id":"display_clear_1","action":"display_data.set","params":{"revision":1,"slot":1,"ttl_seconds":0}}
+```
+
+Both use existing HTTP Basic or authorized MQTT command authentication; reject retained commands. Repeating request_id returns the existing result without renewing a lease. Public sensor fields cannot write api lanes. Values/leases never persist to Flash or replay after reboot. `accepted` is not display confirmation.
+
+GET keeps configuration at the root: revision, selected_source, double_click, lanes. Read-only `runtime` is separate and must not be sent back to SET:
+
+| Runtime field | Meaning |
+| --- | --- |
+| `profile` | Active `legacy` / `dual` scheduler |
+| `selected_source` | Actual original/user selection including a double-click RAM override, rebuilt on configuration change or reboot |
+| `mcu_supported` | Explicit dual schema2 negotiation, beyond scalar support |
+| `confirmed`, `confirmation` | Fresh independent MCU readback matches; `mcu_readback`, `pending_mcu_readback` or `requires_mcu_upgrade` |
+| `lanes[].slot/valid/value/unit` | Resolved reading per position; unknown/invalid value is null |
+| `age_ms`, `remaining_ttl_seconds` | Sample age or null; remaining0..60 seconds |
+| `effective`, `reason` | Eligibility for user overlay; reason ok/disabled/missing/stale/offline/invalid/out_of_range/unsupported |
+| `number/format/color` | Encoded output or null; color is a string enum |
+| `confirmed` | This lane matches an independent MCU query, without optical LCD proof |
+
+Global `confirmed` is true exactly when `profile=dual`, the MCU is supported and both lanes are confirmed; `confirmation` is then `mcu_readback`. A confirmed clear may have `valid=false` and zero remaining lease: value validity and confirmation are separate.
+
+With `valid=true`, value, age and encoded fields are present, the remaining lease is positive and `reason=ok`. Otherwise value and encoded fields are null and the remaining lease is zero. `effective=true` also requires this lane's MCU readback to be confirmed.
+
+After saving, independently GET and compare revision/full configuration. After writing a value, GET and compare that lane's valid/value/unit/lease; MCU confirmation still requires independent UART queries. Old MCUs may retain desired settings without claiming dual control. Expiry preserves desired selection and restores only the affected position. Without reliable offline events, use TTL rather than inventing offline detection.
+
+Successful new SET persistently selects dual. Successful legacy CO₂ SET selects legacy and preserves dual configuration. Commit profile/settings together; conflicts, busy and storage_error roll back completely. Dual configuration appends M1 storagev9; see [v8 migration and backups](configuration.md#m1-display-storage-v9).
+
 ## M1 sensor reminders
 
 `alarm.get {}` reads thresholds and optional sensor-buzzer switches. `alarm.set` requires `sensor` (`hcho` / `pm25`), `yellow` (integer 0..65535), `red` (integer 1..65535 and at least `yellow`), and the latest `revision` (integer 0..2147483647). Optional `buzzer_enabled` must be a JSON boolean and changes only the selected sensor; omission preserves its setting. Reject unknown fields, strings/floats in integer fields and numbers in boolean fields.

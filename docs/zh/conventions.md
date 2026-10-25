@@ -31,3 +31,5 @@ MQTT 重试复用原 `request_id` 和内容；用新编号发送可能再次执�
 各实现仓库以 `protocols.lock.json` 固定本仓库的完整提交和 `contracts/registry.json` 的 SHA-256。前端发布仍使用独立的 `frontend.lock.json` 固定不可变制品；协议锁不能替代前端制品锁。
 
 提交协议变更时同步正文、Schema、正反样例和实现关联。自动检查覆盖格式、边界和示例；涉及显示段、按键、恢复和资源预算的变更还需对应的硬件验证。工作分支、文档发布和固件正式发布各自独立。
+
+协议锁的 contracts 列表说明实际角色和消费分支，不能将归档合同当成同时满足的生产声明。例如MCU新producer完整能力应答D13=2，使用m1-uart-v3替换强制D13=0的v2；仍可保留兼容的display-v1/buttons/alarm合同。Wi-Fi consumer确实按D13=0/2协商旧/新分支时，可以同时列v2/v3；前端保留旧消费合同也不意味着它生产UART应答。实现PR应说明各ID对应的角色/分支。

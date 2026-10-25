@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/m1-display-data-set-v2.schema.json",
+  "title": "M1 display_data.set leased API value or explicit clear",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "slot",
+        "ttl_seconds"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "slot": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ttl_seconds": {
+          "const": 0,
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "slot",
+        "ttl_seconds",
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "slot": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        },
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {
+          "enum": [
+            "",
+            "°C",
+            "%",
+            "µg/m³",
+            "mg/m³",
+            "ppm",
+            "Pa",
+            "W",
+            "kWh",
+            "ppb"
+          ]
+        },
+        "color": {
+          "enum": [
+            "off",
+            "red",
+            "green",
+            "yellow"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "specification": "1.0.0-dev.2",
+  "specification": "1.0.0-dev.3",
   "repository": "phicomm-io/iotcloud-community-protocols",
   "contracts": [
     {
@@ -262,6 +262,93 @@
       "artifacts": [
         "contracts/schemas/m1-alarm-set-v1.schema.json",
         "contracts/schemas/m1-alarm-state-v1.schema.json"
+      ]
+    },
+    {
+      "id": "m1-uart-v3",
+      "version": 3,
+      "status": "implemented-unreleased",
+      "document": "m1-uart.md",
+      "producers": [
+        "mcu"
+      ],
+      "consumers": [
+        "firmware",
+        "frontend"
+      ],
+      "implementation": [
+        "mcu/src/debug.c",
+        "mcu/src/runtime.c",
+        "mcu/include/m1/runtime.h",
+        "firmware/M1/mcu.c"
+      ],
+      "verification": [
+        "mcu/tests/test_runtime.c"
+      ],
+      "artifacts": [
+        "contracts/m1-uart-v3.json",
+        "contracts/vectors/m1-uart-v3.json"
+      ]
+    },
+    {
+      "id": "m1-display-v2",
+      "version": 2,
+      "status": "implemented-unreleased",
+      "document": "m1-display.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "mcu",
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/M1/display_source.c",
+        "firmware/M1/mcu.c",
+        "firmware/M1/m1.h",
+        "firmware/M1/storage.h",
+        "firmware/M1/main.c",
+        "firmware/common/service_product.inc",
+        "mcu/src/debug.c",
+        "mcu/src/display.c",
+        "mcu/src/runtime.c"
+      ],
+      "artifacts": [
+        "contracts/schemas/m1-display-source-set-v2.schema.json",
+        "contracts/schemas/m1-display-source-state-v2.schema.json",
+        "contracts/schemas/m1-display-data-set-v2.schema.json"
+      ],
+      "verification": [
+        "firmware/tests/test_m1_display_source.py"
+      ]
+    },
+    {
+      "id": "sensor-values-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "mqtt.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "firmware",
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/common/runtime.c",
+        "firmware/M1/display_source.c",
+        "firmware/DAIKIN/src/sessions.inc",
+        "firmware/TC1/mqtt_server/user_mqtt_client.c",
+        "firmware/TC1/user_power.c",
+        "firmware/A1/mqtt.c"
+      ],
+      "artifacts": [
+        "contracts/schemas/sensor-values-v1.schema.json"
+      ],
+      "verification": [
+        "firmware/TC1/tests/test_power_sensor.py",
+        "firmware/A1/tests/test_fan_sensor.py",
+        "firmware/tests/test_m1_display_source.py"
       ]
     }
   ],

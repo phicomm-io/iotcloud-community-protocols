@@ -3,21 +3,47 @@
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 import subprocess
 
 from jsonschema import Draft202012Validator, validators
+from jsonschema.exceptions import ValidationError
 
 ROOT = Path(__file__).resolve().parent.parent
 # JSON-C ingress distinguishes integer tokens from floating-point tokens.
 STRICT_TYPES = Draft202012Validator.TYPE_CHECKER.redefine(
-    "integer", lambda checker, value: type(value) is int)
-Validator = validators.extend(Draft202012Validator, type_checker=STRICT_TYPES)
+    "integer", lambda checker, value: type(value) is int).redefine(
+    "number", lambda checker, value: type(value) is int
+    or (type(value) is float and math.isfinite(value)))
+
+
+def ordered_fields(validator, fields, instance, schema):
+    """Declarative cross-field ordering, which JSON Schema cannot express."""
+    if not isinstance(instance, dict) or len(fields) != 2:
+        return
+    left, right = (instance.get(field) for field in fields)
+    if (type(left) in (int, float) and type(right) in (int, float)
+            and left >= right):
+        yield ValidationError(f"{fields[0]} must be less than {fields[1]}")
+
+
+Validator = validators.extend(Draft202012Validator,
+                             {"x-orderedFields": ordered_fields},
+                             type_checker=STRICT_TYPES)
+
+
+def finite_float(value):
+    number = float(value)
+    if not math.isfinite(number):
+        fail("Non-finite JSON number: " + value)
+    return number
 
 
 def load(path):
-    return json.loads(path.read_text(), parse_constant=lambda value: fail(f"Non-JSON number: {value}"))
+    return json.loads(path.read_text(), parse_float=finite_float,
+                      parse_constant=lambda value: fail(f"Non-JSON number: {value}"))
 
 
 def fail(message):
@@ -134,8 +160,8 @@ def validate_examples():
     print(f"PASS {len(schemas)} schemas and {len(cases)} positive/negative examples")
 
 
-def validate_uart():
-    definition = load(ROOT / "contracts/m1-uart-v1.json")
+def validate_uart_artifact(definition_path, vectors_path):
+    definition = load(definition_path)
     opcodes = set()
     for operation in definition["operations"]:
         if operation["op"] in opcodes:
@@ -156,7 +182,7 @@ def validate_uart():
         for condition in operation.get("conditions", []):
             if (set(condition["when"]) | set(condition["require"])) - names:
                 fail("Conditional constraint references an undefined field")
-    vectors = load(ROOT / "contracts/vectors/m1-uart-v1.json")["vectors"]
+    vectors = load(vectors_path)["vectors"]
     for vector in vectors:
         decoded = None
         try:
@@ -170,7 +196,26 @@ def validate_uart():
         for name, value in vector.get("expected", {}).items():
             if decoded is None or decoded.get(name) != value:
                 fail("Decoded vector mismatch: " + vector["name"])
-    print(f"PASS {len(vectors)} MCU wire vectors and opcode allocation")
+    print(f"PASS {definition_path.name}: {len(vectors)} MCU wire vectors and opcode allocation")
+
+
+def validate_uart():
+    for version in ("v1", "v3"):
+        validate_uart_artifact(ROOT / f"contracts/m1-uart-{version}.json",
+                               ROOT / f"contracts/vectors/m1-uart-{version}.json")
+    legacy = load(ROOT / "contracts/m1-uart-v1.json")
+    dual = load(ROOT / "contracts/m1-uart-v3.json")
+    for key in ("request", "reply", "statuses", "button_event"):
+        if legacy[key] != dual[key]:
+            fail("UART v3 changed legacy frame layout: " + key)
+    for old in legacy["operations"]:
+        new = next(item for item in dual["operations"] if item["op"] == old["op"])
+        if old["op"]:
+            if any(new.get(key) != value for key, value in old.items()):
+                fail("UART v3 redefined a legacy opcode")
+        elif old["arguments"] != new["arguments"] or old["reply"][:-1] != new["reply"][:-1]:
+            fail("UART v3 changed an existing capability field")
+    print("PASS UART v3 preserves legacy operations and adds the D13 capability")
 
 
 def validate_sources(workspace):
