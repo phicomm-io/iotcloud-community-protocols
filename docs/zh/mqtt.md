@@ -68,7 +68,7 @@ M1 只接受已配置来源、本账户的实时消息。忽略 retained 重放�
 | `tvoc` | `ppb` | 有限非负，以实际模块能力为准 |
 | `fan_speed_percent` | `%` | 0..100；A1 当前生效主风机输出 `effective_on ? effective_speed : 0`，对应 status.percentage；不是实测 RPM，fresh-air 变体也不代表新风 RPM |
 
-M1 现有物理 feed 提供温湿度、PM2.5、甲醛与可选 SCD40 CO₂；本地 BMP3 压力可由 M1 resolver 换算为 Pa，但不因此声称旧远端 feed 已有压力。DAIKIN 按模块能力还可提供 PM10/TVOC；消费者须以真实字段和 valid 为准。TC1 未取得实际功率计算样本、样本异常或源年龄满20s时发布 power=null/valid=false；没有新脉冲不能不断把旧功率重标 age0，也不能用启动默认0宣称采样就绪。A1 使用当前生效输出快照，未就绪时同样为 null/false。
+M1 的 local 来源可解析本机温湿度、PM2.5、甲醛与可选 SCD40 CO₂，并将本机 BMP3 压力换算为 Pa。本轮 M1 固件不在通用 `sensor/<device_id>/state` 主题发布这些读数；允许解析合法的 M1 typed 消息，不代表已有对应 producer。DAIKIN 按模块能力还可提供 PM10/TVOC；消费者须以真实字段和 valid 为准。TC1 未取得实际功率计算样本、样本异常或源年龄满20s时发布 power=null/valid=false；没有新脉冲不能不断把旧功率重标 age0，也不能用启动默认0宣称采样就绪。A1 使用当前生效输出快照，未就绪时同样为 null/false。
 
 boot、sequence 为1..4294967295的严格 JSON 整数，不接受字符串或浮点token；发布计数器递增，uint32回绕跳过0。消费者在同boot下用带回绕的顺序比较，重复/倒序不续租；新boot退休旧boot，有限 RAM 缓存拒绝最近退出boot的重放。uint32不能通过有符号32位 JSON 构造错误地输出负数。
 
