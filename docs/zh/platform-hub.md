@@ -18,6 +18,21 @@
 
 HTTPS 页面不能直接连接中枢的 HTTP/WS。中枢前端由自身 `/iotcloud/` 提供，不包含邮箱注册、邮件发送、GitHub 登录、别名或管理员账户。`/api/auth/github/status` 和 `/api/banner` 返回 `enabled:false`。
 
+## 内置控制台与设备接入
+
+在同一局域网打开 `http://<hub>/iotcloud/#/`，即可进入中枢自带 WebUI。首次先在 `http://<hub>/` 设置设备 Web 密码，再在初始化页面创建独立本地 owner：用户名为 3–32 个 ASCII 字母、数字或下划线，密码为 8–63 个 UTF-8 字节。云账户凭据不能登录此本地账户。
+
+分别打开各社区固件设备自身的 WebUI，手动将 MQTT 服务器设为中枢地址、TCP 端口 `1883`，用户名填本地 owner，密码填其 MQTT 密码。初始 MQTT 密码等于 owner 密码；分离修改后使用独立 MQTT 密码。再到中枢控制台的**设置 → 设备**添加设备 MAC 和机型。登记只创建管理记录，不通过 HTTP 改写另一台设备的 MQTT 配置。浏览器控制台使用 `ws://<hub>:9001/mqtt`。
+
+| 集成 | 配置入口 |
+| --- | --- |
+| Home Assistant | Home Assistant 的 MQTT 集成：中枢地址、端口 `1883` 和本地 owner 的 MQTT 凭据 |
+| 上游 MQTT 与显式路由 | 中枢控制台的**设置 → 中枢服务** |
+| 巴法云 | 中枢控制台的**设置 → 巴法云**，为已登记设备配置映射 |
+| HomeKit | 中枢控制台的**设置 → 中枢服务**，在其中启用 HAP 并读取配对状态 |
+
+以上均为已有控制台功能，其账户 API 仍须本地 owner 登录。实现见[内置资源与 API 路由](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/http.inc#L177-L221)、[控制台设置](https://github.com/phicomm-io/iotcloud-community-frontend/blob/c3cd4653174dab604f1ff6549f3d223b522fef86/frontend/src/components/PlatformSettings.vue)与[中枢服务](https://github.com/phicomm-io/iotcloud-community-frontend/blob/c3cd4653174dab604f1ff6549f3d223b522fef86/frontend/src/components/HubSettings.vue)。
+
 ## 本地账户与 HTTP 会话
 
 中枢是独立的 `variant:"hub"`；普通 `full` 仍是传感器版本。首次先设置设备 Web 密码，再以设备 Basic `admin` 认证调用：
@@ -50,6 +65,14 @@ HTTP 检查 Host 为设备 IP、AP IP 或 `daikin-<device_id>.local`；携带 Or
 | `/api/hub/homekit/pairing` | DELETE `{"confirm":true}`，清除配对并安排重启 |
 
 除说明的初始化/公开查询外，以上路径要求本地会话。错误以 `code` 判断：401 `unauthorized`、400 `invalid_params`、409 `conflict`、429 `hub_rate_limited`、503 `storage_error` 或 `busy`。注册设备最多 12 个，机型为 `a1`、`m1`、`tc1`、`daikin`；MAC 是非全零/全 f 的小写 12 位十六进制 ID。
+
+<a id="hub-memory-diagnostics"></a>
+
+## 中枢内存诊断
+
+`status.get {}` 的可选只读字段 `data.hub.free_byte_heap`、`largest_byte_block` 和 `min_byte_heap` 以字节描述内部且可按字节访问的堆，见[字段定义与缺失兼容](device-http.md#hub-byte-addressable-heap)。既有顶层堆字段保留原含义。
+
+Broker 新连接准入也按同一 `MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT` 能力统计空闲总量和最大连续块，不能把全部内部 RAM 都当作字节缓冲区存储。一次状态快照不预留内存，也不保证稍后连接一定成功。实现见[堆统计函数](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/hub.inc#L3-L10)与[准入检查](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/hub.inc#L265-L285)。
 
 ## 本地 MQTT Broker
 
@@ -115,9 +138,16 @@ PUT 使用 `enabled`、`mappings` 和启用时的 `api_key`。空字符串 `api_
 
 只信任本地/内部发布；上游注入和 retained 重放不能确认 HomeKit 操作。设备状态 30 秒内可达，传感器样本总年龄小于 20 秒才可用。失效返回不可用，不填零。风扇/灯同批电源与档位只发送一次修改，显式 off 优先；`light.set` 的 `brightness` 为 0–100%，设备状态为 0–255。控制需匹配成功 TMCP 回执，再通过回执后的新状态/主动 `status.get` 结果确认 applied 状态，等待上限 2.5 秒；不会由请求值乐观更新状态。
 
-配对区只在既定 4 MiB 双 OTA 布局未占用的尾部 `0x3d0000`–`0x3fffff` 使用私有标记与 NVS；不修改安装分区表、不擦默认 NVS、不初始化未知非空数据。初始化或运行中 NVS 读写/提交失败会关闭 HAP 监听和连接，禁止继续配对与控制。工厂重置可清除已识别但损坏的配对区；无法识别的尾部保留，普通配置重置不声称已清除未知数据。
+配对区只在两种明确接受的 4 MiB 双 OTA 布局未占用的尾部 `0x3d0000`–`0x3fffff` 使用私有标记与 NVS：
 
-上述布局是 `firmware/DAIKIN/partitions.csv` 的有线安装布局，每个应用槽 `0x1e0000`（1966080 字节）。原厂设备可能仍为 1.5 MiB 应用槽；当前约 1.91 MB 的 Hub HAP 开发镜像超过原厂槽，不能按该有线布局假定可普通 OTA。构建成功和文件上传均不能证明安装分区兼容，部署前必须核对设备实际分区。
+| 实际安装布局 | OTA 0 地址 / 大小 | OTA 1 地址 / 大小 |
+| --- | --- | --- |
+| 原厂 | `0x10000` / `0x180000`（1572864 字节） | `0x190000` / `0x180000` |
+| 有线安装，`DAIKIN/partitions.csv` | `0x10000` / `0x1e0000`（1966080 字节） | `0x1f0000` / `0x1e0000` |
+
+[存储实现](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/include/hub_home_storage.h#L13-L74)还检查完整的实际分区表：使用默认 Flash、未加密、范围及对齐有效、没有额外应用分区、分区互不重叠且未占用配对尾区。不改写分区表、不擦默认 NVS、不初始化未知非空尾区。初始化或运行中 NVS 读写/提交失败会关闭 HAP 监听和连接，禁止继续配对与控制。工厂重置可清除已识别但损坏的配对区；无法识别的尾部保留，普通配置重置不声称已清除未知数据。
+
+应用 OTA 保留实际分区表，原厂设备仍使用 `0x180000` 槽；通过 `status.ota_partitions` 核对现有布局。面向原厂槽的 Hub 构建，须在固件仓库对该次构建产物运行 `python tools/release/check_esp_budget.py --variant hub --layout stock --output build/hub-stock-budget.json`。[固定版本门槛工具](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/tools/release/check_esp_budget.py)要求应用加 32768 字节预留后仍装得下目标槽，静态 RAM 不超过 98304 字节。较大的构建 CSV 或 `--layout wired` 通过不能证明原厂槽可 OTA。槽容量与上传、协议测试、重启后运行验证和 iPhone 家庭验收须分别核对。
 
 本地 Hub API/MQTT 只接受本地 owner。设备主动配置的原有上游 TMCP 仍可管理中枢本机，包括 `config.set` / `system.reset`；这是另一处管理信任入口，不会获得本地 owner Bearer 会话。HAP 配对码仅在未配对且健康时由本地 owner GET 获取，不进入普通 state、config 或配置备份。
 

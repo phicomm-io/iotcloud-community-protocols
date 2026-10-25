@@ -18,6 +18,21 @@ Administrator `GET /api/admin/verification-emails` may add `detail_key` to `reco
 
 HTTPS pages cannot directly connect to the hub's HTTP/WS services. The hub serves its frontend from `/iotcloud/`. It provides no email registration, mail delivery, GitHub sign-in, aliases or administrator accounts. `/api/auth/github/status` and `/api/banner` return `enabled:false`.
 
+## Embedded console and device setup
+
+On the same LAN, open `http://<hub>/iotcloud/#/` for the hub's embedded WebUI. First set the device Web password at `http://<hub>/`, then create the independent local owner on the setup page: 3–32 ASCII letters, digits or underscores for the username, and 8–63 UTF-8 bytes for the password. Cloud credentials do not sign in to this account.
+
+Open each community device's own WebUI and manually set its MQTT server to the hub's address, TCP port `1883`, the local owner username and its MQTT password. Initially this password equals the owner password; use the separate MQTT password after changing it. Add the device's MAC and model under **Settings → Devices** in the hub console. Registration creates a management record; it does not write MQTT settings to another device over HTTP. The browser console uses `ws://<hub>:9001/mqtt`.
+
+| Integration | Configuration entry |
+| --- | --- |
+| Home Assistant | Home Assistant's MQTT integration: hub address, port `1883` and local owner MQTT credentials |
+| Upstream MQTT and explicit routes | Hub console **Settings → Hub services** |
+| Bemfa | Hub console **Settings → Bemfa**; configure mappings for registered devices |
+| HomeKit | Hub console **Settings → Hub services**; enable HAP and read pairing status there |
+
+These are existing console functions; local owner login remains required for their account APIs. Implementation: [embedded assets and API routes](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/http.inc#L177-L221), [console settings](https://github.com/phicomm-io/iotcloud-community-frontend/blob/c3cd4653174dab604f1ff6549f3d223b522fef86/frontend/src/components/PlatformSettings.vue) and [Hub services](https://github.com/phicomm-io/iotcloud-community-frontend/blob/c3cd4653174dab604f1ff6549f3d223b522fef86/frontend/src/components/HubSettings.vue).
+
 ## Local owner and HTTP sessions
 
 The hub uses the independent `variant:"hub"`; ordinary `full` remains the sensor edition. Set the device Web password first, then use device Basic authentication as `admin`:
@@ -50,6 +65,12 @@ HTTP accepts the device IP, AP IP or `daikin-<device_id>.local` as Host. Writes 
 | `/api/hub/homekit/pairing` | DELETE `{"confirm":true}`, clear pairing and schedule reboot |
 
 Apart from the documented setup/public endpoints, these require a local session. Branch on stable `code`: 401 `unauthorized`, 400 `invalid_params`, 409 `conflict`, 429 `hub_rate_limited`, 503 `storage_error` or `busy`. Register up to 12 devices of model `a1`, `m1`, `tc1` or `daikin`. MACs are lowercase 12-digit hex IDs, excluding all-zero/all-f values.
+
+## Hub memory diagnostics
+
+The optional, read-only `data.hub.free_byte_heap`, `largest_byte_block` and `min_byte_heap` in `status.get {}` describe internal, byte-addressable heap in bytes. See [field definitions and absence compatibility](device-http.md#hub-byte-addressable-heap). Existing top-level heap fields keep their original meanings.
+
+Broker connection admission uses free heap and the largest contiguous block with the same `MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT` capabilities, rather than treating all internal RAM as byte-buffer storage. A status snapshot does not reserve memory or guarantee a later connection. Implementation: [heap helpers](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/hub.inc#L3-L10) and [admission checks](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/hub.inc#L265-L285).
 
 ## Local MQTT Broker
 
@@ -115,9 +136,16 @@ This is the complete `PUT /api/hub/homekit` input. Success returns HTTP 202 `{"c
 
 Trust local/internal publications only. Upstream injection and retained replay cannot confirm a HomeKit operation. Device state must be reachable within 30 seconds; sensor total age must be below 20 seconds. Report unavailable data as unavailable, without substituting zero. Batched fan/light power and level changes cause one mutation, with explicit off taking priority. `light.set` brightness is 0–100%; reported device brightness is 0–255. Controls require a matching successful TMCP receipt followed by a fresh applied snapshot or active `status.get` result, within 2.5 seconds. Requested values never optimistically become reported state.
 
-Pairing storage uses a private marker/NVS only in the unpartitioned tail `0x3d0000`–`0x3fffff` of the known 4 MiB dual-OTA layout. It does not modify the installed partition table, erase default NVS or initialize unknown nonempty data. NVS read/write/commit failure during initialization or runtime closes HAP listeners/sessions and disables pairing/control. Factory reset can erase recognized corrupt pairing storage. Unidentified tail bytes remain untouched; ordinary settings reset does not claim to clear them.
+Pairing storage uses a private marker/NVS only in the unpartitioned tail `0x3d0000`–`0x3fffff` of two explicitly accepted 4 MiB dual-OTA layouts:
 
-This is the wired-install layout in `firmware/DAIKIN/partitions.csv`, with `0x1e0000` (1966080-byte) application slots. Factory devices may still have 1.5 MiB slots. The current approximately 1.91 MB Hub HAP development image exceeds that factory slot; the wired layout does not establish compatibility with ordinary OTA. A successful build or upload does not establish installed partition compatibility. Read the device's actual partition layout before deployment.
+| Installed layout | OTA 0 address / size | OTA 1 address / size |
+| --- | --- | --- |
+| Stock | `0x10000` / `0x180000` (1572864 bytes) | `0x190000` / `0x180000` |
+| Wired install, `DAIKIN/partitions.csv` | `0x10000` / `0x1e0000` (1966080 bytes) | `0x1f0000` / `0x1e0000` |
+
+The [storage implementation](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/include/hub_home_storage.h#L13-L74) checks the complete installed partition table: default Flash, no encryption, aligned valid ranges, no extra application partitions, no overlaps and no partition occupying the pairing tail. It does not rewrite the table, erase default NVS or initialize unknown nonempty tail data. NVS read/write/commit failure during initialization or runtime closes HAP listeners/sessions and disables pairing/control. Factory reset can erase recognized corrupt pairing storage. Unidentified tail bytes remain untouched; ordinary settings reset does not claim to clear them.
+
+Application OTA preserves the installed table, so stock devices retain their `0x180000` slots. Check the actual layout through `status.ota_partitions`. For a stock-targeted Hub build, run `python tools/release/check_esp_budget.py --variant hub --layout stock --output build/hub-stock-budget.json` in the firmware repository against that build's outputs. The [version-pinned gate](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/tools/release/check_esp_budget.py) requires the application plus 32768 bytes of reserve to fit the selected slot and static RAM to stay within 98304 bytes. A larger build CSV or a `--layout wired` pass cannot establish stock OTA compatibility. Slot fit, successful upload and protocol tests are separate from boot/runtime verification and iPhone Home acceptance.
 
 Local Hub API/MQTT accepts only the local owner. The device's explicitly configured native upstream TMCP can still manage the hub device itself, including `config.set` / `system.reset`. This separate management trust entry does not grant a local owner Bearer session. HAP pairing credentials appear only in a healthy unpaired owner GET response, never in ordinary state, config or configuration backups.
 
