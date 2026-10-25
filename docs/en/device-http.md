@@ -58,6 +58,28 @@ Implementation: `otaPartitionStatus()` and `state()` in `firmware/DAIKIN/src/com
 
 Optional sibling status fields `minimum_free_memory` (lowest free heap since boot) and `max_free_block` (largest currently allocatable contiguous heap block) are nonnegative integers in bytes, alongside `free_memory`; clients must handle their absence.
 
+### Reset reason
+
+DAIKIN firmware supporting this diagnostic may include read-only `status.reset_reason`, or `data.reset_reason` in a `status.get {}` reply. It is a nonnegative JSON integer from `unsigned(esp_reset_reason())`, describing the last reset. Older firmware may omit the field; absence means the diagnostic is unavailable.
+
+The following values belong to ESP-IDF 4.4.7's `esp_reset_reason_t` for DAIKIN's ESP32. They are not a shared reset-reason enumeration across device models or SDKs. Preserve unrecognized values as unknown diagnostics. See the [official SDK reference](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/system.html#reset-reason) and [version-pinned enum definition](https://github.com/espressif/esp-idf/blob/38eeba213aa695aabfd6d89aa9f5078dbe5a94c3/components/esp_system/include/esp_system.h#L41-L53).
+
+| Number | SDK enum | Meaning |
+| --- | --- | --- |
+| 0 | `ESP_RST_UNKNOWN` | Undetermined reason |
+| 1 | `ESP_RST_POWERON` | Power-on event |
+| 2 | `ESP_RST_EXT` | External-pin reset; not applicable to ESP32 |
+| 3 | `ESP_RST_SW` | Software restart through `esp_restart()` |
+| 4 | `ESP_RST_PANIC` | Exception or panic |
+| 5 | `ESP_RST_INT_WDT` | Interrupt watchdog |
+| 6 | `ESP_RST_TASK_WDT` | Task watchdog |
+| 7 | `ESP_RST_WDT` | Other watchdog |
+| 8 | `ESP_RST_DEEPSLEEP` | Wake from deep sleep |
+| 9 | `ESP_RST_BROWNOUT` | Brownout reset |
+| 10 | `ESP_RST_SDIO` | SDIO reset |
+
+Implementation: [DAIKIN status diagnostic](https://github.com/phicomm-io/iotcloud-community-firmware/blob/508dfed3597bb64bdfb3f29e10f2ee46c90189c2/DAIKIN/src/commands.inc#L28). This optional diagnostic does not change required contract fields or require consumers to update their existing specification pin.
+
 ## Explicit DAIKIN full → hub conversion
 
 This is a development extension without a formal release. Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
