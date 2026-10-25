@@ -48,17 +48,19 @@ Arguments are zero. D0 begins at absolute frame offset 5:
 | D10 / f15 | Button kind bits 0..3 correspond to kinds 1..4; currently `0f` |
 | D11 / f16 | Generic display schema; 1 supports OP `11`–`13` |
 | D12 / f17 | Optional sensor-buzzer schema; 1 supports OP `14`, 0 means absent |
-| D13 / f18 | Reserved zero |
+| D13 / f18 | `m1-uart-v3` dual display schema; 2 supports OP `15`–`17`, 0 unavailable; old v2 requires zero |
 
-Factory MCU does not implement `0x70`. New capabilities use D9..D12 without changing the old bitmap. Disable an extension when its capability is absent. The new schema is a development implementation; the Wi-Fi firmware version alone does not establish that the sensor MCU was upgraded.
+Factory MCU does not implement `0x70`. New capabilities use D9..D13 without changing the old bitmap or D0=2. Disable an extension when its capability is absent. The new schema is a development implementation; the Wi-Fi firmware version alone does not establish that the sensor MCU was upgraded.
+
+Contract revision is separate from the frame protocol number. Old `m1-uart-v2` keeps its [v1 artifact](contracts/m1-uart-v1.json) and [original vectors](contracts/vectors/m1-uart-v1.json), including D13=0. The additive [v3 artifact](contracts/m1-uart-v3.json) and [v3 vectors](contracts/vectors/m1-uart-v3.json) declare D13=2 and dual operations, allowing zero to represent absent support. Consumers explicitly select the new contract and update their pins; nonzero D13 does not satisfy the old fixed-zero contract. Old Wi-Fi clients ignoring the new field still use scalar operations.
 
 ## Operation groups
 
 | Group | OP | Purpose |
 | --- | --- | --- |
-| Product features | `09`, `0b`, `0e`, `0f`, `11`–`14` | Thresholds, tones/music, generic display, optional sensor buzzer |
+| Product features | `09`, `0b`, `0e`, `0f`, `11`, `12`, `14`–`16` | Thresholds, tones/music, scalar/dual writes and selection, optional sensor buzzer |
 | Compatibility | `0a`, `0c`, `0d` | Existing CO₂ config, reading and status; new v1 clients use generic display |
-| Read-only diagnostics | `00`, `06`, `08`, `10` | Capabilities, health, display cache, raw sensor frames |
+| Read-only diagnostics | `00`, `06`, `08`, `10`, `13`, `17` | Capabilities, health, display cache, raw sensor frames, scalar/dual state |
 | Expert tools | `01`–`05`, `07` | PWM, screen/numeric/segment overrides, exit, PM mode |
 
 Existing opcodes remain assigned. See [MCU implementation docs](https://github.com/phicomm-io/phicomm_m1_mcu_atsamd20/tree/main/docs) for existing music/update details. Shared new display and button definitions are on the [next page](m1-display.md).

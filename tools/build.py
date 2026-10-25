@@ -48,6 +48,8 @@ def check_links(site):
 
 
 def main():
+    subprocess.run([sys.executable, "-m", "unittest", "discover", "-s", "tools",
+                    "-p", "test_*.py"], cwd=ROOT, check=True)
     subprocess.run([sys.executable, "tools/validate.py"], cwd=ROOT, check=True)
     for config in ("mkdocs.yml", "mkdocs.en.yml"):
         subprocess.run([sys.executable, "-m", "mkdocs", "build", "--strict", "--clean", "--config-file", config], cwd=ROOT, check=True)

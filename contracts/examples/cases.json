@@ -1982,6 +1982,4920 @@
         ]
       },
       "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "default independent lanes",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "TC1 power and independent API reading",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "local metric temperature",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "local",
+            "device_id": "",
+            "metric": "temperature",
+            "unit": "°C",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "local metric humidity",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "local",
+            "device_id": "",
+            "metric": "humidity",
+            "unit": "%",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "local metric pm25",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "local",
+            "device_id": "",
+            "metric": "pm25",
+            "unit": "µg/m³",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "local metric formaldehyde",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "local",
+            "device_id": "",
+            "metric": "formaldehyde",
+            "unit": "mg/m³",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "local metric co2",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "local",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "local metric pressure",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "local",
+            "device_id": "",
+            "metric": "pressure",
+            "unit": "Pa",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric temperature",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "temperature",
+            "unit": "°C",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric humidity",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "humidity",
+            "unit": "%",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric pm25",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "pm25",
+            "unit": "µg/m³",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric formaldehyde",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "formaldehyde",
+            "unit": "mg/m³",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric co2",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric pressure",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "pressure",
+            "unit": "Pa",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric power",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric energy",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "energy",
+            "unit": "kWh",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric tvoc",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "tvoc",
+            "unit": "ppb",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt metric pm10",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "pm10",
+            "unit": "µg/m³",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric temperature",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "temperature",
+            "unit": "°C",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric humidity",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "humidity",
+            "unit": "%",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric pm25",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "pm25",
+            "unit": "µg/m³",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric formaldehyde",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "formaldehyde",
+            "unit": "mg/m³",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric co2",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric pressure",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "pressure",
+            "unit": "Pa",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric power",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric energy",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "energy",
+            "unit": "kWh",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric tvoc",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "tvoc",
+            "unit": "ppb",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api metric pm10",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "pm10",
+            "unit": "µg/m³",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "duplicate slot",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "missing lane",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "third lane",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          },
+          {
+            "slot": 0,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "unknown field",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {}
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "fractional revision",
+      "data": {
+        "revision": 1.0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "boolean revision",
+      "data": {
+        "revision": true,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "legacy source name",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "co2",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt uppercase ID",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "ABCDEF001122",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "power wrong unit",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "mg/m³",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "local power unsupported",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "local",
+            "device_id": "",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "zero configured TTL",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 0,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "TTL 61",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 61,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "scale 10",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 10,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "decimal 3",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 3,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "decimal float",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 1.0,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "equal thresholds",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 100
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "reversed thresholds",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 200,
+              "high": 100
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "unsupported color",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "blue"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "custom unlisted unit",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "rpm",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "custom embedded NUL unit",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%\u0000",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "none nonempty metric",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "humidity",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api device ID nonempty",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "001122334455",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "leased API value",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "value": 45.6,
+        "unit": "%",
+        "ttl_seconds": 10,
+        "color": "yellow"
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "clear API lane without fake zero",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "ttl_seconds": 0
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "zero TTL with value",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "value": 45.6,
+        "unit": "%",
+        "ttl_seconds": 0,
+        "color": "yellow"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "TTL overflow",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "value": 45.6,
+        "unit": "%",
+        "ttl_seconds": 61,
+        "color": "yellow"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "slot overflow",
+      "data": {
+        "revision": 1,
+        "slot": 2,
+        "value": 45.6,
+        "unit": "%",
+        "ttl_seconds": 10,
+        "color": "yellow"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "negative number",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "value": -1,
+        "unit": "%",
+        "ttl_seconds": 10,
+        "color": "yellow"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "numeric string",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "value": "45.6",
+        "unit": "%",
+        "ttl_seconds": 10,
+        "color": "yellow"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "bad unit",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "value": 45.6,
+        "unit": "watts",
+        "ttl_seconds": 10,
+        "color": "yellow"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "fractional revision",
+      "data": {
+        "revision": 1.0,
+        "slot": 1,
+        "value": 45.6,
+        "unit": "%",
+        "ttl_seconds": 10,
+        "color": "yellow"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "arbitrary extra field",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "value": 45.6,
+        "unit": "%",
+        "ttl_seconds": 10,
+        "color": "yellow",
+        "source": "mqtt"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-data-set-v2",
+      "name": "boolean value",
+      "data": {
+        "revision": 1,
+        "slot": 1,
+        "value": true,
+        "unit": "%",
+        "ttl_seconds": 10,
+        "color": "yellow"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "desired with pending runtime",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "MCU readback without optical assertion",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "old MCU preserves desired",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": false,
+          "confirmed": false,
+          "confirmation": "requires_mcu_upgrade",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "unsupported MCU cannot be confirmed",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": false,
+          "confirmed": true,
+          "confirmation": "requires_mcu_upgrade",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "TC1 fresh physical power",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "TC1 stale measurement is null",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": null,
+            "unit": "W",
+            "valid": false,
+            "age_ms": 25000
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed temperature",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "temperature": {
+            "value": 1,
+            "unit": "°C",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed humidity",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "humidity": {
+            "value": 1,
+            "unit": "%",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed pm25",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "pm25": {
+            "value": 1,
+            "unit": "µg/m³",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed formaldehyde",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "formaldehyde": {
+            "value": 1,
+            "unit": "mg/m³",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed co2",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "co2": {
+            "value": 1,
+            "unit": "ppm",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed pressure",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "pressure": {
+            "value": 1,
+            "unit": "Pa",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed power",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed energy",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "energy": {
+            "value": 1,
+            "unit": "kWh",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed tvoc",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "tvoc": {
+            "value": 1,
+            "unit": "ppb",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "typed pm10",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "pm10": {
+            "value": 1,
+            "unit": "µg/m³",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "wrong W unit",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "kW",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "valid stale power",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 20000
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "negative power",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": -1,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "invalid fake zero",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 0,
+            "unit": "W",
+            "valid": false,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "number valid flag",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": 1,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "null valid value",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": null,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "zero sequence",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 0,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "negative boot",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": -1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "floating sequence",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2.0,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "wrong device_id field",
+      "data": {
+        "schema": 1,
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        },
+        "id": "001122334455"
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "empty sensors",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {}
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "unknown only sensor",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "whatever": {}
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "mqtt A1 main fan output percent",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "api A1 main fan output percent",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "local A1 main fan output percent",
+      "data": {
+        "revision": 0,
+        "selected_source": "original",
+        "double_click": "none",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "local",
+            "device_id": "",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "none",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "",
+            "decimals": 0,
+            "scale": 1,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "off"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "A1 effective main fan percent",
+      "data": {
+        "schema": 1,
+        "device_id": "aabbccddeeff",
+        "model": "a1",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "fan_speed_percent": {
+            "value": 60,
+            "unit": "%",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "A1 fan percent 0",
+      "data": {
+        "schema": 1,
+        "device_id": "aabbccddeeff",
+        "model": "a1",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "fan_speed_percent": {
+            "value": 0,
+            "unit": "%",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "A1 fan percent 100",
+      "data": {
+        "schema": 1,
+        "device_id": "aabbccddeeff",
+        "model": "a1",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "fan_speed_percent": {
+            "value": 100,
+            "unit": "%",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "A1 fan percent 100.01",
+      "data": {
+        "schema": 1,
+        "device_id": "aabbccddeeff",
+        "model": "a1",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "fan_speed_percent": {
+            "value": 100.01,
+            "unit": "%",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "A1 fan percent -1",
+      "data": {
+        "schema": 1,
+        "device_id": "aabbccddeeff",
+        "model": "a1",
+        "boot": 123,
+        "sequence": 1,
+        "sensors": {
+          "fan_speed_percent": {
+            "value": -1,
+            "unit": "%",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-set-v2",
+      "name": "exact ID rejects trailing newline",
+      "data": {
+        "revision": 0,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455\n",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "exact ID rejects trailing newline",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455\n",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "exact ID rejects trailing newline",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455\n",
+        "model": "tc1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "unknown producer model",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "unknown",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "A1 cannot publish power",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "a1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v1",
+      "name": "M1 cannot publish power",
+      "data": {
+        "schema": 1,
+        "device_id": "001122334455",
+        "model": "m1",
+        "boot": 1,
+        "sequence": 2,
+        "sensors": {
+          "power": {
+            "value": 1234.5,
+            "unit": "W",
+            "valid": true,
+            "age_ms": 250
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "real production C dual GET readback",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": true,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "global confirmation requires both lane readbacks",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "global confirmation cannot use legacy profile",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "legacy",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "readback label requires global confirmation",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "pending label cannot claim global confirmation",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "supported MCU cannot report upgrade required",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "requires_mcu_upgrade",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "dual global confirmation is conjunction of lane readbacks",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "legacy cached lane readbacks do not confirm dual profile",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "001122334455",
+            "metric": "power",
+            "unit": "W",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 100,
+              "high": 1000
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "%",
+            "decimals": 1,
+            "scale": 1,
+            "ttl_seconds": 10,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "legacy",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "W",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": false,
+              "value": null,
+              "unit": "%",
+              "age_ms": null,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "missing",
+              "number": null,
+              "format": null,
+              "color": null,
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "valid lane requires physical value",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": null,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "valid lane requires encoded format",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": null,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "valid lane requires encoded number",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": null,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "valid lane requires color",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "color": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "valid lane requires known age",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": null,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "valid lane requires positive remaining lease",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 0,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "valid lane cannot report stale reason",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "stale",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "effective lane requires its own readback",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": false
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "invalid lane cannot retain visible value",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "stale",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "valid values await MCU readback",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": false,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": false
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": false,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "runtime format is a strict integer token",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1.0,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": true,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-source-state-v2",
+      "name": "unsupported MCU cannot show an effective lane",
+      "data": {
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "decimals": 2,
+            "scale": 1000,
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "W",
+            "decimals": 1,
+            "scale": 1000,
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": false,
+          "confirmed": false,
+          "confirmation": "requires_mcu_upgrade",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1234,
+              "unit": "ppm",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "color": "yellow",
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 1200,
+              "unit": "W",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": true,
+              "reason": "ok",
+              "number": 12,
+              "format": 2,
+              "color": "green",
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
     }
   ]
 }

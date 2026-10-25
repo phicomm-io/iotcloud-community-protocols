@@ -2,9 +2,57 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/m1-display/)
 
-Requires generic display schema 1. Wi-Fi MCU owns source selection, numeric conversion, units, color thresholds and alternation timing. Sensor MCU owns physical rendering and two display sources, defaulting to original sensor readings. Overrides do not replace HCHO/PM measurements, queries or alarms.
+Dual-lane contract `m1-display-v2` uses the independent capability and additive operations in `m1-uart-v3`. Existing scalar schema 1 keeps its meaning. This development extension records implementation, builds and physical acceptance separately; publishing documentation does not establish device acceptance.
 
-## Generic display API
+## Dual-lane schema 2
+
+HCHO position `slot=0` and PM2.5 position `slot=1` have independent values, formats, colors and leases. One global selector changes both original/user sources together, including a single double click. A lane configured as `none`, missing, expired, offline or outside its representable range returns only that position to its original reading. Expiry preserves the global desired selection; fresh data may restore that lane.
+
+Wi-Fi MCU resolves sources, physical units, scaling and colors. Sensor MCU renders encoded data. User values must never replace physical measurements, alarm inputs or physical sensor publications. See [dual display API](device-http.md#m1-dual-display-api) and [typed sensor feed](mqtt.md#sensor-values-v1).
+
+### Capability and operations
+
+New writes require OP `00` D13 / f18=`2`. D11 / f16 remains scalar schema `1`; D12 / f17 remains the independent sensor alarm schema. Outer extension protocol D0 remains `2`. New Wi-Fi also verifies schema 2 through read-only OP `17`; absent/unknown capability or failed probing leaves original readings without new writes.
+
+OP numbers below are hexadecimal (`15`/`16`/`17` are decimal 21/22/23), using the existing [extension frame](m1-uart.md).
+
+| OP | Arguments | Effect |
+| --- | --- | --- |
+| `15` dual.write | A0–1 BE16 number 0..999; A2 format; A3 color 0..3; A4 TTL 0..60 seconds; A5 slot 0..1; A6=0 | Update only this lane; TTL0 invalidates it; does not select a profile/source |
+| `16` dual.select | A0=0 original / 1 user; A1..6=0 | Select dual profile and change both lanes with one operation |
+| `17` dual.query | A0=slot 0..1; A1..6=0 | Read the lane and global selection without changing profile or renewing leases |
+
+Format/color retain the scalar encodings below. Successful write/select replies contain zero data. Errors use existing statuses without partial mutation. OP `17` returns D0=2, D1=dual global selection, D2=active dual profile AND user selected AND this lane valid, D3=slot, D4–5=number, D6=format, D7=color, D8=remaining TTL rounded up, D9..13=0. D2 does not establish LCD hardware delivery or visibility beneath an expert override.
+
+Both caches, expiry times and selection are MCU RAM; cold boot has no leases and selects original readings. Expert screen overrides take precedence. Lane writes refresh independently; only the global selector is a single operation. Two separate value writes are not an atomic batch. Confirmation requires independent queries of both lanes after writing, matching current configuration, selection, number, format, color and fresh leases. A write ACK is insufficient.
+
+Example: fill both lanes, select user readings together, then independently query each:
+
+```text
+23 70 15 01 00 7b 01 03 14 00 00 21
+23 70 15 02 01 c8 02 02 0a 01 00 21
+23 70 16 03 01 00 00 00 00 00 00 21
+23 70 17 04 00 00 00 00 00 00 00 21
+23 70 17 05 01 00 00 00 00 00 00 21
+```
+
+<a id="display-representation"></a>
+
+### Numbers, units and colors
+
+Each lane has three nonnegative digits: format0 shows `123`, format1 `1.23`, format2 `12.3`; API decimals0/1/2 map to formats0/2/1. Generic lanes have no minus sign or arbitrary text. Wi-Fi encodes `floor(value / scale * 10^decimals + 0.5)`. Values must be finite, nonnegative, within metric bounds, and encode to 0..999; otherwise restore that lane's original reading without clamping, wrapping or fake zero.
+
+Logical units are separate from glass legends. These positions have no selectable W, kW, ℃, %, CO₂ or ppm glyphs. TC1 power hides the original gas/unit; UI must explain its logical unit and scale. Retain a native legend only for slot0+formaldehyde+`mg/m³`+scale1, or slot1+pm25+`µg/m³`+scale1. Scale1000 always hides it, including native metrics. `1230 W / scale1000 / decimals2` shows approximately `1.23`, without a kW glyph.
+
+Colors are off/red/green/yellow. Threshold mode requires low<high and compares the unscaled physical value: below low green, at/above low but below high yellow, at/above high red. An explicit API color may override a lease's rule. These colors do not change physical sensor alarms.
+
+### Legacy and dual profiles
+
+Old OP `11`/`12`/`13` retain one scalar cache and their byte layouts. Old `12` selects legacy; new `16` selects dual. Filling caches and all queries never take profile ownership. Under dual, old `13` D1 retains the saved legacy selection and D2 is zero; use new `17` for current dual state. Legacy CO₂ configure still belongs to legacy.
+
+A successful Wi-Fi `display_source.set` persistently selects dual. Successful `co2_source.set` / `co2_display.set` persistently select legacy while retaining dual configuration. Commit profile and related settings in one storage transaction; failure cannot switch profiles. Only the active profile's display scheduler runs.
+
+## Compatible scalar schema 1
 
 Use the [extension frame](m1-uart.md). OP values are hexadecimal:
 
@@ -47,5 +95,5 @@ Debounce is 20 ms; a short press lasts 60..2999 ms. A first short release waits 
 Wi-Fi double-click priority:
 
 1. Cancel a ringing alarm and do not toggle the display.
-2. Otherwise, when `switch_display` is configured, a local/external CO₂ source is configured, and capabilities permit it, toggle only original / Wi-Fi sources.
+2. Otherwise, when `switch_display` and the active profile/capabilities permit it, dual profile toggles both lanes together between original/user readings; legacy profile retains its CO₂ behavior.
 3. Otherwise do nothing custom. Expiry restores original readings; OTA, reset or configuration busy excludes custom actions.

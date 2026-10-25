@@ -2,9 +2,57 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/m1-display/)
 
-适用：传感器 MCU 声明通用显示 schema 1。Wi-Fi MCU 负责数据来源、数值换算、单位选择、色灯阈值和交替计时；传感器 MCU 负责两种显示来源和实际段渲染。默认从原传感器直读。覆盖值不改写原始甲醛、PM、查询和告警。
+双路合同 `m1-display-v2` 使用 `m1-uart-v3` 的独立能力声明和新增操作，不重新解释既有 scalar schema 1。此开发扩展的实现、构建与物理验收分别记录，文档发布不表示已完成设备验收。
 
-## 通用显示接口
+## 双路 schema 2
+
+甲醛位 `slot=0` 与 PM2.5 位 `slot=1` 各有独立数值、格式、颜色和租期。一个全局选择器控制两路原始读数 / 两路用户显示，双击一次整体切换。source=`none`、缺失、过期、离线或超出表示范围时，仅该位置恢复原始读数；另一路不受影响。到期不改变全局 desired 选择，新鲜数据可恢复该路用户显示。
+
+Wi-Fi MCU 负责来源、物理单位、缩放和颜色，传感器 MCU 只渲染编码。用户数值不得替代真实采样、告警输入或物理传感器发布。API 配置见 [双路显示 API](device-http.md#m1-dual-display-api)，跨设备数据见 [typed sensor feed](mqtt.md#sensor-values-v1)。
+
+### 能力与操作
+
+只有 OP `00` 的 D13 / f18=`2` 才允许新写入；D11 / f16 仍为旧 scalar schema `1`，D12 / f17 仍为独立蜂鸣器 schema。外层扩展协议 D0 仍为 `2`。新 Wi-Fi 还须以只读 OP `17` 核对 schema 2；未声明、未知值或查询失败时保持原始显示，不尝试新写入。
+
+以下 OP 使用十六进制（`15`/`16`/`17` 即十进制 21/22/23），沿用 [扩展帧](m1-uart.md)。
+
+| OP | 参数 | 作用 |
+| --- | --- | --- |
+| `15` dual.write | A0–1 BE16 number 0..999；A2 format；A3 color 0..3；A4 TTL 0..60 秒；A5 slot 0..1；A6=0 | 只更新该路缓存；0 秒立即清除，不选择 profile 或来源 |
+| `16` dual.select | A0=0 原始 / 1 用户；A1..6=0 | 选择 dual profile，并用一个操作整体切换两路 |
+| `17` dual.query | A0=slot 0..1；A1..6=0 | 只读该路缓存与全局选择，不切 profile、不续租 |
+
+format、color 编码沿用下文 scalar 定义。写入 / 选择成功应答数据为零；失败遵循既有状态码，不得部分修改。OP `17` 返回 D0=2、D1=dual 全局选择、D2=当前 profile 为 dual 且选择用户且该路缓存有效、D3=slot、D4–5=number、D6=format、D7=color、D8=剩余 TTL 向上取整、D9..13=0。即使 D2=1，也不证明 LCD 硬件写入或专家覆盖下的最终可见内容。
+
+两路缓存、到期时间和全局选择均为 MCU RAM；冷启动无有效租期、选择原始。专家屏幕覆盖优先。每路写入是独立刷新，只有选择器整体切换是单次操作；不承诺两次独立数值写入原子提交。确认必须在写入后独立查询两路，并匹配当前配置、选择、数值、格式、颜色与新鲜租期；写 ACK 不构成确认。
+
+例如独立写两个位置，再整体选择用户来源：
+
+```text
+23 70 15 01 00 7b 01 03 14 00 00 21
+23 70 15 02 01 c8 02 02 0a 01 00 21
+23 70 16 03 01 00 00 00 00 00 00 21
+23 70 17 04 00 00 00 00 00 00 00 21
+23 70 17 05 01 00 00 00 00 00 00 21
+```
+
+<a id="display-representation"></a>
+
+### 数字、单位与颜色
+
+每路只有三位非负数字：format 0 显示 `123`，1 显示 `1.23`，2 显示 `12.3`；API decimals 0/1/2 分别映射 format 0/2/1。没有 generic 负号或任意文本。Wi-Fi 编码 `floor(value / scale * 10^decimals + 0.5)`；数值必须有限、非负、符合 metric 范围且结果 0..999，否则该路恢复原始读数，不钳位、不绕回、不伪零。
+
+逻辑 unit 与玻璃单位段分开。玻璃没有这两路可选择的 W、kW、℃、%、CO₂ 或 ppm 字形；显示 TC1 功率时必须隐藏原气体/单位段，并在 UI 说明逻辑单位和倍率。仅 slot0+formaldehyde+`mg/m³`+scale1，或 slot1+pm25+`µg/m³`+scale1 可保留原 legend；scale1000 即使原 metric 也必须隐藏，避免错标。`1230 W / scale1000 / decimals2` 显示约 `1.23`，不表示玻璃上出现了 kW。
+
+颜色为 off/red/green/yellow；thresholds 模式必须 low<high，按缩放前物理值比较：`<low` 绿、`>=low && <high` 黄、`>=high` 红。API 租期内显式颜色可覆盖规则；只影响用户显示色灯，不修改传感器报警。
+
+### legacy / dual profile
+
+旧 OP `11`/`12`/`13` 保持一份 scalar 缓存和原字节布局。旧 `12` 选择 legacy profile，新 `16` 选择 dual；只写缓存和所有查询都不能抢占 profile。dual profile 下旧 `13` 的 D1 仍报告 legacy 保存的选择，D2 为 0；查询当前双路必须用新 `17`。旧 CO₂ configure 仍属于 legacy。
+
+Wi-Fi 的新 `display_source.set` 成功后持久选择 dual；旧 `co2_source.set` / `co2_display.set` 成功后持久选择 legacy，同时保留双路配置。profile 与相关配置在同一存储事务中提交；失败不切换。只运行当前 profile 的显示调度，不能由两个周期任务交替争抢。
+
+## 兼容的 scalar schema 1
 
 均使用 [扩展请求](m1-uart.md)。OP 为十六进制。
 
@@ -47,5 +95,5 @@ KIND：1=单击、2=双击、3=约 3 秒长按、4=10 秒长按。SEQ 每次事�
 Wi-Fi MCU 处理双击的优先级：
 
 1. 闹钟正在响铃，取消本次闹钟，不执行显示切换。
-2. 未响铃，且用户配置 `switch_display`、已配置本机或外部 CO₂ 来源，并声明相关能力时，只在原传感器 / Wi-Fi 两个来源之间切换。
+2. 未响铃且已配置 `switch_display`、当前 profile 和 MCU 能力允许时，dual profile 整体切换两路原始 / 用户来源；legacy profile 保持既有 CO₂ 切换。
 3. 其余情况不执行自定义切换。数据过期由租期恢复直读；OTA、复位或配置占用时不接受自定义动作。

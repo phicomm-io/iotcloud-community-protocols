@@ -154,6 +154,77 @@ X-IoTCloud-Confirm: full-to-hub
 
 显示模式、替换位置、阈值和交替周期由 `co2_display.get` / `co2_display.set` 管理。显示开关不改变真实甲醛、PM 或 CO₂ 采样。MCU 来源与按钮规则见 [显示源](m1-display.md)。
 
+<a id="m1-dual-display-api"></a>
+
+## M1 双路用户显示 API
+
+开发合同 `m1-display-v2` 新增 `display_source.get {}`、`display_source.set` 和 `display_data.set`。动作出现在 `capabilities.actions` 才可调用；这不代表传感器 MCU 已支持双路。`mcu.version.get` 的 `display_source_schema` 为 2 或 0，`dual_display_source_supported` 表示双路支持；旧 `display_source_supported` 仍只表示 scalar schema 1。实际控制还须完成 [双路能力协商与读回](m1-display.md)。
+
+`display_source.set` 全量替换两路持久配置，携带最近读取的 revision。slot0 是甲醛位，slot1 是 PM2.5 位，必须各出现一次。默认 selected_source=`original`、double_click=`none`；两路默认 source=`none`、device_id=`""`、metric=`custom`、unit=`""`、decimals=0、scale=1、ttl_seconds=20、color=`{"mode":"fixed","value":"off"}`。
+
+```json
+{"request_id":"display_cfg_1","action":"display_source.set","params":{"revision":0,"selected_source":"user","double_click":"switch_display","lanes":[{"slot":0,"source":"mqtt","device_id":"001122334455","metric":"power","unit":"W","decimals":2,"scale":1000,"ttl_seconds":15,"color":{"mode":"thresholds","low":100,"high":1000}},{"slot":1,"source":"api","device_id":"","metric":"custom","unit":"%","decimals":1,"scale":1,"ttl_seconds":10,"color":{"mode":"fixed","value":"green"}}]}}
+```
+
+| 配置字段 | 规则 |
+| --- | --- |
+| `revision` | 严格 JSON 整数 0..2147483647，CAS；成功后递增 |
+| `selected_source` | `original` / `user`，两路整体选择 |
+| `double_click` | `none` / `switch_display`；闹钟响铃时优先取消闹钟，本次不切显示 |
+| `lanes[].source` | `none` / `local` / `mqtt` / `api`；none 的位置始终原始 |
+| `device_id` | mqtt 必须是本账户外部设备的小写 12 位 hex ID且非自身；其余为空 |
+| `metric` / `unit` | 下表的固定组合；custom 仅 api 或 none，none 必须 custom+空单位 |
+| `decimals` / `scale` | 整数 0..2 / 1或1000；按 `value / scale` 显示，不改变物理单位或告警 |
+| `ttl_seconds` | 整数 1..60；最大数据寿命，物理源还受更严格的新鲜度限制 |
+| `color` | fixed 模式必须 value=off/red/green/yellow；thresholds 模式必须有限 low<high，按缩放前物理值判断绿/黄/红 |
+
+| metric | unit | 来源与范围 |
+| --- | --- | --- |
+| `temperature` | `°C` | local/mqtt/api；物理值 -40..125，负值无法在通用位置表示，回退原始 |
+| `humidity` | `%` | local/mqtt/api；0..100 |
+| `pm25` / `formaldehyde` | `µg/m³` / `mg/m³` | local/mqtt/api；有限非负 |
+| `co2` | `ppm` | local/mqtt/api；1..65535，local 需真实 SCD40 能力 |
+| `pressure` | `Pa` | local/mqtt/api；有限非负，centi-Pa/hPa 必须换算数值后才用 Pa |
+| `power` / `energy` | `W` / `kWh` | mqtt/api；有限非负，TC1 当前新增 feed 仅 power，不宣称 energy |
+| `tvoc` / `pm10` | `ppb` / `µg/m³` | mqtt/api；有限非负，以实际 producer 字段为准 |
+| `fan_speed_percent` | `%` | mqtt 的 A1 或 api；有限0..100，A1 当前生效主风机输出百分比，非实测 RPM；fresh-air 变体仍为主风机 |
+| `custom` | 白名单 | 仅 api；unit 为 `""`、`°C`、`%`、`µg/m³`、`mg/m³`、`ppm`、`Pa`、`W`、`kWh` 或 `ppb` |
+
+local 指本机 M1，只允许温湿度、PM2.5、甲醛、CO₂、压力；没有传感器能力或新鲜样本时无效。mqtt 只消费同账号 [typed feed](mqtt.md#sensor-values-v1)，不接受任意 topic/URL/JSONPath。source=none 只允许 custom+空单位，不成为写入入口。未知字段、错误类型、单位不匹配、重复位置和 low>=high 均拒绝。
+
+每路只有三位非负数字。数值编码须落在0..999，否则仅该路回退；原气体/单位段是否显示由固件按真实位置、metric、单位及 scale1 推导。玻璃没有可选择的 W、℃、% 等单位字形，客户端须明确逻辑单位与倍率，见[表示边界](m1-display.md#display-representation)。
+
+`display_data.set` 仅向 source=api 的位置写入短期 RAM 数据，必须匹配当前配置 revision、unit，且 TTL 不超过该路上限；可选 color 在本条租期内直接指定。正常写入需要 value、unit 和1..60秒 TTL。立即清除使用独立形状，不以伪零表示缺失：
+
+```json
+{"request_id":"display_value_1","action":"display_data.set","params":{"revision":1,"slot":1,"value":45.6,"unit":"%","ttl_seconds":10,"color":"yellow"}}
+{"request_id":"display_clear_1","action":"display_data.set","params":{"revision":1,"slot":1,"ttl_seconds":0}}
+```
+
+两者均沿用 HTTP Basic 或已授权 MQTT 命令认证，retained 命令拒绝；重复 request_id 返回原结果，不延长租期。公开 sensor 字段不能写入 API lane。新值和租期不写 Flash，重启不重放。`accepted` 只表示配置或租期操作已接受，不表示屏幕已确认。
+
+GET 的配置字段仍在根：revision、selected_source、double_click、lanes；另有只读 `runtime`，禁止把 runtime 回写 SET：
+
+| runtime 字段 | 含义 |
+| --- | --- |
+| `profile` | `legacy` / `dual`，当前调度策略 |
+| `selected_source` | 包含双击 RAM override 的实际 original/user 选择；持久配置或重启会重建它 |
+| `mcu_supported` | 明确协商双路 schema2；不是仅有 scalar 支持 |
+| `confirmed` / `confirmation` | 新鲜独立 MCU 读回匹配；`mcu_readback` / `pending_mcu_readback` / `requires_mcu_upgrade` |
+| `lanes[].slot/valid/value/unit` | 对应位置的来源结果；未知/无效 value 为 null |
+| `age_ms` / `remaining_ttl_seconds` | 样本年龄或 null；剩余0..60秒 |
+| `effective` / `reason` | 当前是否具备用户覆盖资格；reason为ok/disabled/missing/stale/offline/invalid/out_of_range/unsupported |
+| `number/format/color` | 实际编码或 null；color 使用字符串枚举 |
+| `confirmed` | 该路与独立 MCU 查询一致，不是 LCD 光学回读 |
+
+全局 `confirmed` 仅在 `profile=dual`、MCU 支持且两路 `confirmed` 均为 true 时为 true，此时 `confirmation=mcu_readback`。已确认的清除状态可以是 `valid=false`、剩余租期 0；有效数值与确认状态分别表达。
+
+`valid=true` 时数值、年龄和编码字段完整、剩余租期为正且 `reason=ok`；否则数值与编码字段为 null、剩余租期为 0。`effective=true` 还要求本路 MCU 读回已确认。
+
+配置保存后独立 GET 核对 revision 和完整配置；数值写入后再 GET 核对该路 valid/value/unit/租期，MCU 确认仍须独立 UART 查询。旧 MCU 可保留 desired 配置，但不得声称双路已生效。失效不改持久选择，仅恢复对应原始读数；没有可靠离线事件时按 TTL 失效，不伪造 offline 判断。
+
+成功的新 SET 持久选择 dual；成功旧 CO₂ SET 选择 legacy并保留双路配置。profile 与配置同笔保存；CAS冲突、busy或storage_error完整回滚，不产生半路更新或失败后切换。两路配置追加到 M1 存储v9，v8迁移与备份兼容见[配置说明](configuration.md#m1-display-storage-v9)。
+
 ## M1 传感器提醒
 
 `alarm.get {}` 读取阈值和可选传感器蜂鸣器开关。`alarm.set` 必须包含 `sensor`（`hcho` / `pm25`）、`yellow`（整数 0..65535）、`red`（整数 1..65535 且不小于 `yellow`）、最近的 `revision`（整数 0..2147483647）；可选 `buzzer_enabled` 必须为 JSON 布尔值，只修改指定传感器，省略则保留原设置。禁止未知字段、字符串/浮点数冒充整数和数值冒充布尔值。

@@ -23,6 +23,14 @@ MiCO（TC1 / A1 / M1）schema 1 采用 104 字节头和机型原生配置负载�
 
 DAIKIN 使用独立 JSON 信封：`schema`、`model`、`variant`、`firmware`、`config_version`、`config`。不能把 MiCO 文件、普通 `full` 和未来 `hub` 备份混用。恢复先校验全部内容，再一次持久化；失败保留原设置。
 
+<a id="m1-display-storage-v9"></a>
+
+## M1 双路配置存储v9
+
+双路显示配置追加在原v8负载尾部，旧配置前缀与 CO₂ 字段偏移不变。v8启动迁移保留普通配置、旧 CO₂、阈值、蜂鸣器、automation与revision；默认仍选legacy profile，新双路两位置为none、无RAM租期。只有显式新SET才启用dual，迁移不自动接管显示。
+
+v8完整备份是明确的兼容例外：先校验原model/variant、v8精确长度、CRC及旧字段，再有界迁移到v9并初始化新尾段。v9备份继续要求v9精确长度与语义；未知未来版本拒绝。候选配置与profile同笔持久化，失败完整回滚；短期API数值和剩余租期不进入备份。
+
 ## 恢复模式
 
 `config.get` 中的 `migration_state` 为 `ready` 或 `confirmation_required`；后者表示当前使用 RAM 中的恢复配网设置，原始配置仍待用户处理。前端展示明确的清空确认，执行设备支持的重置动作。恢复期间不能通过普通设置或自动任务覆盖原 Flash。
