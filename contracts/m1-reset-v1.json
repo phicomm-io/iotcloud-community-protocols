@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "contract": "m1-reset-v1",
+  "status": "implemented-unreleased",
+  "reset_request": {
+    "direction": "sensor-to-wifi",
+    "length": 20,
+    "header": [35, 114, 1],
+    "kind_offset": 3,
+    "kinds": [1, 2],
+    "sequence_offset": 4,
+    "reserved_offset": 5,
+    "reserved_length": 14,
+    "footer": 33
+  },
+  "reset_ack": {
+    "direction": "wifi-to-sensor",
+    "length": 12,
+    "header": [35, 114, 1],
+    "kind_offset": 3,
+    "kinds": [1, 2],
+    "sequence_offset": 4,
+    "reserved_offset": 5,
+    "reserved_length": 6,
+    "footer": 33
+  },
+  "kinds": {
+    "1": "reprovision",
+    "2": "factory-reset"
+  },
+  "gestures": {
+    "debounce_ms": 20,
+    "short_press_min_ms": 60,
+    "short_press_max_ms": 2999,
+    "double_click_window_ms": 350,
+    "reprovision_release_min_ms": 3000,
+    "reprovision_release_max_ms": 9999,
+    "factory_reset_hold_ms": 10000,
+    "factory_reset_requires_release": false,
+    "notification_only_at_3000_ms": ["button-kind-3", "legacy-0x04"],
+    "factory_reset_notification": "button-kind-4",
+    "automatic_legacy_commands": [15, 4],
+    "never_automatically_send": [16, 24]
+  },
+  "sensor": {
+    "sequence_bits": 8,
+    "sequence_zero_valid": true,
+    "new_request_advances_sequence": true,
+    "retry_preserves_kind_and_sequence": true,
+    "retry_interval_ms": 500,
+    "timeout_ms": 5000,
+    "ack_valid_while_elapsed_ms_less_than_timeout": true,
+    "ack_requires_local_pending_request": true,
+    "ack_match_fields": ["schema", "kind", "sequence", "reserved"],
+    "wifi_disable_min_ms": 1000,
+    "reset_order": ["matching-ack", "wifi-enable-low", "sensor-system-reset", "wifi-enable-high-on-boot"],
+    "timeout_cuts_wifi_power": false,
+    "retry_after_timeout_requires_release": true,
+    "exclude_new_request_during": ["ota", "pending-reset", "committed-reset"]
+  },
+  "wifi": {
+    "persist_function": "m1_reset(kind == 2)",
+    "ack_requires_persistence_success": true,
+    "persistence_failure_consumes_transaction": false,
+    "committed_duplicate": "ack-without-another-write",
+    "committed_conflict": "ignore-without-escalation",
+    "factory_reset_scope": ["wifi-app_storage-defaults", "sensor-ram-after-restart"],
+    "factory_reset_preserves": ["independent-flash-rtttl-music"]
+  },
+  "compatibility": {
+    "requires_matching_sensor_and_wifi_updates": true,
+    "old_wifi_ignores_command": 114,
+    "fallback_to_legacy_reprovision": false,
+    "new_wifi_accepts_legacy_reprovision": 24,
+    "legacy_ack_after_persistence": "fixed-0x16-magic",
+    "legacy_ack_hex": "23 16 00 10 14 00 03 10 f1 ff ff 21",
+    "ota_command": 22,
+    "ota_commit_delay_ms": 4000,
+    "ota_wifi_disable_min_ms": 1000,
+    "explicit_display_test_command": 16
+  }
+}

@@ -1,0 +1,533 @@
+{
+  "schema": 1,
+  "contract": "m1-reset-v1",
+  "note": "Wire validity alone does not authorize reset. Transaction cases model local pending ACKs and durable Wi-Fi persistence; consumer runtime tests must also verify timing and power sequencing.",
+  "vectors": [
+    {
+      "name": "reset_request kind 1 sequence 0",
+      "role": "reset_request",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 1,
+        "sequence": 0
+      }
+    },
+    {
+      "name": "reset_request kind 2 sequence 255",
+      "role": "reset_request",
+      "hex": "23 72 01 02 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 2,
+        "sequence": 255
+      }
+    },
+    {
+      "name": "reset_request kind 1 sequence 255",
+      "role": "reset_request",
+      "hex": "23 72 01 01 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 1,
+        "sequence": 255
+      }
+    },
+    {
+      "name": "reset_request kind 2 sequence 0",
+      "role": "reset_request",
+      "hex": "23 72 01 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 2,
+        "sequence": 0
+      }
+    },
+    {
+      "name": "reset_request rejects zero kind",
+      "role": "reset_request",
+      "hex": "23 72 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects unknown kind",
+      "role": "reset_request",
+      "hex": "23 72 01 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects unknown schema",
+      "role": "reset_request",
+      "hex": "23 72 02 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects wrong command",
+      "role": "reset_request",
+      "hex": "23 16 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects wrong header",
+      "role": "reset_request",
+      "hex": "00 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects wrong footer",
+      "role": "reset_request",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects first reserved byte",
+      "role": "reset_request",
+      "hex": "23 72 01 01 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects last reserved byte",
+      "role": "reset_request",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects truncated frame",
+      "role": "reset_request",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+      "valid": false
+    },
+    {
+      "name": "reset_request rejects extended frame",
+      "role": "reset_request",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21 21",
+      "valid": false
+    },
+    {
+      "name": "reset_ack kind 1 sequence 0",
+      "role": "reset_ack",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 1,
+        "sequence": 0
+      }
+    },
+    {
+      "name": "reset_ack kind 2 sequence 255",
+      "role": "reset_ack",
+      "hex": "23 72 01 02 ff 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 2,
+        "sequence": 255
+      }
+    },
+    {
+      "name": "reset_ack kind 1 sequence 255",
+      "role": "reset_ack",
+      "hex": "23 72 01 01 ff 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 1,
+        "sequence": 255
+      }
+    },
+    {
+      "name": "reset_ack kind 2 sequence 0",
+      "role": "reset_ack",
+      "hex": "23 72 01 02 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 2,
+        "sequence": 0
+      }
+    },
+    {
+      "name": "reset_ack rejects zero kind",
+      "role": "reset_ack",
+      "hex": "23 72 01 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects unknown kind",
+      "role": "reset_ack",
+      "hex": "23 72 01 03 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects unknown schema",
+      "role": "reset_ack",
+      "hex": "23 72 02 01 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects wrong command",
+      "role": "reset_ack",
+      "hex": "23 16 01 01 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects wrong header",
+      "role": "reset_ack",
+      "hex": "00 72 01 01 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects wrong footer",
+      "role": "reset_ack",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 00",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects first reserved byte",
+      "role": "reset_ack",
+      "hex": "23 72 01 01 00 01 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects last reserved byte",
+      "role": "reset_ack",
+      "hex": "23 72 01 01 00 00 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects truncated frame",
+      "role": "reset_ack",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00",
+      "valid": false
+    },
+    {
+      "name": "reset_ack rejects extended frame",
+      "role": "reset_ack",
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 21 21",
+      "valid": false
+    }
+  ],
+  "sensor_ack_cases": [
+    {
+      "name": "matching reprovision ACK with zero sequence",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 1,
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 21",
+      "restart": true
+    },
+    {
+      "name": "matching factory ACK with sequence 255",
+      "pending": {
+        "kind": 2,
+        "sequence": 255
+      },
+      "elapsed_ms": 1,
+      "hex": "23 72 01 02 ff 00 00 00 00 00 00 21",
+      "restart": true
+    },
+    {
+      "name": "orphan ACK",
+      "pending": null,
+      "elapsed_ms": 1,
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 21",
+      "restart": false
+    },
+    {
+      "name": "different kind",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 1,
+      "hex": "23 72 01 02 00 00 00 00 00 00 00 21",
+      "restart": false
+    },
+    {
+      "name": "different sequence",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 1,
+      "hex": "23 72 01 01 01 00 00 00 00 00 00 21",
+      "restart": false
+    },
+    {
+      "name": "unknown schema",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 1,
+      "hex": "23 72 02 01 00 00 00 00 00 00 00 21",
+      "restart": false
+    },
+    {
+      "name": "nonzero first reserved byte",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 1,
+      "hex": "23 72 01 01 00 01 00 00 00 00 00 21",
+      "restart": false
+    },
+    {
+      "name": "nonzero last reserved byte",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 1,
+      "hex": "23 72 01 01 00 00 00 00 00 00 01 21",
+      "restart": false
+    },
+    {
+      "name": "old OTA commit magic is not a reset ACK",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 1,
+      "hex": "23 16 00 10 14 00 03 10 f1 ff ff 21",
+      "restart": false
+    },
+    {
+      "name": "ACK immediately before deadline",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 4999,
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 21",
+      "restart": true
+    },
+    {
+      "name": "ACK at deadline",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 5000,
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 21",
+      "restart": false
+    },
+    {
+      "name": "late ACK after timeout",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": 5001,
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 21",
+      "restart": false
+    },
+    {
+      "name": "negative elapsed time",
+      "pending": {
+        "kind": 1,
+        "sequence": 0
+      },
+      "elapsed_ms": -1,
+      "hex": "23 72 01 01 00 00 00 00 00 00 00 21",
+      "restart": false
+    }
+  ],
+  "wifi_request_cases": [
+    {
+      "name": "persist then ACK, duplicate ACK without Flash rewrite, no conflicting escalation",
+      "steps": [
+        {
+          "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": true,
+            "persist": true,
+            "committed": {
+              "kind": 1,
+              "sequence": 0
+            }
+          }
+        },
+        {
+          "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": true,
+          "persist_ok": true,
+          "expected": {
+            "ack": true,
+            "persist": false,
+            "committed": {
+              "kind": 1,
+              "sequence": 0
+            }
+          }
+        },
+        {
+          "hex": "23 72 01 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": false,
+            "persist": false,
+            "committed": {
+              "kind": 1,
+              "sequence": 0
+            }
+          }
+        },
+        {
+          "hex": "23 72 01 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": false,
+            "persist": false,
+            "committed": {
+              "kind": 1,
+              "sequence": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed write does not consume transaction, identical retry can commit",
+      "steps": [
+        {
+          "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": false,
+          "expected": {
+            "ack": false,
+            "persist": true,
+            "committed": null
+          }
+        },
+        {
+          "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": true,
+            "persist": true,
+            "committed": {
+              "kind": 1,
+              "sequence": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "OTA busy does not consume transaction",
+      "steps": [
+        {
+          "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": true,
+          "persist_ok": true,
+          "expected": {
+            "ack": false,
+            "persist": false,
+            "committed": null
+          }
+        },
+        {
+          "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": true,
+            "persist": true,
+            "committed": {
+              "kind": 1,
+              "sequence": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid request does not consume transaction",
+      "steps": [
+        {
+          "hex": "23 72 01 01 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": false,
+            "persist": false,
+            "committed": null
+          }
+        },
+        {
+          "hex": "23 72 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": true,
+            "persist": true,
+            "committed": {
+              "kind": 1,
+              "sequence": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "full reset is acknowledged only after its own successful persistence",
+      "steps": [
+        {
+          "hex": "23 72 01 02 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": false,
+          "expected": {
+            "ack": false,
+            "persist": true,
+            "committed": null
+          }
+        },
+        {
+          "hex": "23 72 01 02 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": true,
+            "persist": true,
+            "committed": {
+              "kind": 2,
+              "sequence": 255
+            }
+          }
+        },
+        {
+          "hex": "23 72 01 02 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": true,
+            "persist": false,
+            "committed": {
+              "kind": 2,
+              "sequence": 255
+            }
+          }
+        },
+        {
+          "hex": "23 72 01 01 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+          "busy": false,
+          "persist_ok": true,
+          "expected": {
+            "ack": false,
+            "persist": false,
+            "committed": {
+              "kind": 2,
+              "sequence": 255
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
