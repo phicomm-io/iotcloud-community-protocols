@@ -4,6 +4,8 @@
 
 Wi-Fi and sensor MCU communicate over SERCOM3 UART, 115200 8N1. Ordinary requests are 12 bytes; replies/events are 20 bytes, beginning `23` and ending `21`. There is no separate checksum byte. Multibyte values are big-endian. OTA blocks have a separate variable-length format.
 
+[Button reset `0x72`](m1-display.md#button-reset-transaction-m1-reset-v1) has an independent 20-byte sensor request / 12-byte Wi-Fi ACK and requires matching implementations in both firmwares.
+
 ## Versions and extension frames
 
 Ordinary command `0x11` queries the sensor MCU version. Reply f2 is the length; f3 starts the raw string, at most 16 bytes. Show Wi-Fi firmware separately. Factory `11.x` users are the initial target for open-source MCU firmware; factory `17.1.2.3` / `17.x` awaits the corresponding image and compatibility analysis. Show unknown versions as unknown.

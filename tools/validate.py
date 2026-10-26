@@ -69,14 +69,16 @@ def decode_vector(frame, role, definition):
     if (len(frame) != layout["length"] or list(frame[:len(layout["header"])]) != layout["header"]
             or frame[-1] != layout["footer"]):
         fail("Invalid frame boundary")
-    if role == "button_event":
+    if role in ("button_event", "reset_request", "reset_ack"):
         start, count = layout["reserved_offset"], layout["reserved_length"]
         kind = frame[layout["kind_offset"]]
         if kind not in layout["kinds"] or any(frame[start:start + count]):
-            fail("Invalid button kind or reserved byte")
-        start = layout["held_offset"]
-        return {"kind": kind, "sequence": frame[layout["sequence_offset"]],
-                "held_ms": int.from_bytes(frame[start:start + layout["held_bytes"]], "big")}
+            fail("Invalid kind or reserved byte")
+        output = {"kind": kind, "sequence": frame[layout["sequence_offset"]]}
+        if role == "button_event":
+            start = layout["held_offset"]
+            output["held_ms"] = int.from_bytes(frame[start:start + layout["held_bytes"]], "big")
+        return output
     op = frame[layout["op_offset"]]
     operation = next((item for item in definition["operations"] if item["op"] == op), None)
     if operation is None:
@@ -160,6 +162,22 @@ def validate_examples():
     print(f"PASS {len(schemas)} schemas and {len(cases)} positive/negative examples")
 
 
+def validate_wire_vectors(definition, vectors):
+    for vector in vectors:
+        decoded = None
+        try:
+            decoded = decode_vector(bytes.fromhex(vector["hex"]), vector["role"], definition)
+        except ValueError:
+            if vector["valid"]:
+                raise
+        else:
+            if not vector["valid"]:
+                fail("Invalid vector was accepted: " + vector["name"])
+        for name, value in vector.get("expected", {}).items():
+            if decoded is None or decoded.get(name) != value:
+                fail("Decoded vector mismatch: " + vector["name"])
+
+
 def validate_uart_artifact(definition_path, vectors_path):
     definition = load(definition_path)
     opcodes = set()
@@ -183,19 +201,7 @@ def validate_uart_artifact(definition_path, vectors_path):
             if (set(condition["when"]) | set(condition["require"])) - names:
                 fail("Conditional constraint references an undefined field")
     vectors = load(vectors_path)["vectors"]
-    for vector in vectors:
-        decoded = None
-        try:
-            decoded = decode_vector(bytes.fromhex(vector["hex"]), vector["role"], definition)
-        except ValueError:
-            if vector["valid"]:
-                raise
-        else:
-            if not vector["valid"]:
-                fail("Invalid vector was accepted: " + vector["name"])
-        for name, value in vector.get("expected", {}).items():
-            if decoded is None or decoded.get(name) != value:
-                fail("Decoded vector mismatch: " + vector["name"])
+    validate_wire_vectors(definition, vectors)
     print(f"PASS {definition_path.name}: {len(vectors)} MCU wire vectors and opcode allocation")
 
 
@@ -216,6 +222,64 @@ def validate_uart():
         elif old["arguments"] != new["arguments"] or old["reply"][:-1] != new["reply"][:-1]:
             fail("UART v3 changed an existing capability field")
     print("PASS UART v3 preserves legacy operations and adds the D13 capability")
+
+
+def reset_ack_matches(frame, pending, elapsed_ms, definition):
+    """A valid wire ACK alone cannot authorize a sensor restart."""
+    try:
+        decoded = decode_vector(frame, "reset_ack", definition)
+    except ValueError:
+        return False
+    return (pending is not None and 0 <= elapsed_ms < definition["sensor"]["timeout_ms"]
+            and decoded == pending)
+
+
+def reset_request_result(frame, committed, busy, persist_ok, definition):
+    """Reference the persistence/deduplication boundary, without performing I/O."""
+    result = {"ack": False, "persist": False, "committed": committed}
+    try:
+        decoded = decode_vector(frame, "reset_request", definition)
+    except ValueError:
+        return result
+    if committed is not None:
+        result["ack"] = decoded == committed
+    elif not busy:
+        result["persist"] = True
+        if persist_ok:
+            result.update(ack=True, committed=decoded)
+    return result
+
+
+def validate_reset():
+    definition = load(ROOT / "contracts/m1-reset-v1.json")
+    for role in ("reset_request", "reset_ack"):
+        layout = definition[role]
+        covered = (list(range(len(layout["header"])))
+                   + [layout["kind_offset"], layout["sequence_offset"]]
+                   + list(range(layout["reserved_offset"],
+                                layout["reserved_offset"] + layout["reserved_length"]))
+                   + [layout["length"] - 1])
+        if sorted(covered) != list(range(layout["length"])):
+            fail("Incomplete or overlapping reset frame layout")
+    fixtures = load(ROOT / "contracts/vectors/m1-reset-v1.json")
+    validate_wire_vectors(definition, fixtures["vectors"])
+    for case in fixtures["sensor_ack_cases"]:
+        actual = reset_ack_matches(bytes.fromhex(case["hex"]), case["pending"],
+                                   case["elapsed_ms"], definition)
+        if actual != case["restart"]:
+            fail("Reset ACK transaction mismatch: " + case["name"])
+    steps = 0
+    for case in fixtures["wifi_request_cases"]:
+        committed = None
+        for step in case["steps"]:
+            actual = reset_request_result(bytes.fromhex(step["hex"]), committed,
+                                          step["busy"], step["persist_ok"], definition)
+            if actual != step["expected"]:
+                fail("Reset persistence transaction mismatch: " + case["name"])
+            committed = actual["committed"]
+            steps += 1
+    print(f"PASS m1-reset-v1: {len(fixtures['vectors'])} wire vectors, "
+          f"{len(fixtures['sensor_ack_cases'])} pending ACK cases, {steps} persistence steps")
 
 
 def validate_sources(workspace):
@@ -253,6 +317,7 @@ def main():
     ids = validate_registry()
     validate_examples()
     validate_uart()
+    validate_reset()
     if args.sources:
         validate_sources(args.sources.resolve())
     if args.consumer:
