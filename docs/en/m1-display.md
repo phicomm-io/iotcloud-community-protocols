@@ -90,10 +90,29 @@ After capability D9=1, parse this independent 20-byte event:
 
 Kinds: 1 single click, 2 double click, 3 approximately 3-second hold, 4 10-second hold. SEQ advances per event and wraps at 8 bits; zero is valid. It supports adjacent duplicate filtering. HELD is big-endian milliseconds, capped at 65535; current single-click events use zero and double-click events report the second press duration.
 
-Debounce is 20 ms; a short press lasts 60..2999 ms. A first short release waits over 350 ms for a single click. Completing a second qualifying short press within the window emits a double click without legacy `0x0f`. Single clicks retain `0x0f`; holds retain `0x04` / `0x10`, with the existing release-to-provision behavior. OTA/reset wait clears pending clicks.
+Debounce is 20 ms; a short press lasts 60..2999 ms. A first short release waits over 350 ms for a single click. Completing a second qualifying short press within the window emits a double click without legacy `0x0f`. Single clicks retain `0x0f`. Reaching 3 seconds emits only KIND=3 and legacy `0x04` notifications; releasing after at least 3 but less than 10 seconds requests reprovisioning. Holding continuously for 10 seconds emits KIND=4 and immediately requests a factory reset, without waiting for release. The new gesture flow never automatically sends legacy reprovision `0x18` or display test `0x10`; explicit debug commands may still invoke the latter. OTA/reset wait clears pending clicks.
 
 Wi-Fi double-click priority:
 
 1. Cancel a ringing alarm and do not toggle the display.
 2. Otherwise, when `switch_display` and the active profile/capabilities permit it, dual profile toggles both lanes together between original/user readings; legacy profile retains its CO₂ behavior.
 3. Otherwise do nothing custom. Expiry restores original readings; OTA, reset or configuration busy excludes custom actions.
+
+## Button reset transaction m1-reset-v1
+
+`m1-reset-v1` uses the independent command `0x72`. It is neither a `0x70` sub-operation nor the OTA command `0x16`. Sensor MCU requests are 20 bytes; Wi-Fi MCU ACKs are 12 bytes:
+
+```text
+23 72 01 KIND SEQ 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21
+23 72 01 KIND SEQ 00 00 00 00 00 00 21
+```
+
+Here KIND=1 means reprovision and 2 means factory reset, independently of button-event `0x71` kinds. Reserved bytes must be zero. Each new transaction advances an 8-bit SEQ, including wrap to zero. Retry the same KIND/SEQ every 500 ms for at most 5 seconds. OTA, a pending reset or a committed reset excludes another physical-button transaction.
+
+After validating the complete request, Wi-Fi calls `m1_reset(kind == 2)` and sends the matching KIND/SEQ ACK only after persistence succeeds. Busy or failed persistence produces no ACK or committed receipt, allowing a later retry. A duplicate committed transaction receives another ACK without another Flash write. Ignore conflicting transactions without escalating to factory reset.
+
+Sensor MCU accepts an ACK only for its local pending transaction, with matching schema, KIND, SEQ and reserved bytes, within the 5-second window; elapsed time of 5000 ms is already expired. Orphan, late or incorrect ACKs cannot reset it. On confirmation, hold Wi-Fi EN low for at least 1 second, then reset the sensor MCU; startup raises Wi-Fi EN again. Without a valid ACK, do not cut Wi-Fi power. After timeout, release and hold again to start a new transaction.
+
+Both MCUs require matching updates. Old Wi-Fi ignores `0x72`; new sensor firmware does not fall back to `0x18` or downgrade factory reset to reprovisioning. New Wi-Fi still accepts legacy sensor `0x18`, persists its original partial reset, then sends the old fixed `0x16` magic ACK. Existing OTA `0x16` retains its 4-second commit delay followed by at least 1 second with Wi-Fi EN low.
+
+Factory reset retains the scope of Wi-Fi `m1_reset(true)`: restore all `app_storage` defaults and restart the sensor MCU to clear RAM state. Independent Flash RTTTL music remains. See the [reset contract](contracts/m1-reset-v1.json) and [positive/negative transaction vectors](contracts/vectors/m1-reset-v1.json).

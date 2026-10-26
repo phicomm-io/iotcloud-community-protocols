@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "specification": "1.0.0-dev.3",
+  "specification": "1.0.0-dev.4",
   "repository": "phicomm-io/iotcloud-community-protocols",
   "contracts": [
     {
@@ -143,6 +143,33 @@
         "mcu/src/runtime.c",
         "mcu/tests/test_runtime.c",
         "firmware/M1/mcu.c"
+      ]
+    },
+    {
+      "id": "m1-reset-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "m1-display.md",
+      "producers": [
+        "mcu",
+        "firmware"
+      ],
+      "consumers": [
+        "firmware",
+        "mcu"
+      ],
+      "implementation": [
+        "mcu/src/runtime.c",
+        "firmware/M1/uart.c",
+        "firmware/M1/main.c"
+      ],
+      "verification": [
+        "mcu/tests/test_runtime.c",
+        "firmware/tests/test_stock_runtime.py"
+      ],
+      "artifacts": [
+        "contracts/m1-reset-v1.json",
+        "contracts/vectors/m1-reset-v1.json"
       ]
     },
     {
