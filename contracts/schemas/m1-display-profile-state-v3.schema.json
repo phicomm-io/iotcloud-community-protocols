@@ -460,6 +460,10 @@
               "x-orderedFields": [
                 "low",
                 "high"
+              ],
+              "x-float32OrderedFields": [
+                "low",
+                "high"
               ]
             }
           ]

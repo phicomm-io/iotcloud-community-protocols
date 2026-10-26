@@ -28,6 +28,32 @@ Each region has three physical positions, left/middle/right, each with independe
 
 Array order is physical left/middle/right. Each object contains exactly the three booleans. Threshold mode remains `{"mode":"thresholds","low":1000,"high":2000}`: all three positions green below low, yellow in [low, high), red at/above high; require low<high. Direct API writes require this complete lamp array and use it exactly, bypassing configured thresholds. Display lamps never replace sensor measurements or alarm inputs.
 
+### Glass layout: 19 display groups
+
+PM2.5 is on the left and HCHO on the right. Each `8` below illustrates a digit position that exists on the glass; it does not specify sensor accuracy, UART precision or decimal places in the existing temperature/humidity driver. The climate regions are separate from the two generic display slots above.
+
+| Group | Position | Glass content / digit positions |
+| --- | --- | --- |
+| 1 | Top | Date `8888-88-88` |
+| 2 | Top | Time `88:88` |
+| 3 | Top | Wi-Fi icon and `×` status segment |
+| 4 | Middle left | `PM2.5` label |
+| 5 | Middle left | PM2.5 digits `888`; slot1 accepts integers only |
+| 6 | Middle left | `µg/m³` unit |
+| 7 | Below PM2.5 digits | Three positions, left/middle/right × red/green/yellow: nine lamp segments |
+| 8 | Middle right | `甲醛` (HCHO) label |
+| 9 | Middle right | HCHO digits `8.88`; fixed decimal after the first digit, optionally hidden |
+| 10 | Middle right | `mg/m³` unit |
+| 11 | Below HCHO digits | Three positions, left/middle/right × red/green/yellow: nine lamp segments |
+| 12 | Bottom temperature region | Thermometer icon |
+| 13 | Bottom temperature region | `温度` (temperature) label |
+| 14 | Bottom temperature region | Digit positions `88.8` |
+| 15 | Bottom temperature region | `°C` unit |
+| 16 | Bottom humidity region | Water-drop icon |
+| 17 | Bottom humidity region | `湿度` (humidity) label |
+| 18 | Bottom humidity region | Digit positions `88.8` |
+| 19 | Bottom humidity region | `%` unit |
+
 ### UART flags and lamp mapping
 
 OP `00` D13 / f18 remains 2. No old capability byte gains a new meaning. After checking it, use read-only OP26 / `0x1a` to probe schema3. Unsupported/invalid-operation replies or failed queries from old MCUs require bounded probing, no OP24/25 writes and `requires_mcu_upgrade`.

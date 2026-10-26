@@ -30,8 +30,25 @@ def ordered_fields(validator, fields, instance, schema):
         yield ValidationError(f"{fields[0]} must be less than {fields[1]}")
 
 
+def float32_ordered_fields(validator, fields, instance, schema):
+    """V3 thresholds must remain finite and distinct after firmware float32 ingress."""
+    if not isinstance(instance, dict) or len(fields) != 2:
+        return
+    values = [instance.get(field) for field in fields]
+    if any(type(value) not in (int, float) for value in values):
+        return  # Required properties and numeric types have their own constraints.
+    try:
+        left, right = (struct.unpack("!f", struct.pack("!f", value))[0] for value in values)
+    except (OverflowError, struct.error):
+        yield ValidationError("Thresholds must be finite float32 numbers")
+        return
+    if not (math.isfinite(left) and math.isfinite(right) and left < right):
+        yield ValidationError(f"{fields[0]} must be less than {fields[1]} after finite float32 conversion")
+
+
 Validator = validators.extend(Draft202012Validator,
-                             {"x-orderedFields": ordered_fields},
+                             {"x-orderedFields": ordered_fields,
+                              "x-float32OrderedFields": float32_ordered_fields},
                              type_checker=STRICT_TYPES)
 
 

@@ -186,7 +186,7 @@ X-IoTCloud-Confirm: full-to-hub
 }
 ```
 
-来源、metric 和配置的物理单位沿用 [schema2 规则](#m1-dual-display-api)，`decimals` / `scale` 替换为必填的 `display` 对象。[五种模式与每区域九段灯](m1-display.md#m1-display-v3) 用于本地/MQTT 数据转换；PM 仅允许 `integer`。固定灯色要求三个完整对象，阈值要求 low<high，按缩放前的物理值比较。api 来源可以保留模式、物理单位元数据和配色配置，但这些字段不转换直接写入的显示帧。
+来源、metric 和配置的物理单位沿用 [schema2 规则](#m1-dual-display-api)，`decimals` / `scale` 替换为必填的 `display` 对象。[五种模式与每区域九段灯](m1-display.md#m1-display-v3) 用于本地/MQTT 数据转换；PM 仅允许 `integer`。固定灯色要求三个完整对象，阈值转换为 float32 后必须有限且仍 low<high，按缩放前的物理值比较。api 来源可以保留模式、物理单位元数据和配色配置，但这些字段不转换直接写入的显示帧。
 
 MQTT ID 接受恰好 12 位十六进制或六组冒号分隔字节，允许大小写；先规范化为小写紧凑形式，再做本机 ID 检查和持久化，响应始终返回规范形式。非 MQTT 的 ID 必须为空。`co2_source.set` 同样增加输入规范化，定义于新 [v2 输入 schema](contracts/schemas/m1-co2-source-set-v2.schema.json)。既有 `display_source.set` 实现也宽松接收这些拼写；这是冻结 v2 契约之外的输入扩展，旧 schema 文件字节不变。
 
