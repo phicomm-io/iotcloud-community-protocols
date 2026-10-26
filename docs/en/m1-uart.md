@@ -56,13 +56,18 @@ Factory MCU does not implement `0x70`. New capabilities use D9..D13 without chan
 
 Contract revision is separate from the frame protocol number. Old `m1-uart-v2` keeps its [v1 artifact](contracts/m1-uart-v1.json) and [original vectors](contracts/vectors/m1-uart-v1.json), including D13=0. The additive [v3 artifact](contracts/m1-uart-v3.json) and [v3 vectors](contracts/vectors/m1-uart-v3.json) declare D13=2 and dual operations, allowing zero to represent absent support. Consumers explicitly select the new contract and update their pins; nonzero D13 does not satisfy the old fixed-zero contract. Old Wi-Fi clients ignoring the new field still use scalar operations.
 
+The additive [v4 artifact](contracts/m1-uart-v4.json) and [v4 vectors](contracts/vectors/m1-uart-v4.json) preserve every v3 capability byte and assigned operation. OP `00` D13 stays 2 and D0 stays 2. New hexadecimal `18`/`19`/`1a` (decimal 24/25/26) write, select and query independent formatted caches with nine lamp bits per region. D13=2 alone cannot distinguish these from a v3-only MCU: first probe read-only OP `1a` for schema3. On unsupported/invalid/failed probes, bound retries, send no formatted writes/selects and report `requires_mcu_upgrade`.
+
+OP `18` and all queries do not select a profile. OP `19` explicitly activates formatted control, including original readings. A query's formatted-active flag and a matching selector ACK for the current configuration generation are both required before confirming output; cached dual replies are insufficient. Full byte offsets and glass mapping are defined in [M1 display v3](m1-display.md#m1-display-v3).
+
 ## Operation groups
 
 | Group | OP | Purpose |
 | --- | --- | --- |
 | Product features | `09`, `0b`, `0e`, `0f`, `11`, `12`, `14`–`16` | Thresholds, tones/music, scalar/dual writes and selection, optional sensor buzzer |
 | Compatibility | `0a`, `0c`, `0d` | Existing CO₂ config, reading and status; new v1 clients use generic display |
-| Read-only diagnostics | `00`, `06`, `08`, `10`, `13`, `17` | Capabilities, health, display cache, raw sensor frames, scalar/dual state |
+| Read-only diagnostics | `00`, `06`, `08`, `10`, `13`, `17`, `1a` | Capabilities, health, display cache, raw sensor frames, scalar/dual state |
+| Formatted display | `18`, `19` | Explicit raw digits/flags/nine lamps and global original/user selection |
 | Expert tools | `01`–`05`, `07` | PWM, screen/numeric/segment overrides, exit, PM mode |
 
 Existing opcodes remain assigned. See [MCU implementation docs](https://github.com/phicomm-io/phicomm_m1_mcu_atsamd20/tree/main/docs) for existing music/update details. Shared new display and button definitions are on the [next page](m1-display.md).

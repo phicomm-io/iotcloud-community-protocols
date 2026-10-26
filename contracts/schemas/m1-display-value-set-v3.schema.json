@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/m1-display-value-set-v3.schema.json",
+  "title": "M1 display_value.set raw digits, flags and individual lamps, or explicit clear",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "slot",
+        "ttl_seconds"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "slot": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ttl_seconds": {
+          "const": 0,
+          "type": "integer"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "slot",
+        "ttl_seconds",
+        "number",
+        "decimal",
+        "show_label",
+        "show_unit",
+        "lamps"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "slot": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        },
+        "lamps": {
+          "$ref": "#/$defs/lamps"
+        },
+        "number": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
+        },
+        "decimal": {
+          "type": "boolean"
+        },
+        "show_label": {
+          "type": "boolean"
+        },
+        "show_unit": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "slot": {
+                "const": 1
+              }
+            },
+            "required": [
+              "slot"
+            ]
+          },
+          "then": {
+            "properties": {
+              "decimal": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "lamps": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "red",
+          "green",
+          "yellow"
+        ],
+        "properties": {
+          "red": {
+            "type": "boolean"
+          },
+          "green": {
+            "type": "boolean"
+          },
+          "yellow": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "x-runtime-requirements": [
+    "active saved formatted profile",
+    "selected lane source is api",
+    "revision matches shared configuration revision",
+    "positive TTL does not exceed configured lane TTL",
+    "number, format flags and all nine lamps are applied exactly; no configured conversion or threshold policy"
+  ]
+}

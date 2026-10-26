@@ -2,9 +2,61 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/m1-display/)
 
-Dual-lane contract `m1-display-v2` uses the independent capability and additive operations in `m1-uart-v3`. Existing scalar schema 1 keeps its meaning. This development extension records implementation, builds and physical acceptance separately; publishing documentation does not establish device acceptance.
+Formatting and individual-lamp contract `m1-display-v3` uses additive `m1-uart-v4`. Existing dual schema 2 and scalar schema 1 retain their meanings. These are development interfaces without a formal release.
 
-## Dual-lane schema 2
+## M1 display v3
+
+Slot0 is the HCHO region; slot1 is PM2.5. HCHO has a fixed decimal point after the first digit. PM supports integers only. `unit` in local/MQTT configuration describes the source's physical value; it cannot create ppm, W or % glyphs on the glass. `display.show_label` enables the original HCHO/PM2.5 legend, while `display.show_unit` independently enables the original mg/m³ / µg/m³ unit. Both are required booleans, initially false for custom/external data.
+
+The following modes transform local/MQTT physical inputs. Direct API writes instead supply the digit register, three flags and all nine lamps explicitly.
+
+| `display.mode` | HCHO presentation | Example / limit |
+| --- | --- | --- |
+| `integer` | Round to the nearest integer | 123.5 → `124`; maximum `999`; the only PM mode |
+| `auto_kilo` | Integer below 1000; otherwise divide by 1000 and show x.xx | 1234 → `1.23`; scaled maximum `9.99` |
+| `decimal_2` | Round to the nearest hundredth, fixed x.xx | 1.2351 → `1.24`; maximum `9.99` |
+| `decimal_1` | Round to the nearest tenth with a trailing zero | 1.251 → `1.30`; maximum `9.90` |
+| `milli` | Divide by 1000 and round to the nearest hundredth | 1234 → `1.23`; maximum `9.99` |
+
+Physical input and arithmetic use float32; positive ties round upward. Positive display overflow remains valid and saturates at the mode's limit. Negative, nonfinite or metric-invalid data restores that region's original reading. Thresholds compare the physical input before conversion. Independent expiry, the global original/user selector, double-click switching and alarm priority retain their existing behavior.
+
+Each region has three physical positions, left/middle/right, each with independent red/green/yellow segments: nine segments per region. Multiple colors may be enabled at one position. Fixed color uses this complete shape:
+
+```json
+{"mode":"fixed","lamps":[{"red":true,"green":false,"yellow":false},{"red":false,"green":true,"yellow":false},{"red":true,"green":false,"yellow":true}]}
+```
+
+Array order is physical left/middle/right. Each object contains exactly the three booleans. Threshold mode remains `{"mode":"thresholds","low":1000,"high":2000}`: all three positions green below low, yellow in [low, high), red at/above high; require low<high. Direct API writes require this complete lamp array and use it exactly, bypassing configured thresholds. Display lamps never replace sensor measurements or alarm inputs.
+
+### UART flags and lamp mapping
+
+OP `00` D13 / f18 remains 2. No old capability byte gains a new meaning. After checking it, use read-only OP26 / `0x1a` to probe schema3. Unsupported/invalid-operation replies or failed queries from old MCUs require bounded probing, no OP24/25 writes and `requires_mcu_upgrade`.
+
+| Decimal OP / hexadecimal | Arguments | Effect |
+| --- | --- | --- |
+| 24 / `18` write | A0–1 number BE16 0..999; A2 format; A3–4 lamps BE16 0..511; A5 TTL0..60; A6 slot0..1 | Update only this formatted cache; TTL0 clears it |
+| 25 / `19` select | A0=0 original / 1 user; A1..6=0 | Explicitly activate formatted profile, including original selection |
+| 26 / `1a` query | A0=slot; A1..6=0 | Read the cache, saved selection and profile-active flag |
+
+Format bit0 is the fixed HCHO decimal, bit1 the original label, bit2 the original unit; bits3..7 are zero. PM forbids bit0. Formatted caches are independent of scalar/dual caches. Writes and queries never select a profile. Old decimal OP10/18/22 (hex `0a`/`12`/`16`) explicitly reclaim legacy CO₂/scalar/dual ownership respectively. Expert overrides, OTA and reset keep their priorities.
+
+Lamp bits0..2 are red left/middle/right, bits3..5 green, bits6..8 yellow. Uniform red=`0x007`, green=`0x038`, yellow=`0x1c0`; the mixed example above is `0x115`. LCD RAM offsets are red `0x0c`, green `0x13`, yellow `0x12`. HCHO position bits are `0x10/0x20/0x40`; PM bits are `0x80/0x01/0x04`. Clear and replace only the chosen region's bits, preserving every other bit in all three color bytes.
+
+Example: write HCHO `1.23`, mixed lamps and a 20-second lease, select user readings, then query independently:
+
+```text
+23 70 18 01 00 7b 01 01 15 14 00 21
+23 70 19 02 01 00 00 00 00 00 00 21
+23 70 1a 03 00 00 00 00 00 00 00 21
+```
+
+Successful write/select data is all zero. An OP26 reply uses absolute offsets: f5=schema3, f6=cached selection, f7=effective, f8=slot, f9–10=number, f11=format, f12–13=lamps, f14=remaining TTL rounded up (0..60), f15=formatted profile active, f16..18=0. Effective requires active profile, user selection and TTL>0.
+
+An OP26 reply alone never confirms selection. Wi-Fi must first receive the matching OP25 ACK for its current configuration generation, then independently query both lanes and match f15=1, selection, encoded value, flags, lamps and fresh TTL. A cached v2 reply cannot confirm formatted control. See [display_profile API](device-http.md#m1-display_profile-api) for configuration, runtime and compatibility views, and [contracts and vectors](contracts.md) for machine artifacts.
+
+<a id="dual-lane-schema-2"></a>
+
+## Compatible dual-lane schema 2
 
 HCHO position `slot=0` and PM2.5 position `slot=1` have independent values, formats, colors and leases. One global selector changes both original/user sources together, including a single double click. A lane configured as `none`, missing, expired, offline or outside its representable range returns only that position to its original reading. Expiry preserves the global desired selection; fresh data may restore that lane.
 

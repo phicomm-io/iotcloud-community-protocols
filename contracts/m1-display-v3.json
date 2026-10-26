@@ -1,0 +1,188 @@
+{
+  "schema": 3,
+  "contract": "m1-display-v3",
+  "status": "implemented-unreleased",
+  "actions": [
+    "display_profile.get",
+    "display_profile.set",
+    "display_value.set"
+  ],
+  "slots": {
+    "0": "HCHO",
+    "1": "PM2.5"
+  },
+  "format_flags": {
+    "left_decimal": 1,
+    "original_label": 2,
+    "original_unit": 4,
+    "reserved_mask": 248
+  },
+  "modes": {
+    "integer": {
+      "slots": [
+        0,
+        1
+      ],
+      "digits_multiplier": 1,
+      "max_step_count": 999,
+      "decimal": false
+    },
+    "auto_kilo": {
+      "slots": [
+        0
+      ],
+      "integer_below": 1000,
+      "digits_multiplier": 1,
+      "max_step_count": 999,
+      "decimal": true,
+      "count_divisor": 10
+    },
+    "decimal_2": {
+      "slots": [
+        0
+      ],
+      "digits_multiplier": 1,
+      "max_step_count": 999,
+      "decimal": true,
+      "count_multiplier": 100
+    },
+    "decimal_1": {
+      "slots": [
+        0
+      ],
+      "digits_multiplier": 10,
+      "max_step_count": 99,
+      "decimal": true,
+      "count_multiplier": 10
+    },
+    "milli": {
+      "slots": [
+        0
+      ],
+      "digits_multiplier": 1,
+      "max_step_count": 999,
+      "decimal": true,
+      "count_divisor": 10
+    }
+  },
+  "input": {
+    "representation": "IEEE-754 binary32 physical input",
+    "maximum": 999999,
+    "rounding": "binary32 scaled count and addition; nearest positive step, ties upward",
+    "invalid": [
+      "negative",
+      "non-finite",
+      "metric-invalid",
+      "expired",
+      "offline"
+    ],
+    "positive_display_overflow": "saturate without invalidating the lane",
+    "thresholds_compare": "original physical value before display conversion",
+    "sources": [
+      "local",
+      "mqtt"
+    ]
+  },
+  "lamps": {
+    "positions": [
+      "left",
+      "middle",
+      "right"
+    ],
+    "bit_offsets": {
+      "red": 0,
+      "green": 3,
+      "yellow": 6
+    },
+    "maximum_mask": 511,
+    "glass_bits": {
+      "0": [
+        16,
+        32,
+        64
+      ],
+      "1": [
+        128,
+        1,
+        4
+      ]
+    },
+    "color_ram_offsets": {
+      "red": 12,
+      "green": 19,
+      "yellow": 18
+    },
+    "uniform_masks": {
+      "off": 0,
+      "red": 7,
+      "green": 56,
+      "yellow": 448
+    },
+    "write_policy": "clear and replace only the selected region bits in each color RAM byte"
+  },
+  "confirmation": {
+    "profile": "formatted",
+    "selector_ack_op": 25,
+    "query_op": 26,
+    "query_requires_active": true,
+    "selector_ack_matches_configuration_generation": true,
+    "independent_queries_for_both_lanes": true,
+    "projected_legacy_or_dual_confirmed": false
+  },
+  "storage": {
+    "version": 10,
+    "preserve_all_v9_offsets": true,
+    "presentation_records": 2,
+    "profile_discriminator": {
+      "0": "dual",
+      "1": "formatted"
+    },
+    "lease_storage": "RAM only",
+    "v9_migration_activates_formatted": false,
+    "compatible_backups": [
+      8,
+      9,
+      10
+    ]
+  },
+  "frozen_artifacts": {
+    "contracts/schemas/m1-display-source-set-v2.schema.json": "3296ec6f3110bf3bfa9c33d57718dd669a155eda4c08c3ec70d2be8d324ccd26",
+    "contracts/schemas/m1-display-source-state-v2.schema.json": "824efaec7489260bb78bf5b4b820278162fcd68feb65195240154d5fb96581ae",
+    "contracts/schemas/m1-display-data-set-v2.schema.json": "2a4f8de206fe97e1e091df42566e04e736a692d098ac01bcbd5950cd9d7c189d",
+    "contracts/schemas/m1-co2-source-set-v1.schema.json": "1f7613d622f3c4fd9a5db542d4475e5bcfde67e1e2c3e7037e93051d419829de",
+    "contracts/examples/cases.json": "1392d86ea19e518683b747b2821715e058b26f7ae3da01149e71b8d22bcd540d",
+    "contracts/m1-reset-v1.json": "24076e450aa8916346a2835573368c64d8c6dc1a68cdb3fbf08c97244e77d47f",
+    "contracts/vectors/m1-reset-v1.json": "6824f788f43cc972753f9abfd04d886a971120fd4b66edca66ef9e55cd9b5665"
+  },
+  "raw_api": {
+    "action": "display_value.set",
+    "input_representation": "integer digit register and explicit boolean flags/lamps",
+    "number_minimum": 0,
+    "number_maximum": 999,
+    "decimal_slots": [
+      0
+    ],
+    "policy_conversion": false,
+    "overflow": "reject",
+    "configured_mode_and_thresholds_apply": false,
+    "requires_saved_profile": "formatted",
+    "requires_lane_source": "api",
+    "clear_fields": [
+      "revision",
+      "slot",
+      "ttl_seconds"
+    ],
+    "runtime_value": "number / 100 when decimal=true, otherwise number; binary32 readout",
+    "runtime_native_unit": {
+      "0": "mg/m³",
+      "1": "µg/m³"
+    },
+    "runtime_unit_when_hidden": "",
+    "confirmation_fields": [
+      "number",
+      "format",
+      "lamps",
+      "fresh TTL"
+    ]
+  }
+}

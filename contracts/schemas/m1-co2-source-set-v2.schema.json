@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/m1-co2-source-set-v2.schema.json",
+  "title": "M1 co2_source.set with canonical MAC input normalization",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source",
+    "device_id",
+    "double_click",
+    "revision"
+  ],
+  "properties": {
+    "source": {
+      "enum": [
+        "local",
+        "mqtt"
+      ]
+    },
+    "device_id": {
+      "type": "string"
+    },
+    "double_click": {
+      "enum": [
+        "none",
+        "switch_display"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source": {
+            "const": "local"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "device_id": {
+            "const": ""
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "oneOf": [
+              {
+                "pattern": "^[0-9A-Fa-f]{12}$",
+                "minLength": 12,
+                "maxLength": 12
+              },
+              {
+                "pattern": "^(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$",
+                "minLength": 17,
+                "maxLength": 17
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

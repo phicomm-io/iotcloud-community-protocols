@@ -1,0 +1,5437 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "formatted API and external fan",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "HCHO integer",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "HCHO auto_kilo",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "HCHO decimal_2",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "decimal_2",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "HCHO decimal_1",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "decimal_1",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "HCHO milli",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "milli",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "accepted MAC f0e1d2c3b4a5",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "accepted MAC F0E1D2C3B4A5",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0E1D2C3B4A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "accepted MAC f0:e1:d2:c3:b4:a5",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0:e1:d2:c3:b4:a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "accepted MAC F0:e1:D2:c3:B4:a5",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:e1:D2:c3:B4:a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "reject malformed MAC 'f0-e1-d2-c3-b4-a5'",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0-e1-d2-c3-b4-a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "reject malformed MAC 'f0:e1d2:c3:b4:a5'",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0:e1d2:c3:b4:a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "reject malformed MAC 'f0e1d2c3b4a5\\n'",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5\n",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "reject malformed MAC ' f0e1d2c3b4a5'",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": " f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "reject malformed MAC 'f0e1d2c3b4a5\\x00'",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5\u0000",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "reject malformed MAC 'f0e1d2c3b4a'",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "reject malformed MAC 'g0:e1:d2:c3:b4:a5'",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "g0:e1:d2:c3:b4:a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "no SET schema property",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "no legacy decimals",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            },
+            "decimals": 2
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "no legacy scale",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            },
+            "scale": 1000
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "PM cannot use decimal mode",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "decimal_2",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "display flags require booleans",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": 1,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "display requires explicit unit flag",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "display rejects invented unit glyph",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false,
+              "unit": "ppm"
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "fixed lamps must have three positions",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "lamp switches require booleans",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": 1,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "each lamp object is complete",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "lamp rejects extra field",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true,
+                  "blue": false
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "fixed color rejects scalar enum",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "value": "green"
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "threshold equality invalid",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 25
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "duplicate slots invalid",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 0,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "non MQTT ID must be empty",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "001122334455",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-set-v3",
+      "name": "unit follows physical metric",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "W",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw HCHO digits and mixed lamps",
+      "valid": true,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw integer zero",
+      "valid": true,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw maximum digits",
+      "valid": true,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw PM integer and native legend",
+      "valid": true,
+      "data": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw simultaneous colors at every position",
+      "valid": true,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": true,
+            "yellow": true
+          },
+          {
+            "red": true,
+            "green": true,
+            "yellow": true
+          },
+          {
+            "red": true,
+            "green": true,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "explicit clear without fake sample",
+      "valid": true,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 0
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "clear forbids number",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 0,
+        "number": 123
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "clear forbids decimal",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 0,
+        "decimal": true
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "clear forbids show_label",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 0,
+        "show_label": false
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "clear forbids show_unit",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 0,
+        "show_unit": false
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "clear forbids lamps",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 0,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write requires revision",
+      "valid": false,
+      "data": {
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write requires slot",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write requires ttl_seconds",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write requires number",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write requires decimal",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write requires show_label",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write requires show_unit",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write requires lamps",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "negative digits",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": -1,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw overflow rejected",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 1000,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "fractional digit register",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 1.5,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "whole float digit register",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123.0,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "string digit register",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": "123",
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "boolean digit register",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": true,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "PM decimal rejected",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "decimal requires boolean",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": 1,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "label requires boolean",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": "false",
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "unit flag requires boolean",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": 0,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "no physical value input",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ],
+        "value": 1.23
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "no physical unit input",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ],
+        "unit": "ppm"
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "no scalar color input",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ],
+        "color": "green"
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "too long raw lease",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 61,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "float raw lease",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15.0,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "float raw revision",
+      "valid": false,
+      "data": {
+        "revision": 12.0,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw write rejects unknown field",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ],
+        "schema": 3
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw lamps require three positions",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-value-set-v3",
+      "name": "raw lamp bools strict",
+      "valid": false,
+      "data": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": 1,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": 1,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": 1,
+            "green": false,
+            "yellow": false
+          }
+        ]
+      }
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "confirmed formatted state",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "confirmed clear is distinct from value validity",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "ppm",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "stale",
+              "number": null,
+              "format": null,
+              "lamps": null,
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "projected legacy is unconfirmed",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "legacy",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": false,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": false
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": false,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "projected legacy cannot confirm one lane",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "legacy",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": false,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": false,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "projected dual is unconfirmed",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": false,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": false
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": false,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "projected dual cannot confirm one lane",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": false,
+          "confirmation": "pending_mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": false,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": false,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "response requires schema 3",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 2,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "response IDs must be canonical",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "F0:E1:D2:C3:B4:A5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "PM format forbids decimal bit",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "inactive profile cannot claim confirmation",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "dual",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "global confirmation needs both lanes",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": false,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": false
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "unsupported MCU cannot claim confirmation",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": false,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "original selection cannot be effective",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "original",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "invalid lane lamps must be null",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": false,
+              "value": null,
+              "unit": "ppm",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 0,
+              "effective": false,
+              "reason": "stale",
+              "number": null,
+              "format": null,
+              "lamps": [
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "no scalar color in v3 runtime",
+      "data": {
+        "revision": 12,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "custom",
+            "unit": "ppm",
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            },
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": false
+            }
+          },
+          {
+            "slot": 1,
+            "source": "mqtt",
+            "device_id": "f0e1d2c3b4a5",
+            "metric": "fan_speed_percent",
+            "unit": "%",
+            "ttl_seconds": 15,
+            "color": {
+              "mode": "thresholds",
+              "low": 25,
+              "high": 75
+            },
+            "display": {
+              "mode": "integer",
+              "show_label": false,
+              "show_unit": false
+            }
+          }
+        ],
+        "schema": 3,
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "",
+              "age_ms": 0,
+              "remaining_ttl_seconds": 15,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 1,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true,
+              "color": "red"
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 99,
+              "unit": "%",
+              "age_ms": 100,
+              "remaining_ttl_seconds": 14,
+              "effective": true,
+              "reason": "ok",
+              "number": 99,
+              "format": 0,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-co2-source-set-v2",
+      "name": "CO2 normalizes colon uppercase MAC",
+      "data": {
+        "revision": 12,
+        "source": "mqtt",
+        "device_id": "F0:E1:D2:C3:B4:A5",
+        "double_click": "none"
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-co2-source-set-v2",
+      "name": "CO2 normalizes compact uppercase MAC",
+      "data": {
+        "revision": 12,
+        "source": "mqtt",
+        "device_id": "F0E1D2C3B4A5",
+        "double_click": "none"
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-co2-source-set-v2",
+      "name": "CO2 local uses empty ID",
+      "data": {
+        "revision": 12,
+        "source": "local",
+        "device_id": "",
+        "double_click": "none"
+      },
+      "valid": true
+    },
+    {
+      "schema": "m1-co2-source-set-v2",
+      "name": "CO2 rejects 'f0e1d2c3b4a5\\n'",
+      "data": {
+        "revision": 12,
+        "source": "mqtt",
+        "device_id": "f0e1d2c3b4a5\n",
+        "double_click": "none"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-co2-source-set-v2",
+      "name": "CO2 rejects 'f0:e1d2:c3:b4:a5'",
+      "data": {
+        "revision": 12,
+        "source": "mqtt",
+        "device_id": "f0:e1d2:c3:b4:a5",
+        "double_click": "none"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-co2-source-set-v2",
+      "name": "CO2 rejects 'F0-E1-D2-C3-B4-A5'",
+      "data": {
+        "revision": 12,
+        "source": "mqtt",
+        "device_id": "F0-E1-D2-C3-B4-A5",
+        "double_click": "none"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-co2-source-set-v2",
+      "name": "CO2 local rejects nonempty ID",
+      "data": {
+        "revision": 12,
+        "source": "local",
+        "device_id": "F0:E1:D2:C3:B4:A5",
+        "double_click": "none"
+      },
+      "valid": false
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "producer GET after selector ACK and two formatted queries",
+      "valid": true,
+      "data": {
+        "schema": 3,
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": true
+            },
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "power",
+            "unit": "W",
+            "display": {
+              "mode": "integer",
+              "show_label": true,
+              "show_unit": false
+            },
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.23,
+              "unit": "mg/m³",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 5,
+              "lamps": [
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": true
+                },
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": true
+                },
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 999,
+              "unit": "",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": true,
+              "reason": "ok",
+              "number": 999,
+              "format": 2,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "schema": "m1-display-profile-state-v3",
+      "name": "API displayed readout may retain float32 representation",
+      "valid": true,
+      "data": {
+        "schema": 3,
+        "revision": 1,
+        "selected_source": "user",
+        "double_click": "switch_display",
+        "lanes": [
+          {
+            "slot": 0,
+            "source": "api",
+            "device_id": "",
+            "metric": "co2",
+            "unit": "ppm",
+            "display": {
+              "mode": "auto_kilo",
+              "show_label": false,
+              "show_unit": true
+            },
+            "ttl_seconds": 20,
+            "color": {
+              "mode": "thresholds",
+              "low": 1000,
+              "high": 1500
+            }
+          },
+          {
+            "slot": 1,
+            "source": "api",
+            "device_id": "",
+            "metric": "power",
+            "unit": "W",
+            "display": {
+              "mode": "integer",
+              "show_label": true,
+              "show_unit": false
+            },
+            "ttl_seconds": 4,
+            "color": {
+              "mode": "fixed",
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ]
+            }
+          }
+        ],
+        "runtime": {
+          "profile": "formatted",
+          "selected_source": "user",
+          "mcu_supported": true,
+          "confirmed": true,
+          "confirmation": "mcu_readback",
+          "lanes": [
+            {
+              "slot": 0,
+              "valid": true,
+              "value": 1.2300000190734863,
+              "unit": "mg/m³",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 19,
+              "effective": true,
+              "reason": "ok",
+              "number": 123,
+              "format": 5,
+              "lamps": [
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": true
+                },
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": true
+                },
+                {
+                  "red": false,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            },
+            {
+              "slot": 1,
+              "valid": true,
+              "value": 999,
+              "unit": "",
+              "age_ms": 1250,
+              "remaining_ttl_seconds": 3,
+              "effective": true,
+              "reason": "ok",
+              "number": 999,
+              "format": 2,
+              "lamps": [
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": false
+                },
+                {
+                  "red": false,
+                  "green": true,
+                  "yellow": false
+                },
+                {
+                  "red": true,
+                  "green": false,
+                  "yellow": true
+                }
+              ],
+              "confirmed": true
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

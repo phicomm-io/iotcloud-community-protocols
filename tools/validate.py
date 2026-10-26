@@ -6,6 +6,7 @@ import json
 import math
 from pathlib import Path
 import re
+import struct
 import subprocess
 
 from jsonschema import Draft202012Validator, validators
@@ -64,6 +65,16 @@ def decode_fields(data, fields):
     return output
 
 
+def check_conditions(output, conditions):
+    for condition in conditions:
+        if not all(output.get(key) == value for key, value in condition["when"].items()):
+            continue
+        if (any(output.get(key) != value for key, value in condition.get("require", {}).items())
+                or any(output[key] & mask for key, mask in condition.get("forbid_bits", {}).items())
+                or any(output[key] < value for key, value in condition.get("minimum", {}).items())):
+            fail("Conditional wire constraint failed")
+
+
 def decode_vector(frame, role, definition):
     layout = definition[role]
     if (len(frame) != layout["length"] or list(frame[:len(layout["header"])]) != layout["header"]
@@ -98,13 +109,11 @@ def decode_vector(frame, role, definition):
             if "reply" not in operation:
                 fail("Operation has no reply field contract")
             output.update(decode_fields(data, operation["reply"]))
+            check_conditions(output, operation.get("reply_conditions", []))
     else:
         start = layout["arguments_offset"]
         output.update(decode_fields(frame[start:start + layout["arguments_length"]], operation["arguments"]))
-        for condition in operation.get("conditions", []):
-            if all(output.get(key) == value for key, value in condition["when"].items()):
-                if any(output.get(key) != value for key, value in condition["require"].items()):
-                    fail("Conditional argument constraint failed")
+        check_conditions(output, operation.get("conditions", []))
     return output
 
 
@@ -143,13 +152,18 @@ def validate_registry():
     return ids
 
 
+def example_cases():
+    return [case for path in sorted((ROOT / "contracts/examples").glob("*.json"))
+            for case in load(path)["cases"]]
+
+
 def validate_examples():
     schemas = {}
     for path in (ROOT / "contracts/schemas").glob("*.schema.json"):
         schema = load(path)
         Validator.check_schema(schema)
         schemas[path.name.removesuffix(".schema.json")] = Validator(schema)
-    cases = load(ROOT / "contracts/examples/cases.json")["cases"]
+    cases = example_cases()
     names = set()
     for case in cases:
         key = (case["schema"], case["name"])
@@ -196,17 +210,28 @@ def validate_uart_artifact(definition_path, vectors_path):
                 covered.extend(range(field["offset"], field["offset"] + field["bytes"]))
             if sorted(covered) != list(range(size)):
                 fail("Incomplete or overlapping wire field definition")
-        names = {field["name"] for field in operation["arguments"] if "name" in field}
-        for condition in operation.get("conditions", []):
-            if (set(condition["when"]) | set(condition["require"])) - names:
-                fail("Conditional constraint references an undefined field")
-    vectors = load(vectors_path)["vectors"]
+        for fields, key in (("arguments", "conditions"), ("reply", "reply_conditions")):
+            names = {field["name"] for field in operation.get(fields, []) if "name" in field}
+            for condition in operation.get(key, []):
+                if set().union(*(condition.get(part, {}) for part in
+                                 ("when", "require", "forbid_bits", "minimum"))) - names:
+                    fail("Conditional constraint references an undefined field")
+    fixtures = load(vectors_path)
+    vectors = fixtures["vectors"]
     validate_wire_vectors(definition, vectors)
     print(f"PASS {definition_path.name}: {len(vectors)} MCU wire vectors and opcode allocation")
+    if fixtures.get("lamp_mask_sweep"):
+        for slot in (0, 1):
+            for mask in range(512):
+                frame = bytes([35, 112, 24, 0, 0, 123, 0, mask >> 8, mask & 255, 1, slot, 33])
+                actual = decode_vector(frame, "request", definition)
+                if actual["lamps"] != mask or actual["slot"] != slot:
+                    fail("UART lamp mask sweep mismatch")
+        print("PASS formatted UART writes: all 512 lamp masks in both slots")
 
 
 def validate_uart():
-    for version in ("v1", "v3"):
+    for version in ("v1", "v3", "v4"):
         validate_uart_artifact(ROOT / f"contracts/m1-uart-{version}.json",
                                ROOT / f"contracts/vectors/m1-uart-{version}.json")
     legacy = load(ROOT / "contracts/m1-uart-v1.json")
@@ -222,6 +247,107 @@ def validate_uart():
         elif old["arguments"] != new["arguments"] or old["reply"][:-1] != new["reply"][:-1]:
             fail("UART v3 changed an existing capability field")
     print("PASS UART v3 preserves legacy operations and adds the D13 capability")
+    formatted = load(ROOT / "contracts/m1-uart-v4.json")
+    for key, value in dual.items():
+        if key not in ("operations", "contract_revision") and formatted.get(key) != value:
+            fail("UART v4 changed a legacy field: " + key)
+    for old in dual["operations"]:
+        if old != next(item for item in formatted["operations"] if item["op"] == old["op"]):
+            fail("UART v4 redefined a legacy opcode")
+    validate_frozen_artifacts(formatted)
+    print("PASS UART v4 preserves every v3 capability/operation and frozen UART artifact")
+
+
+def validate_frozen_artifacts(definition):
+    for relative, expected in definition["frozen_artifacts"].items():
+        if ".." in Path(relative).parts or Path(relative).is_absolute():
+            fail("Unsafe frozen artifact reference")
+        if hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() != expected:
+            fail("Changed frozen artifact: " + relative)
+
+
+def binary32(value):
+    try:
+        return struct.unpack("!f", struct.pack("!f", value))[0]
+    except OverflowError:
+        return math.copysign(float("inf"), value)
+
+
+def format_display_value(value, mode, slot, show_label, show_unit, definition):
+    """Reference local/MQTT float32 conversion; raw API writes bypass this policy."""
+    value = binary32(value)
+    policy = definition["modes"].get(mode)
+    if (policy is None or slot not in policy["slots"] or not math.isfinite(value)
+            or value < 0 or value > definition["input"]["maximum"]):
+        return None
+    if "integer_below" in policy and value < policy["integer_below"]:
+        policy = definition["modes"]["integer"]
+    scaled = binary32(value * policy.get("count_multiplier", 1)
+                      / policy.get("count_divisor", 1))
+    number = min(policy["max_step_count"], int(binary32(scaled + 0.5)))
+    return {"number": number * policy["digits_multiplier"],
+            "format": int(policy["decimal"]) | (int(show_label) << 1) | (int(show_unit) << 2)}
+
+
+def validate_formatted_display():
+    definition = load(ROOT / "contracts/m1-display-v3.json")
+    validate_frozen_artifacts(definition)
+    vectors = load(ROOT / "contracts/vectors/m1-display-v3.json")
+    for case in vectors["formatting_cases"]:
+        actual = format_display_value(case["value"], case["mode"], case["slot"],
+                                      case["show_label"], case["show_unit"], definition)
+        if actual != case["expected"]:
+            fail("Formatted display conversion mismatch: " + case["name"])
+    raw_validator = Validator(load(ROOT / "contracts/schemas/m1-display-value-set-v3.schema.json"))
+    for case in vectors["raw_api_cases"]:
+        request = case["request"]
+        if not raw_validator.is_valid(request):
+            fail("Invalid raw API vector: " + case["name"])
+        actual = None
+        if request["ttl_seconds"]:
+            actual = {
+                "number": request["number"],
+                "format": int(request["decimal"]) | (int(request["show_label"]) << 1)
+                          | (int(request["show_unit"]) << 2),
+                "lamps": sum(int(lamp[color]) << (offset + position)
+                             for color, offset in definition["lamps"]["bit_offsets"].items()
+                             for position, lamp in enumerate(request["lamps"])),
+                "value": binary32(request["number"] / (100 if request["decimal"] else 1)),
+                "unit": (definition["raw_api"]["runtime_native_unit"][str(request["slot"])]
+                         if request["show_unit"] else ""),
+            }
+        expected = case["expected"]
+        if expected is not None:
+            expected = dict(expected, value=binary32(expected["value"]))
+        if actual != expected:
+            fail("Raw API display mismatch: " + case["name"])
+    lamp_schema = load(ROOT / "contracts/schemas/m1-display-profile-set-v3.schema.json")["$defs"]["lamps"]
+    lamp_validator = Validator(lamp_schema)
+    regions = [sum(bits) for bits in definition["lamps"]["glass_bits"].values()]
+    if regions[0] & regions[1]:
+        fail("Formatted lamp regions overlap")
+    for slot, bits in definition["lamps"]["glass_bits"].items():
+        region = sum(bits)
+        for mask in range(definition["lamps"]["maximum_mask"] + 1):
+            lamps = [{color: bool(mask & (1 << (offset + position)))
+                      for color, offset in definition["lamps"]["bit_offsets"].items()}
+                     for position in range(3)]
+            if not lamp_validator.is_valid(lamps):
+                fail("Invalid exhaustive lamp object")
+            rebuilt = sum(int(lamps[position][color]) << (offset + position)
+                          for color, offset in definition["lamps"]["bit_offsets"].items()
+                          for position in range(3))
+            if rebuilt != mask:
+                fail("Lamp mask round trip failed")
+            for color in definition["lamps"]["bit_offsets"]:
+                segments = sum(bits[position] for position in range(3) if lamps[position][color])
+                for original in (0, 0x55, 0xaa, 0xff):
+                    updated = (original & ~region) | segments
+                    if updated & region != segments or updated & ~region != original & ~region:
+                        fail("Lamp update changed another region")
+    print(f"PASS m1-display-v3: {len(vectors['formatting_cases'])} physical format vectors, "
+          f"{len(vectors['raw_api_cases'])} raw API vectors, "
+          "1024 lamp masks with region isolation; frozen JSON schemas/examples preserved")
 
 
 def reset_ack_matches(frame, pending, elapsed_ms, definition):
@@ -317,6 +443,7 @@ def main():
     ids = validate_registry()
     validate_examples()
     validate_uart()
+    validate_formatted_display()
     validate_reset()
     if args.sources:
         validate_sources(args.sources.resolve())

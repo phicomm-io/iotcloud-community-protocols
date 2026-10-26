@@ -1,0 +1,2370 @@
+{
+  "schema": 1,
+  "contract": "m1-display-v3",
+  "formatting_cases": [
+    {
+      "name": "integer slot0 0",
+      "mode": "integer",
+      "slot": 0,
+      "value": 0,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot0 1.49",
+      "mode": "integer",
+      "slot": 0,
+      "value": 1.49,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 1,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot0 1.5",
+      "mode": "integer",
+      "slot": 0,
+      "value": 1.5,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 2,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot0 998.49",
+      "mode": "integer",
+      "slot": 0,
+      "value": 998.49,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 998,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot0 998.5",
+      "mode": "integer",
+      "slot": 0,
+      "value": 998.5,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot0 999.5",
+      "mode": "integer",
+      "slot": 0,
+      "value": 999.5,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot0 1000",
+      "mode": "integer",
+      "slot": 0,
+      "value": 1000,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot0 999999",
+      "mode": "integer",
+      "slot": 0,
+      "value": 999999,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot1 0",
+      "mode": "integer",
+      "slot": 1,
+      "value": 0,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot1 1.49",
+      "mode": "integer",
+      "slot": 1,
+      "value": 1.49,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 1,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot1 1.5",
+      "mode": "integer",
+      "slot": 1,
+      "value": 1.5,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 2,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot1 998.49",
+      "mode": "integer",
+      "slot": 1,
+      "value": 998.49,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 998,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot1 998.5",
+      "mode": "integer",
+      "slot": 1,
+      "value": 998.5,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot1 999.5",
+      "mode": "integer",
+      "slot": 1,
+      "value": 999.5,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot1 1000",
+      "mode": "integer",
+      "slot": 1,
+      "value": 1000,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "integer slot1 999999",
+      "mode": "integer",
+      "slot": 1,
+      "value": 999999,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "auto_kilo 0",
+      "mode": "auto_kilo",
+      "slot": 0,
+      "value": 0,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 0
+      }
+    },
+    {
+      "name": "auto_kilo 999.9",
+      "mode": "auto_kilo",
+      "slot": 0,
+      "value": 999.9,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 0
+      }
+    },
+    {
+      "name": "auto_kilo 1000",
+      "mode": "auto_kilo",
+      "slot": 0,
+      "value": 1000,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 100,
+        "format": 1
+      }
+    },
+    {
+      "name": "auto_kilo 1234",
+      "mode": "auto_kilo",
+      "slot": 0,
+      "value": 1234,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 123,
+        "format": 1
+      }
+    },
+    {
+      "name": "auto_kilo 1235.1",
+      "mode": "auto_kilo",
+      "slot": 0,
+      "value": 1235.1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 124,
+        "format": 1
+      }
+    },
+    {
+      "name": "auto_kilo 9990",
+      "mode": "auto_kilo",
+      "slot": 0,
+      "value": 9990,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "auto_kilo 10000",
+      "mode": "auto_kilo",
+      "slot": 0,
+      "value": 10000,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "auto_kilo 999999",
+      "mode": "auto_kilo",
+      "slot": 0,
+      "value": 999999,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_2 0",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 0,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_2 0.0049",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 0.0049,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_2 0.0051",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 0.0051,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 1,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_2 1.234",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 1.234,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 123,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_2 1.2351",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 1.2351,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 124,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_2 9.99",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 9.99,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_2 10",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 10,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_2 999999",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 999999,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 0",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 0,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 0.049",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 0.049,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 0.051",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 0.051,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 10,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 1.24",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 1.24,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 120,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 1.251",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 1.251,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 130,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 9.85",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 9.85,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 990,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 9.9",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 9.9,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 990,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 10",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 10,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 990,
+        "format": 1
+      }
+    },
+    {
+      "name": "decimal_1 999999",
+      "mode": "decimal_1",
+      "slot": 0,
+      "value": 999999,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 990,
+        "format": 1
+      }
+    },
+    {
+      "name": "milli 0",
+      "mode": "milli",
+      "slot": 0,
+      "value": 0,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 1
+      }
+    },
+    {
+      "name": "milli 4.9",
+      "mode": "milli",
+      "slot": 0,
+      "value": 4.9,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 0,
+        "format": 1
+      }
+    },
+    {
+      "name": "milli 5.1",
+      "mode": "milli",
+      "slot": 0,
+      "value": 5.1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 1,
+        "format": 1
+      }
+    },
+    {
+      "name": "milli 1234",
+      "mode": "milli",
+      "slot": 0,
+      "value": 1234,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 123,
+        "format": 1
+      }
+    },
+    {
+      "name": "milli 1235.1",
+      "mode": "milli",
+      "slot": 0,
+      "value": 1235.1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 124,
+        "format": 1
+      }
+    },
+    {
+      "name": "milli 9990",
+      "mode": "milli",
+      "slot": 0,
+      "value": 9990,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "milli 10000",
+      "mode": "milli",
+      "slot": 0,
+      "value": 10000,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "milli 999999",
+      "mode": "milli",
+      "slot": 0,
+      "value": 999999,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 999,
+        "format": 1
+      }
+    },
+    {
+      "name": "independent HCHO legend False unit False",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 1.23,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 123,
+        "format": 1
+      }
+    },
+    {
+      "name": "independent PM legend False unit False",
+      "mode": "integer",
+      "slot": 1,
+      "value": 123,
+      "show_label": false,
+      "show_unit": false,
+      "expected": {
+        "number": 123,
+        "format": 0
+      }
+    },
+    {
+      "name": "independent HCHO legend False unit True",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 1.23,
+      "show_label": false,
+      "show_unit": true,
+      "expected": {
+        "number": 123,
+        "format": 5
+      }
+    },
+    {
+      "name": "independent PM legend False unit True",
+      "mode": "integer",
+      "slot": 1,
+      "value": 123,
+      "show_label": false,
+      "show_unit": true,
+      "expected": {
+        "number": 123,
+        "format": 4
+      }
+    },
+    {
+      "name": "independent HCHO legend True unit False",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 1.23,
+      "show_label": true,
+      "show_unit": false,
+      "expected": {
+        "number": 123,
+        "format": 3
+      }
+    },
+    {
+      "name": "independent PM legend True unit False",
+      "mode": "integer",
+      "slot": 1,
+      "value": 123,
+      "show_label": true,
+      "show_unit": false,
+      "expected": {
+        "number": 123,
+        "format": 2
+      }
+    },
+    {
+      "name": "independent HCHO legend True unit True",
+      "mode": "decimal_2",
+      "slot": 0,
+      "value": 1.23,
+      "show_label": true,
+      "show_unit": true,
+      "expected": {
+        "number": 123,
+        "format": 7
+      }
+    },
+    {
+      "name": "independent PM legend True unit True",
+      "mode": "integer",
+      "slot": 1,
+      "value": 123,
+      "show_label": true,
+      "show_unit": true,
+      "expected": {
+        "number": 123,
+        "format": 6
+      }
+    },
+    {
+      "name": "PM rejects auto_kilo",
+      "mode": "auto_kilo",
+      "slot": 1,
+      "value": 1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": null
+    },
+    {
+      "name": "PM rejects decimal_2",
+      "mode": "decimal_2",
+      "slot": 1,
+      "value": 1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": null
+    },
+    {
+      "name": "PM rejects decimal_1",
+      "mode": "decimal_1",
+      "slot": 1,
+      "value": 1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": null
+    },
+    {
+      "name": "PM rejects milli",
+      "mode": "milli",
+      "slot": 1,
+      "value": 1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": null
+    },
+    {
+      "name": "negative is invalid",
+      "mode": "integer",
+      "slot": 0,
+      "value": -1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": null
+    },
+    {
+      "name": "above physical maximum is invalid",
+      "mode": "integer",
+      "slot": 0,
+      "value": 1000000,
+      "show_label": false,
+      "show_unit": false,
+      "expected": null
+    },
+    {
+      "name": "unknown mode is invalid",
+      "mode": "scientific",
+      "slot": 0,
+      "value": 1,
+      "show_label": false,
+      "show_unit": false,
+      "expected": null
+    }
+  ],
+  "exhaustive_lamp_masks": {
+    "slots": [
+      0,
+      1
+    ],
+    "minimum": 0,
+    "maximum": 511
+  },
+  "note": "Reference conversion and segment mapping vectors; consumer tests must verify actual UART scheduling, select-ACK generation ownership, expiry, Flash persistence and LCD RAM writes.",
+  "formatting_sources": [
+    "local",
+    "mqtt"
+  ],
+  "raw_api_cases": [
+    {
+      "name": "raw slot0 flags0 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 0,
+        "lamps": 277,
+        "value": 0,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags0 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 0,
+        "lamps": 277,
+        "value": 123,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags0 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 0,
+        "lamps": 277,
+        "value": 999,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags1 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 1,
+        "lamps": 277,
+        "value": 0,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags1 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 1,
+        "lamps": 277,
+        "value": 1.23,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags1 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 1,
+        "lamps": 277,
+        "value": 9.99,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags2 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 2,
+        "lamps": 277,
+        "value": 0,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags2 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 2,
+        "lamps": 277,
+        "value": 123,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags2 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 2,
+        "lamps": 277,
+        "value": 999,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags3 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": true,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 3,
+        "lamps": 277,
+        "value": 0,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags3 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 3,
+        "lamps": 277,
+        "value": 1.23,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags3 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": true,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 3,
+        "lamps": 277,
+        "value": 9.99,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot0 flags4 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 4,
+        "lamps": 277,
+        "value": 0,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags4 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 4,
+        "lamps": 277,
+        "value": 123,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags4 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 4,
+        "lamps": 277,
+        "value": 999,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags5 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 5,
+        "lamps": 277,
+        "value": 0,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags5 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 5,
+        "lamps": 277,
+        "value": 1.23,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags5 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": true,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 5,
+        "lamps": 277,
+        "value": 9.99,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags6 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 6,
+        "lamps": 277,
+        "value": 0,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags6 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 6,
+        "lamps": 277,
+        "value": 123,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags6 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 6,
+        "lamps": 277,
+        "value": 999,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags7 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": true,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 7,
+        "lamps": 277,
+        "value": 0,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags7 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": true,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 7,
+        "lamps": 277,
+        "value": 1.23,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot0 flags7 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": true,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "milli",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 7,
+        "lamps": 277,
+        "value": 9.99,
+        "unit": "mg/m³"
+      }
+    },
+    {
+      "name": "raw slot1 flags0 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 0,
+        "lamps": 277,
+        "value": 0,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot1 flags0 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 0,
+        "lamps": 277,
+        "value": 123,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot1 flags0 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 0,
+        "lamps": 277,
+        "value": 999,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot1 flags2 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 2,
+        "lamps": 277,
+        "value": 0,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot1 flags2 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 2,
+        "lamps": 277,
+        "value": 123,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot1 flags2 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": false,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 2,
+        "lamps": 277,
+        "value": 999,
+        "unit": ""
+      }
+    },
+    {
+      "name": "raw slot1 flags4 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 4,
+        "lamps": 277,
+        "value": 0,
+        "unit": "µg/m³"
+      }
+    },
+    {
+      "name": "raw slot1 flags4 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 4,
+        "lamps": 277,
+        "value": 123,
+        "unit": "µg/m³"
+      }
+    },
+    {
+      "name": "raw slot1 flags4 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": false,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 4,
+        "lamps": 277,
+        "value": 999,
+        "unit": "µg/m³"
+      }
+    },
+    {
+      "name": "raw slot1 flags6 digits0",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 0,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 0,
+        "format": 6,
+        "lamps": 277,
+        "value": 0,
+        "unit": "µg/m³"
+      }
+    },
+    {
+      "name": "raw slot1 flags6 digits123",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 123,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 123,
+        "format": 6,
+        "lamps": 277,
+        "value": 123,
+        "unit": "µg/m³"
+      }
+    },
+    {
+      "name": "raw slot1 flags6 digits999",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 15,
+        "number": 999,
+        "decimal": false,
+        "show_label": true,
+        "show_unit": true,
+        "lamps": [
+          {
+            "red": true,
+            "green": false,
+            "yellow": false
+          },
+          {
+            "red": false,
+            "green": true,
+            "yellow": false
+          },
+          {
+            "red": true,
+            "green": false,
+            "yellow": true
+          }
+        ]
+      },
+      "configured_policy_ignored": {
+        "mode": "integer",
+        "color": {
+          "mode": "thresholds",
+          "low": 1,
+          "high": 2
+        }
+      },
+      "expected": {
+        "number": 999,
+        "format": 6,
+        "lamps": 277,
+        "value": 999,
+        "unit": "µg/m³"
+      }
+    },
+    {
+      "name": "raw clear slot0",
+      "request": {
+        "revision": 12,
+        "slot": 0,
+        "ttl_seconds": 0
+      },
+      "expected": null
+    },
+    {
+      "name": "raw clear slot1",
+      "request": {
+        "revision": 12,
+        "slot": 1,
+        "ttl_seconds": 0
+      },
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,1510 @@
+{
+  "schema": 1,
+  "contract_revision": 4,
+  "lamp_mask_sweep": true,
+  "vectors": [
+    {
+      "name": "capability query",
+      "role": "request",
+      "hex": "23 70 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 0,
+        "sequence": 0
+      }
+    },
+    {
+      "name": "1234 ppm policy frame",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 17,
+        "sequence": 1,
+        "number": 123,
+        "format": 1,
+        "color": 3,
+        "ttl_seconds": 20,
+        "slot": 0
+      }
+    },
+    {
+      "name": "select Wi-Fi",
+      "role": "request",
+      "hex": "23 70 12 02 01 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 18,
+        "sequence": 2,
+        "source": 1
+      }
+    },
+    {
+      "name": "select original",
+      "role": "request",
+      "hex": "23 70 12 ff 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 18,
+        "sequence": 255,
+        "source": 0
+      }
+    },
+    {
+      "name": "display query",
+      "role": "request",
+      "hex": "23 70 13 03 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 19,
+        "sequence": 3
+      }
+    },
+    {
+      "name": "invalidate cache",
+      "role": "request",
+      "hex": "23 70 11 04 00 00 00 00 00 01 00 21",
+      "valid": true,
+      "expected": {
+        "op": 17,
+        "number": 0,
+        "ttl_seconds": 0,
+        "slot": 1
+      }
+    },
+    {
+      "name": "number too large",
+      "role": "request",
+      "hex": "23 70 11 01 03 e8 00 00 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "decimal 3",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 03 03 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "unknown format bit",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 08 03 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "color too large",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 04 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "TTL too large",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 3d 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "slot too large",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 02 00 21",
+      "valid": false
+    },
+    {
+      "name": "reserved write argument",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "third source rejected",
+      "role": "request",
+      "hex": "23 70 12 01 02 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reserved source byte",
+      "role": "request",
+      "hex": "23 70 12 01 01 01 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reserved query byte",
+      "role": "request",
+      "hex": "23 70 13 01 01 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "wrong frame footer",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 00 00 00",
+      "valid": false
+    },
+    {
+      "name": "truncated request",
+      "role": "request",
+      "hex": "23 70 11 01 00 7b 01 03 14 00 00",
+      "valid": false
+    },
+    {
+      "name": "double click with sequence wrap",
+      "role": "button_event",
+      "hex": "23 71 01 02 00 00 64 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "kind": 2,
+        "sequence": 0,
+        "held_ms": 100
+      }
+    },
+    {
+      "name": "unknown button kind",
+      "role": "button_event",
+      "hex": "23 71 01 05 00 00 64 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "reserved event byte",
+      "role": "button_event",
+      "hex": "23 71 01 02 00 00 64 01 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm read",
+      "role": "request",
+      "hex": "23 70 14 ff 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 20,
+        "sequence": 255,
+        "mode": 0,
+        "mask": 0
+      }
+    },
+    {
+      "name": "sensor alarm write mask 0",
+      "role": "request",
+      "hex": "23 70 14 ff 01 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 0
+      }
+    },
+    {
+      "name": "sensor alarm write mask 1",
+      "role": "request",
+      "hex": "23 70 14 ff 01 01 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 1
+      }
+    },
+    {
+      "name": "sensor alarm write mask 2",
+      "role": "request",
+      "hex": "23 70 14 ff 01 02 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 2
+      }
+    },
+    {
+      "name": "sensor alarm write mask 3",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 3
+      }
+    },
+    {
+      "name": "sensor alarm write mask 4",
+      "role": "request",
+      "hex": "23 70 14 ff 01 04 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 4
+      }
+    },
+    {
+      "name": "sensor alarm write mask 7",
+      "role": "request",
+      "hex": "23 70 14 ff 01 07 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "mode": 1,
+        "mask": 7
+      }
+    },
+    {
+      "name": "sensor alarm read nonzero mask",
+      "role": "request",
+      "hex": "23 70 14 ff 00 01 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm mode unsupported",
+      "role": "request",
+      "hex": "23 70 14 ff 02 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved mask bit",
+      "role": "request",
+      "hex": "23 70 14 ff 01 08 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A2",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 01 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A3",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A4",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 00 01 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A5",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 00 00 01 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reserved A6",
+      "role": "request",
+      "hex": "23 70 14 ff 01 03 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm actual mask 0",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 0,
+        "schema": 1,
+        "actual_mask": 0,
+        "alarm_latched": 0
+      }
+    },
+    {
+      "name": "sensor alarm actual mask 3",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 03 01 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 0,
+        "schema": 1,
+        "actual_mask": 3,
+        "alarm_latched": 1
+      }
+    },
+    {
+      "name": "sensor alarm actual mask 7",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 07 01 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 0,
+        "schema": 1,
+        "actual_mask": 7,
+        "alarm_latched": 1
+      }
+    },
+    {
+      "name": "sensor alarm error status 1",
+      "role": "reply",
+      "hex": "23 70 14 ff 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 1
+      }
+    },
+    {
+      "name": "sensor alarm error status 2",
+      "role": "reply",
+      "hex": "23 70 14 ff 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 2
+      }
+    },
+    {
+      "name": "sensor alarm error status 3",
+      "role": "reply",
+      "hex": "23 70 14 ff 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 3
+      }
+    },
+    {
+      "name": "sensor alarm reply wrong schema",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reply overflowing mask",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 08 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reply nonboolean latch",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 00 02 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reply unknown status",
+      "role": "reply",
+      "hex": "23 70 14 ff 06 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm error stale payload",
+      "role": "reply",
+      "hex": "23 70 14 ff 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "sensor alarm reply reserved D13",
+      "role": "reply",
+      "hex": "23 70 14 ff 00 01 00 00 00 00 00 00 00 00 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "capability reply sensor alarm schema 0",
+      "role": "reply",
+      "hex": "23 70 00 01 00 02 ff ff 27 10 01 01 07 09 01 0f 01 00 00 21",
+      "valid": true,
+      "expected": {
+        "protocol": 2,
+        "sensor_alarm_schema": 0
+      }
+    },
+    {
+      "name": "capability reply sensor alarm schema 1",
+      "role": "reply",
+      "hex": "23 70 00 01 00 02 ff ff 27 10 01 01 07 09 01 0f 01 01 00 21",
+      "valid": true,
+      "expected": {
+        "protocol": 2,
+        "sensor_alarm_schema": 1
+      }
+    },
+    {
+      "name": "capability reply unknown alarm schema",
+      "role": "reply",
+      "hex": "23 70 00 01 00 02 ff ff 27 10 01 01 07 09 01 0f 01 02 00 21",
+      "valid": false
+    },
+    {
+      "name": "capability reply reserved D13",
+      "role": "reply",
+      "hex": "23 70 00 01 00 02 ff ff 27 10 01 01 07 09 01 0f 01 01 01 21",
+      "valid": false
+    },
+    {
+      "name": "dual capability schema 2",
+      "role": "reply",
+      "hex": "23 70 00 07 00 02 ff ff 27 10 01 01 07 09 01 0f 01 01 02 21",
+      "valid": true,
+      "expected": {
+        "protocol": 2,
+        "display_schema": 1,
+        "sensor_alarm_schema": 1,
+        "dual_display_schema": 2
+      }
+    },
+    {
+      "name": "unknown dual capability 1",
+      "role": "reply",
+      "hex": "23 70 00 07 00 02 ff ff 27 10 01 01 07 09 01 0f 01 01 01 21",
+      "valid": false
+    },
+    {
+      "name": "unknown dual capability 3",
+      "role": "reply",
+      "hex": "23 70 00 07 00 02 ff ff 27 10 01 01 07 09 01 0f 01 01 03 21",
+      "valid": false
+    },
+    {
+      "name": "unknown dual capability 255",
+      "role": "reply",
+      "hex": "23 70 00 07 00 02 ff ff 27 10 01 01 07 09 01 0f 01 01 ff 21",
+      "valid": false
+    },
+    {
+      "name": "dual write slot 0 format 0",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 00 03 3c 00 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 0,
+        "format": 0,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 0 format 1",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 01 03 3c 00 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 0,
+        "format": 1,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 0 format 2",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 02 03 3c 00 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 0,
+        "format": 2,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 0 format 4",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 04 03 3c 00 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 0,
+        "format": 4,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 0 format 5",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 05 03 3c 00 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 0,
+        "format": 5,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 0 format 6",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 06 03 3c 00 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 0,
+        "format": 6,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual clear slot 0",
+      "role": "request",
+      "hex": "23 70 15 07 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "slot": 0,
+        "ttl_seconds": 0
+      }
+    },
+    {
+      "name": "dual query slot 0",
+      "role": "request",
+      "hex": "23 70 17 07 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "slot": 0
+      }
+    },
+    {
+      "name": "dual query active slot 0",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 01 00 00 7b 02 02 0f 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "schema": 2,
+        "source": 1,
+        "effective": 1,
+        "slot": 0,
+        "number": 123,
+        "ttl_seconds": 15
+      }
+    },
+    {
+      "name": "dual query expired slot 0",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 00 00 00 7b 02 02 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "source": 1,
+        "effective": 0,
+        "ttl_seconds": 0
+      }
+    },
+    {
+      "name": "dual write slot 1 format 0",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 00 03 3c 01 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 1,
+        "format": 0,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 1 format 1",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 01 03 3c 01 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 1,
+        "format": 1,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 1 format 2",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 02 03 3c 01 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 1,
+        "format": 2,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 1 format 4",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 04 03 3c 01 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 1,
+        "format": 4,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 1 format 5",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 05 03 3c 01 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 1,
+        "format": 5,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual write slot 1 format 6",
+      "role": "request",
+      "hex": "23 70 15 07 03 e7 06 03 3c 01 00 21",
+      "valid": true,
+      "expected": {
+        "number": 999,
+        "slot": 1,
+        "format": 6,
+        "ttl_seconds": 60
+      }
+    },
+    {
+      "name": "dual clear slot 1",
+      "role": "request",
+      "hex": "23 70 15 07 00 00 00 00 00 01 00 21",
+      "valid": true,
+      "expected": {
+        "slot": 1,
+        "ttl_seconds": 0
+      }
+    },
+    {
+      "name": "dual query slot 1",
+      "role": "request",
+      "hex": "23 70 17 07 01 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "slot": 1
+      }
+    },
+    {
+      "name": "dual query active slot 1",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 01 01 00 7b 02 02 0f 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "schema": 2,
+        "source": 1,
+        "effective": 1,
+        "slot": 1,
+        "number": 123,
+        "ttl_seconds": 15
+      }
+    },
+    {
+      "name": "dual query expired slot 1",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 00 01 00 7b 02 02 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "source": 1,
+        "effective": 0,
+        "ttl_seconds": 0
+      }
+    },
+    {
+      "name": "dual select 0",
+      "role": "request",
+      "hex": "23 70 16 07 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "source": 0
+      }
+    },
+    {
+      "name": "dual select 1",
+      "role": "request",
+      "hex": "23 70 16 07 01 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "source": 1
+      }
+    },
+    {
+      "name": "dual write rejects number 1000",
+      "role": "request",
+      "hex": "23 70 15 07 03 e8 00 02 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual write rejects decimal 3",
+      "role": "request",
+      "hex": "23 70 15 07 00 7b 03 02 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual write rejects format bit 3",
+      "role": "request",
+      "hex": "23 70 15 07 00 7b 08 02 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual write rejects color 4",
+      "role": "request",
+      "hex": "23 70 15 07 00 7b 00 04 14 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual write rejects TTL 61",
+      "role": "request",
+      "hex": "23 70 15 07 00 7b 00 02 3d 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual write rejects slot 2",
+      "role": "request",
+      "hex": "23 70 15 07 00 7b 00 02 14 02 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual write rejects reserved A6",
+      "role": "request",
+      "hex": "23 70 15 07 00 7b 00 02 14 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "dual select rejects 2",
+      "role": "request",
+      "hex": "23 70 16 07 02 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual select rejects reserved",
+      "role": "request",
+      "hex": "23 70 16 07 01 00 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "dual query rejects slot 2",
+      "role": "request",
+      "hex": "23 70 17 07 02 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query rejects reserved",
+      "role": "request",
+      "hex": "23 70 17 07 00 00 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects schema 1",
+      "role": "reply",
+      "hex": "23 70 17 07 00 01 01 01 00 00 7b 02 02 0f 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects source 2",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 02 01 00 00 7b 02 02 0f 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects effective 2",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 02 00 00 7b 02 02 0f 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects slot 2",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 01 02 00 7b 02 02 0f 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects number 1000",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 01 00 03 e8 02 02 0f 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects decimal 3",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 01 00 00 7b 03 02 0f 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects color 4",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 01 00 00 7b 02 04 0f 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects TTL 61",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 01 00 00 7b 02 02 3d 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query reply rejects reserved D13",
+      "role": "reply",
+      "hex": "23 70 17 07 00 02 01 01 00 00 7b 02 02 0f 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "dual 21 accepted ACK",
+      "role": "reply",
+      "hex": "23 70 15 07 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 0
+      }
+    },
+    {
+      "name": "dual 21 nonzero ACK rejected",
+      "role": "reply",
+      "hex": "23 70 15 07 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual 22 accepted ACK",
+      "role": "reply",
+      "hex": "23 70 16 07 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 0
+      }
+    },
+    {
+      "name": "dual 22 nonzero ACK rejected",
+      "role": "reply",
+      "hex": "23 70 16 07 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "dual query error 1",
+      "role": "reply",
+      "hex": "23 70 17 07 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 1
+      }
+    },
+    {
+      "name": "dual query error 2",
+      "role": "reply",
+      "hex": "23 70 17 07 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 2
+      }
+    },
+    {
+      "name": "dual query error 3",
+      "role": "reply",
+      "hex": "23 70 17 07 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 3
+      }
+    },
+    {
+      "name": "dual query error 4",
+      "role": "reply",
+      "hex": "23 70 17 07 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 4
+      }
+    },
+    {
+      "name": "dual query error 5",
+      "role": "reply",
+      "hex": "23 70 17 07 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 5
+      }
+    },
+    {
+      "name": "dual query error has data",
+      "role": "reply",
+      "hex": "23 70 17 07 03 02 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "legacy scalar active",
+      "role": "reply",
+      "hex": "23 70 13 09 00 01 01 01 00 00 7b 01 03 14 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "schema": 1,
+        "source": 1,
+        "effective": 1
+      }
+    },
+    {
+      "name": "legacy query while dual owns renderer",
+      "role": "reply",
+      "hex": "23 70 13 09 00 01 01 00 00 00 7b 01 03 14 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "schema": 1,
+        "source": 1,
+        "effective": 0
+      }
+    },
+    {
+      "name": "formatted HCHO flags 0",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 00 01 ff 14 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "slot": 0,
+        "format": 0,
+        "lamps": 511
+      }
+    },
+    {
+      "name": "formatted HCHO flags 1",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 01 01 ff 14 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "slot": 0,
+        "format": 1,
+        "lamps": 511
+      }
+    },
+    {
+      "name": "formatted HCHO flags 2",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 02 01 ff 14 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "slot": 0,
+        "format": 2,
+        "lamps": 511
+      }
+    },
+    {
+      "name": "formatted HCHO flags 3",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 03 01 ff 14 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "slot": 0,
+        "format": 3,
+        "lamps": 511
+      }
+    },
+    {
+      "name": "formatted HCHO flags 4",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 04 01 ff 14 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "slot": 0,
+        "format": 4,
+        "lamps": 511
+      }
+    },
+    {
+      "name": "formatted HCHO flags 5",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 05 01 ff 14 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "slot": 0,
+        "format": 5,
+        "lamps": 511
+      }
+    },
+    {
+      "name": "formatted HCHO flags 6",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 06 01 ff 14 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "slot": 0,
+        "format": 6,
+        "lamps": 511
+      }
+    },
+    {
+      "name": "formatted HCHO flags 7",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 07 01 ff 14 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "slot": 0,
+        "format": 7,
+        "lamps": 511
+      }
+    },
+    {
+      "name": "formatted PM independent flags 0",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 00 01 ff 14 01 21",
+      "valid": true,
+      "expected": {
+        "slot": 1,
+        "format": 0
+      }
+    },
+    {
+      "name": "formatted PM independent flags 2",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 02 01 ff 14 01 21",
+      "valid": true,
+      "expected": {
+        "slot": 1,
+        "format": 2
+      }
+    },
+    {
+      "name": "formatted PM independent flags 4",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 04 01 ff 14 01 21",
+      "valid": true,
+      "expected": {
+        "slot": 1,
+        "format": 4
+      }
+    },
+    {
+      "name": "formatted PM independent flags 6",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 06 01 ff 14 01 21",
+      "valid": true,
+      "expected": {
+        "slot": 1,
+        "format": 6
+      }
+    },
+    {
+      "name": "formatted clear slot0",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 00 00 00 00 00 21",
+      "valid": true
+    },
+    {
+      "name": "formatted clear slot1",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 00 00 00 00 01 21",
+      "valid": true
+    },
+    {
+      "name": "formatted maximum number and TTL",
+      "role": "request",
+      "hex": "23 70 18 00 03 e7 01 01 ff 3c 00 21",
+      "valid": true
+    },
+    {
+      "name": "formatted zero number and lamps",
+      "role": "request",
+      "hex": "23 70 18 00 00 00 01 00 00 14 00 21",
+      "valid": true
+    },
+    {
+      "name": "formatted rejects PM decimal",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 01 01 ff 14 01 21",
+      "valid": false
+    },
+    {
+      "name": "formatted rejects reserved format",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 08 01 ff 14 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted rejects overflow lamps",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 01 02 00 14 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted rejects overflow number",
+      "role": "request",
+      "hex": "23 70 18 00 03 e8 01 01 ff 14 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted rejects overflow TTL",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 01 01 ff 3d 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted rejects unknown slot",
+      "role": "request",
+      "hex": "23 70 18 00 00 7b 01 01 ff 14 02 21",
+      "valid": false
+    },
+    {
+      "name": "formatted select 0",
+      "role": "request",
+      "hex": "23 70 19 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "source": 0
+      }
+    },
+    {
+      "name": "formatted select 1",
+      "role": "request",
+      "hex": "23 70 19 00 01 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "source": 1
+      }
+    },
+    {
+      "name": "formatted select rejects unknown source",
+      "role": "request",
+      "hex": "23 70 19 00 02 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted select reserved A1",
+      "role": "request",
+      "hex": "23 70 19 00 01 01 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted select reserved A2",
+      "role": "request",
+      "hex": "23 70 19 00 01 00 01 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted select reserved A3",
+      "role": "request",
+      "hex": "23 70 19 00 01 00 00 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted select reserved A4",
+      "role": "request",
+      "hex": "23 70 19 00 01 00 00 00 01 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted select reserved A5",
+      "role": "request",
+      "hex": "23 70 19 00 01 00 00 00 00 01 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted select reserved A6",
+      "role": "request",
+      "hex": "23 70 19 00 01 00 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query slot 0",
+      "role": "request",
+      "hex": "23 70 1a 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "slot": 0
+      }
+    },
+    {
+      "name": "formatted query slot 1",
+      "role": "request",
+      "hex": "23 70 1a 00 01 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "slot": 1
+      }
+    },
+    {
+      "name": "formatted query unknown slot",
+      "role": "request",
+      "hex": "23 70 1a 00 02 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved A1",
+      "role": "request",
+      "hex": "23 70 1a 00 00 01 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved A2",
+      "role": "request",
+      "hex": "23 70 1a 00 00 00 01 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved A3",
+      "role": "request",
+      "hex": "23 70 1a 00 00 00 00 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved A4",
+      "role": "request",
+      "hex": "23 70 1a 00 00 00 00 00 01 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved A5",
+      "role": "request",
+      "hex": "23 70 1a 00 00 00 00 00 00 01 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved A6",
+      "role": "request",
+      "hex": "23 70 1a 00 00 00 00 00 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "formatted active query slot 0",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 07 01 ff 14 01 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "schema": 3,
+        "source": 1,
+        "effective": 1,
+        "slot": 0,
+        "format": 7,
+        "lamps": 511,
+        "formatted_active": 1
+      }
+    },
+    {
+      "name": "formatted active query slot 1",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 01 00 7b 06 01 ff 14 01 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "schema": 3,
+        "source": 1,
+        "effective": 1,
+        "slot": 1,
+        "format": 6,
+        "lamps": 511,
+        "formatted_active": 1
+      }
+    },
+    {
+      "name": "formatted query inactive cache is not selection proof",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 00 00 00 7b 01 01 ff 14 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "formatted_active": 0,
+        "effective": 0
+      }
+    },
+    {
+      "name": "formatted query original selected",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 00 00 00 00 7b 01 01 ff 14 01 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "source": 0,
+        "effective": 0
+      }
+    },
+    {
+      "name": "formatted query expired cache",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 00 00 00 7b 01 01 ff 00 01 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "ttl_seconds": 0,
+        "effective": 0
+      }
+    },
+    {
+      "name": "formatted query rejects old schema",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 02 01 01 00 00 7b 01 01 ff 14 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects number overflow",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 03 e8 01 01 ff 14 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects reserved format bit",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 08 01 ff 14 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects lamp bit9",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 01 02 ff 14 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects TTL overflow",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 01 01 ff 3d 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects active not boolean",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 01 01 ff 14 02 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects effective without active",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 01 01 ff 14 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects effective while original selected",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 00 01 00 00 7b 01 01 ff 14 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects effective with zero TTL",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 01 01 ff 00 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query rejects PM with decimal",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 01 00 7b 01 01 ff 14 01 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved f16",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 01 01 ff 14 01 01 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved f17",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 01 01 ff 14 01 00 01 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted query reserved f18",
+      "role": "reply",
+      "hex": "23 70 1a 00 00 03 01 01 00 00 7b 01 01 ff 14 01 00 00 01 21",
+      "valid": false
+    },
+    {
+      "name": "formatted OP24 zero-data ACK",
+      "role": "reply",
+      "hex": "23 70 18 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 24,
+        "status": 0
+      }
+    },
+    {
+      "name": "formatted OP24 nonzero-data ACK",
+      "role": "reply",
+      "hex": "23 70 18 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted OP25 zero-data ACK",
+      "role": "reply",
+      "hex": "23 70 19 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "op": 25,
+        "status": 0
+      }
+    },
+    {
+      "name": "formatted OP25 nonzero-data ACK",
+      "role": "reply",
+      "hex": "23 70 19 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted OP24 status 1",
+      "role": "reply",
+      "hex": "23 70 18 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 1
+      }
+    },
+    {
+      "name": "formatted OP24 status 2",
+      "role": "reply",
+      "hex": "23 70 18 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 2
+      }
+    },
+    {
+      "name": "formatted OP24 status 3",
+      "role": "reply",
+      "hex": "23 70 18 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 3
+      }
+    },
+    {
+      "name": "formatted OP24 error with data",
+      "role": "reply",
+      "hex": "23 70 18 00 02 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted OP25 status 1",
+      "role": "reply",
+      "hex": "23 70 19 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 1
+      }
+    },
+    {
+      "name": "formatted OP25 status 2",
+      "role": "reply",
+      "hex": "23 70 19 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 2
+      }
+    },
+    {
+      "name": "formatted OP25 status 3",
+      "role": "reply",
+      "hex": "23 70 19 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 3
+      }
+    },
+    {
+      "name": "formatted OP25 error with data",
+      "role": "reply",
+      "hex": "23 70 19 00 02 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    },
+    {
+      "name": "formatted OP26 status 1",
+      "role": "reply",
+      "hex": "23 70 1a 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 1
+      }
+    },
+    {
+      "name": "formatted OP26 status 2",
+      "role": "reply",
+      "hex": "23 70 1a 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 2
+      }
+    },
+    {
+      "name": "formatted OP26 status 3",
+      "role": "reply",
+      "hex": "23 70 1a 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": true,
+      "expected": {
+        "status": 3
+      }
+    },
+    {
+      "name": "formatted OP26 error with data",
+      "role": "reply",
+      "hex": "23 70 1a 00 02 01 00 00 00 00 00 00 00 00 00 00 00 00 00 21",
+      "valid": false
+    }
+  ]
+}

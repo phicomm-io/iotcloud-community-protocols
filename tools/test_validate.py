@@ -20,13 +20,19 @@ class NumericValidation(unittest.TestCase):
             self.assertEqual(validate.load(path), {"value": 1.25})
 
     def test_constructed_non_finite_numbers_fail_real_schemas(self):
-        cases = validate.load(validate.ROOT / "contracts/examples/cases.json")["cases"]
+        cases = validate.example_cases()
         fixtures = (
             ("m1-display-data-set-v2", "leased API value", lambda data, value: data.update(value=value)),
             ("m1-display-source-set-v2", "TC1 power and independent API reading",
              lambda data, value: data["lanes"][0]["color"].update(high=value)),
             ("sensor-values-v1", "TC1 fresh physical power",
              lambda data, value: data["sensors"]["power"].update(value=value)),
+            ("m1-display-value-set-v3", "raw HCHO digits and mixed lamps",
+             lambda data, value: data.update(number=value)),
+            ("m1-display-profile-state-v3", "confirmed formatted state",
+             lambda data, value: data["runtime"]["lanes"][0].update(value=value)),
+            ("m1-display-profile-set-v3", "formatted API and external fan",
+             lambda data, value: data["lanes"][1]["color"].update(high=value)),
         )
         for name, example, mutate in fixtures:
             schema = validate.load(validate.ROOT / f"contracts/schemas/{name}.schema.json")

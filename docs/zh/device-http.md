@@ -154,9 +154,64 @@ X-IoTCloud-Confirm: full-to-hub
 
 显示模式、替换位置、阈值和交替周期由 `co2_display.get` / `co2_display.set` 管理。显示开关不改变真实甲醛、PM 或 CO₂ 采样。MCU 来源与按钮规则见 [显示源](m1-display.md)。
 
+<a id="m1-display_profile-api"></a>
+
+## M1 display_profile API
+
+增量契约 `m1-display-v3` 提供 `display_profile.get {}`、`display_profile.set` 和 `display_value.set`，通过 `capabilities.actions` 声明。需要 MCU 支持 formatted UART，不能仅凭 HTTP 版本认定 MCU 已升级。GET 返回 `schema:3`、配置和独立的 `runtime`；SET 使用既有共享 revision/CAS，提交完整配置，不带 `schema` 或 `runtime`：
+
+```json
+{
+  "revision": 12,
+  "selected_source": "user",
+  "double_click": "switch_display",
+  "lanes": [
+    {
+      "slot": 0, "source": "api", "device_id": "",
+      "metric": "custom", "unit": "", "ttl_seconds": 20,
+      "display": {"mode": "integer", "show_label": false, "show_unit": false},
+      "color": {"mode": "fixed", "lamps": [
+        {"red": false, "green": false, "yellow": false},
+        {"red": false, "green": false, "yellow": false},
+        {"red": false, "green": false, "yellow": false}
+      ]}
+    },
+    {
+      "slot": 1, "source": "mqtt", "device_id": "F0:E1:D2:C3:B4:A5",
+      "metric": "fan_speed_percent", "unit": "%", "ttl_seconds": 15,
+      "display": {"mode": "integer", "show_label": false, "show_unit": false},
+      "color": {"mode": "thresholds", "low": 25, "high": 75}
+    }
+  ]
+}
+```
+
+来源、metric 和配置的物理单位沿用 [schema2 规则](#m1-dual-display-api)，`decimals` / `scale` 替换为必填的 `display` 对象。[五种模式与每区域九段灯](m1-display.md#m1-display-v3) 用于本地/MQTT 数据转换；PM 仅允许 `integer`。固定灯色要求三个完整对象，阈值要求 low<high，按缩放前的物理值比较。api 来源可以保留模式、物理单位元数据和配色配置，但这些字段不转换直接写入的显示帧。
+
+MQTT ID 接受恰好 12 位十六进制或六组冒号分隔字节，允许大小写；先规范化为小写紧凑形式，再做本机 ID 检查和持久化，响应始终返回规范形式。非 MQTT 的 ID 必须为空。`co2_source.set` 同样增加输入规范化，定义于新 [v2 输入 schema](contracts/schemas/m1-co2-source-set-v2.schema.json)。既有 `display_source.set` 实现也宽松接收这些拼写；这是冻结 v2 契约之外的输入扩展，旧 schema 文件字节不变。
+
+`display_value.set` 直接写一个显示区域。先显式保存 formatted 配置，并将该路来源设为 `api`；请求必须匹配最新 revision，TTL 不超过该路配置上限。`number` 是 0..999 的整数数字寄存器，`decimal`、`show_label`、`show_unit` 都是必填布尔值；PM 必须 `decimal:false`。`lamps` 按左、中、右提供完整数组，每个位置必须包含红、绿、黄三个布尔开关。写入不做缩放、取整、饱和或阈值配色。拒绝小数或越界 number、物理 `value` / `unit` 字段、标量 `color` 和未知字段。
+
+```json
+{"request_id":"raw_display_1","action":"display_value.set","params":{"revision":13,"slot":0,"ttl_seconds":15,"number":123,"decimal":true,"show_label":false,"show_unit":true,"lamps":[{"red":true,"green":false,"yellow":false},{"red":false,"green":true,"yellow":false},{"red":true,"green":false,"yellow":true}]}}
+{"request_id":"raw_clear_1","action":"display_value.set","params":{"revision":13,"slot":0,"ttl_seconds":0}}
+```
+
+首条显示 `1.23` 和原生 mg/m³ 单位，隐藏甲醛标识，九段色灯完全按请求点亮。TTL0 仅接收 revision/slot/ttl_seconds，恢复该区域原始读数。API 数值只在 RAM 中生效，过期、离线或重启不能重放旧租期。认证、retained 命令拒绝和 request_id 去重沿用已有命令规则；相同 request_id 不续租。`accepted` 不等于 MCU 确认。
+
+GET runtime 的 `profile` 为 legacy / dual / formatted。有效 api 路的 `value` 是实际显示读数（decimal 为 true 时 number/100，否则 number），可能包含 float32 表示误差；`unit` 为实际显示的原生单位（slot0 mg/m³、slot1 µg/m³），隐藏时为空。本地/MQTT runtime 仍保留原始物理值和单位。`number`、format 标志和三个对象组成的 `lamps` 表示精确编码输出。无效路的 value/number/format/lamps 为 null，剩余 TTL 为零；已确认清除与数值有效是不同状态。
+
+配置 SET 后独立 GET，比对 revision 和完整配置；直接写入后比对原始 number/flags/lamps 与新鲜 TTL。确认必须先收到当前配置代次匹配的 OP25 选择 ACK，再分别 OP26 查询两路，匹配 formatted-active=1、来源选择和编码输出。只有 profile=formatted、MCU 支持且两路均确认，才允许全局 `confirmed:true`；legacy/dual 投影不能确认或生效。单独一次 query 或旧 v2 缓存不能证明 formatted 已被选择。
+
+v2 生效时读取 v3 只投影配置，不保存或切换：PM→integer；甲醛 scale1000→milli，否则 decimals0/1/2→integer/decimal_1/decimal_2。旧固定颜色转为三位置统一灯色，旧合并标识决定转为两个布尔值。显式 v3 SET 才激活 formatted。formatted 生效时，v2 GET 返回禁用的旧版视图，保留当前共享 revision，两路不确认、不生效；显式 v2 SET 切回 v2。旧 CO₂ SET 切回 legacy，同时保留两种新配置。profile 与配置按[存储提交规则](configuration.md#storage-commit-results)同笔保存，[v10 迁移见此](configuration.md#m1-display-storage-v10)。
+
+机器定义：[profile SET](contracts/schemas/m1-display-profile-set-v3.schema.json)、[profile GET](contracts/schemas/m1-display-profile-state-v3.schema.json)、[raw value SET](contracts/schemas/m1-display-value-set-v3.schema.json)。
+
 <a id="m1-dual-display-api"></a>
 
 ## M1 双路用户显示 API
+
+本节保留已发布 schema2 的 `display_source` / `display_data` 行为；formatted schema3 使用上方新动作。
 
 开发合同 `m1-display-v2` 新增 `display_source.get {}`、`display_source.set` 和 `display_data.set`。动作出现在 `capabilities.actions` 才可调用；这不代表传感器 MCU 已支持双路。`mcu.version.get` 的 `display_source_schema` 为 2 或 0，`dual_display_source_supported` 表示双路支持；旧 `display_source_supported` 仍只表示 scalar schema 1。实际控制还须完成 [双路能力协商与读回](m1-display.md)。
 

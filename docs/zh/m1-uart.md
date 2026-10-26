@@ -56,13 +56,18 @@ Wi-Fi MCU 与传感器 MCU 通过 SERCOM3 UART（115200、8N1）通信。普通�
 
 合同 revision 与帧内协议号分别管理：旧 `m1-uart-v2` 的机器定义 [v1 artifact](contracts/m1-uart-v1.json) 和[原向量](contracts/vectors/m1-uart-v1.json) 保持原样，仍要求 D13=0。新增 [v3 artifact](contracts/m1-uart-v3.json) / [v3 向量](contracts/vectors/m1-uart-v3.json) 单独声明 D13=2 与双路操作，支持读出0表示旧能力。消费者须显式选择新合同并更新 pin，不能把非零 D13 宣称为符合旧固定零合同。旧 Wi-Fi 忽略该新增能力时仍使用 scalar 接口。
 
+增量 [v4 artifact](contracts/m1-uart-v4.json) / [v4 向量](contracts/vectors/m1-uart-v4.json) 保留每个 v3 能力字节和已分配操作；OP `00` D13 仍为 2，D0 仍为 2。新增十六进制 `18` / `19` / `1a`（十进制24/25/26）写入、选择和查询独立格式缓存，每区域支持九个灯位。D13=2 无法区分仅支持 v3 的 MCU，必须先用只读 OP `1a` 探测 schema3；不支持、参数错误或查询失败时限制探测次数，不发送格式写入/选择，并报告 `requires_mcu_upgrade`。
+
+OP `18` 和所有查询不选择 profile；OP `19` 显式激活 formatted，包括选择原始读数时。输出确认需要当前配置代次匹配的选择 ACK 和查询的 formatted-active 标志；旧 dual 缓存应答不足以确认。完整字节偏移与玻璃映射见 [M1 display v3](m1-display.md#m1-display-v3)。
+
 ## 操作码分组
 
 | 类别 | OP | 用途 |
 | --- | --- | --- |
 | 正式功能 | `09`、`0b`、`0e`、`0f`、`11`、`12`、`14`–`16` | 阈值、音色/音乐、scalar/双路显示写入与选择、可选传感器蜂鸣器 |
 | 兼容入口 | `0a`、`0c`、`0d` | 既有 CO₂ 显示配置、读数与状态；v1 新实现改用通用显示源 |
-| 只读诊断 | `00`、`06`、`08`、`10`、`13`、`17` | 能力、健康、显示缓存、原始传感器帧、scalar/双路状态 |
+| 只读诊断 | `00`、`06`、`08`、`10`、`13`、`17`、`1a` | 能力、健康、显示缓存、原始传感器帧、scalar/双路状态 |
+| 格式显示 | `18`、`19` | 原始数字/标志/九灯写入与整体原始/用户选择 |
 | 专家工具 | `01`–`05`、`07` | PWM、屏幕/数值/段覆盖、退出、PM 模式 |
 
 既有操作码继续保留。完整既有命令与音乐/升级细节见 [MCU 实现文档](https://github.com/phicomm-io/phicomm_m1_mcu_atsamd20/tree/main/docs)。跨仓库新显示和按钮接口在 [下一页](m1-display.md) 集中维护。
