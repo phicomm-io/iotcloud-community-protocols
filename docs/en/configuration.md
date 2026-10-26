@@ -21,7 +21,7 @@ MiCO devices (TC1/A1/M1) use a 104-byte header and a model-specific native paylo
 
 32-bit integers are little-endian. Require exact model, variant, storage revision, length and CRC, then validate payload semantics. The payload is a storage-specific native snapshot, not portable serialization.
 
-DAIKIN uses a separate JSON envelope with `schema`, `model`, `variant`, `firmware`, `config_version`, `config`. MiCO files and DAIKIN `full` / future `hub` files are not interchangeable. Validate the entire candidate before a single persistence operation; preserve old settings on failure.
+DAIKIN uses a separate JSON envelope with `schema`, `model`, `variant`, `firmware`, `config_version`, `config`. MiCO files and DAIKIN `full` / `hub` files are not interchangeable. Validate the entire candidate before a single persistence operation; preserve old settings on failure.
 
 <a id="m1-display-storage-v9"></a>
 
@@ -71,6 +71,6 @@ The v1 development route is `/ota/v1/<model>/<variant>/latest.json`. After forma
 
 Select OTA by model, variant, signature and version. DAIKIN `hub` is a separate variant; ordinary `full` devices do not automatically cross-upgrade. The browser fetches and verifies release differences directly; when unavailable, explain the failure and require additional confirmation.
 
-DAIKIN `full` development firmware declaring `ota_variant_conversion:"full-to-hub"` may use the dedicated [explicit signed conversion endpoint](device-http.md#explicit-daikin-full-hub-conversion). Ordinary signed/unsigned OTA preserves the variant. Conversion does not alter the partition table and does not support `hub` → `full`.
+DAIKIN `full` firmware declaring `ota_variant_conversion:"full-to-hub"` may use the dedicated [explicit signed conversion endpoint](device-http.md#explicit-daikin-full-hub-conversion). Ordinary signed/unsigned OTA preserves the variant. Conversion does not alter the partition table and does not support `hub` → `full`.
 
 Record Wi-Fi firmware, sensor MCU and frontend versions independently. Firmware consumes a full-commit, SHA-256-pinned frontend release. A successful build or UART transfer does not prove the new application is running.

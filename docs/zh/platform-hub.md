@@ -2,7 +2,7 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/platform-hub/)
 
-本页的中枢接口状态为 **implemented-unreleased**：对应开发实现，尚未发布新的 v1 固件，也不代表 Apple Home 配对、物理输出或长期运行已经验收。接口索引中的 `firmware/` 路径对应 [固件仓库](https://github.com/phicomm-io/iotcloud-community-firmware)，由实现仓库的 `protocols.lock.json` 固定本规范提交；交付时另记录实际实现提交。
+中枢基础功能已随 **v1.0.0-rc** 预发布；本页新增的可选设备 Web 密码、本机设备自动列出及重启后只读恢复行为面向 **v1.0.0-rc.1（尚未发布）**，属于 `implemented-unreleased` 修复，不能据此推定已发布 RC 已包含这些行为。原 v1.0.0-rc 标签与制品保持不变。预发布、接口检查或文档发布均不代表 Apple Home 配对、物理输出或长期运行已经验收。接口索引中的 `firmware/` 路径对应 [固件仓库](https://github.com/phicomm-io/iotcloud-community-firmware)，由实现仓库的 `protocols.lock.json` 固定本规范提交；交付时另记录实际实现提交。
 
 ## 管理平台接入面
 
@@ -20,9 +20,9 @@ HTTPS 页面不能直接连接中枢的 HTTP/WS。中枢前端由自身 `/iotclo
 
 ## 内置控制台与设备接入
 
-在同一局域网打开 `http://<hub>/iotcloud/#/`，即可进入中枢自带 WebUI。首次先在 `http://<hub>/` 设置设备 Web 密码，再在初始化页面创建独立本地 owner：用户名为 3–32 个 ASCII 字母、数字或下划线，密码为 8–63 个 UTF-8 字节。云账户凭据不能登录此本地账户。
+在同一局域网打开 `http://<hub>/iotcloud/#/`，即可进入中枢自带 WebUI。在初始化页面创建独立本地 owner：用户名为 3–32 个 ASCII 字母、数字或下划线，密码为 8–63 个 UTF-8 字节。设备 Web 密码可选；未设置时可直接初始化，已有密码时仍必须使用该密码通过设备 Basic `admin` 认证。此变更不降低本地 owner 的密码要求。云账户凭据不能登录此本地账户。
 
-分别打开各社区固件设备自身的 WebUI，手动将 MQTT 服务器设为中枢地址、TCP 端口 `1883`，用户名填本地 owner，密码填其 MQTT 密码。初始 MQTT 密码等于 owner 密码；分离修改后使用独立 MQTT 密码。再到中枢控制台的**设置 → 设备**添加设备 MAC 和机型。登记只创建管理记录，不通过 HTTP 改写另一台设备的 MQTT 配置。浏览器控制台使用 `ws://<hub>:9001/mqtt`。
+分别打开各社区固件设备自身的 WebUI，手动将 MQTT 服务器设为中枢地址、TCP 端口 `1883`，用户名填本地 owner，密码填其 MQTT 密码。初始 MQTT 密码等于 owner 密码；分离修改后使用独立 MQTT 密码。再到中枢控制台的**设置 → 设备**添加其他设备 MAC 和机型；中枢本机自动列出，无需手工添加。登记只创建管理记录，不通过 HTTP 改写另一台设备的 MQTT 配置。浏览器控制台使用 `ws://<hub>:9001/mqtt`。
 
 | 集成 | 配置入口 |
 | --- | --- |
@@ -35,7 +35,7 @@ HTTPS 页面不能直接连接中枢的 HTTP/WS。中枢前端由自身 `/iotclo
 
 ## 本地账户与 HTTP 会话
 
-中枢是独立的 `variant:"hub"`；普通 `full` 仍是传感器版本。首次先设置设备 Web 密码，再以设备 Basic `admin` 认证调用：
+中枢是独立的 `variant:"hub"`；普通 `full` 仍是传感器版本。设备未设置 Web 密码时可直接调用；已有密码时，必须附带 `Authorization: Basic <base64(admin:设备Web密码)>`：
 
 ```http
 POST /api/hub/setup
@@ -44,7 +44,7 @@ Content-Type: application/json
 {"username":"local","password":"local-password"}
 ```
 
-用户名为 3–32 个 ASCII 字母、数字或下划线，密码为 8–63 个 UTF-8 字节，不能含 NUL。只创建一个本地 owner，不导入云账户。已配置时返回 HTTP 409；Web 密码未设置时不能初始化。密码使用独立盐的 PBKDF2-HMAC-SHA256 校验值存储。配置保存失败返回 HTTP 503 `storage_error`，保留旧配置。
+用户名为 3–32 个 ASCII 字母、数字或下划线，密码为 8–63 个 UTF-8 字节，不能含 NUL。只创建一个本地 owner，不导入云账户。已配置时返回 HTTP 409；没有设备 Web 密码不再阻止初始化，但已设密码时缺失或错误的 Basic 认证仍返回 HTTP 401 `unauthorized`。密码使用独立盐的 PBKDF2-HMAC-SHA256 校验值存储。配置保存失败返回 HTTP 503 `storage_error`，保留旧配置。
 
 `POST /api/auth/login {username,password}` 返回账户对象，并在 `X-IotCloud-Session` 响应头返回 64 位十六进制 token；后续使用 `Authorization: Bearer <token>`。中枢不签发或读取会话 Cookie。最多四个内存会话，有效期自登录起 12 小时，重启即失效。账户对象含 `username`、`mqtt_username`、`aliases:[]`、`is_admin:false`、`hub:true`、`mqtt_password_separate`。已计入的登录/MQTT 密码失败共享五次失败、30 秒退避窗口。
 
@@ -57,14 +57,18 @@ HTTP 检查 Host 为设备 IP、AP IP 或 `daikin-<device_id>.local`；携带 Or
 | `/api/auth/logout` | POST `{}`，撤销当前会话 |
 | `/api/auth/password` | POST `{current_password,password}`，修改账户密码并撤销会话；未分离时同时更新 MQTT 密码 |
 | `/api/auth/mqtt-password` | POST `{current_password,password}`，当前密码指账户密码；分离 MQTT 密码、断开 Broker 客户端，保留 HTTP 会话 |
-| `/api/devices` | GET；POST `{mac,model,version:"v2"}`，服务端写入当前 owner 和 `status:"active"` |
-| `/api/devices/<mac>` | DELETE，移除登记与关联 Bemfa 映射；最后一条映射删除时关闭 Bemfa |
+| `/api/devices` | GET 首项为只读本机设备，随后是已登记设备；POST `{mac,model,version:"v2"}`，服务端写入当前 owner 和 `status:"active"`；POST 本机返回 409 `conflict` |
+| `/api/devices/<mac>` | DELETE，移除登记与关联 Bemfa 映射；最后一条映射删除时关闭 Bemfa；删除本机返回 403 `hub_local_device` |
 | `/api/hub/bridge` | GET/PUT，显式上游路由，见下文 |
 | `/api/integrations/bemfa` | GET/PUT/DELETE，巴法云映射 |
 | `/api/hub/homekit` | GET/PUT，HAP 配置与状态 |
 | `/api/hub/homekit/pairing` | DELETE `{"confirm":true}`，清除配对并安排重启 |
 
-除说明的初始化/公开查询外，以上路径要求本地会话。错误以 `code` 判断：401 `unauthorized`、400 `invalid_params`、409 `conflict`、429 `hub_rate_limited`、503 `storage_error` 或 `busy`。注册设备最多 12 个，机型为 `a1`、`m1`、`tc1`、`daikin`；MAC 是非全零/全 f 的小写 12 位十六进制 ID。
+除说明的初始化/公开查询外，以上路径要求本地会话。错误以 `code` 判断：401 `unauthorized`、400 `invalid_params`、409 `conflict`、429 `hub_rate_limited`、503 `storage_error` 或 `busy`。用户登记槽位最多 12 个，本机不占用槽位；机型为 `a1`、`m1`、`tc1`、`daikin`，MAC 是非全零/全 f 的小写 12 位十六进制 ID。
+
+`GET /api/devices` 在响应首项自动加入 `{mac:本机小写12位ID, model:"daikin", version:"v2", status:"active", username:当前owner, self:true}`。它由本机身份即时生成，不写入持久配置；已有手工登记的相同本机 MAC 在响应中去重，不因 GET 改写或删除旧登记。因此响应最多包含本机与 12 个用户登记设备，前端不得把 `self` 计入用户槽位，也不得把它当作可删除登记。旧客户端可忽略新增的 `self` 字段。
+
+控制台进入 `Restarting` 后只使用只读请求观察服务恢复；若响应为 HTTP 401，返回本地 owner 登录流程。重启会清除内存会话，不能仅因旧 token 失效一直停留在重启页面，也不能自动重放初始化、转换、配置写入或重启请求。恢复页面不等于设备已完成物理验收。
 
 <a id="hub-memory-diagnostics"></a>
 
@@ -120,7 +124,7 @@ PUT 使用 `enabled`、`mappings` 和启用时的 `api_key`。空字符串 `api_
 
 ## HomeKit HAP
 
-当前提供可选 HAP Bridge，端口 51826，`protocol:"hap"`；**未提供 Matter 配网或设备服务**。
+当前提供可选 HAP Bridge，端口 51826，`protocol:"hap"`；**未提供 Matter 配网或设备服务**。HAP 原已自动包含中枢本机，本次管理列表新增 `self` 不改变该行为，也不代表新增或通过了 Apple Home 真机配对验收。
 
 ```json
 {"enabled":true}

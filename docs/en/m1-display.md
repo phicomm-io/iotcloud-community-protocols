@@ -122,7 +122,7 @@ Each lane has three nonnegative digits: format0 shows `123`, format1 `1.23`, for
 
 Logical units are separate from glass legends. These positions have no selectable W, kW, ℃, %, CO₂ or ppm glyphs. TC1 power hides the original gas/unit; UI must explain its logical unit and scale. Retain a native legend only for slot0+formaldehyde+`mg/m³`+scale1, or slot1+pm25+`µg/m³`+scale1. Scale1000 always hides it, including native metrics. `1230 W / scale1000 / decimals2` shows approximately `1.23`, without a kW glyph.
 
-Colors are off/red/green/yellow. Threshold mode requires low<high and compares the unscaled physical value: below low green, at/above low but below high yellow, at/above high red. An explicit API color may override a lease's rule. These colors do not change physical sensor alarms.
+Colors are off/red/green/yellow. Threshold mode requires `low < high` and compares the unscaled physical value: below low green, at/above low but below high yellow, at/above high red. An explicit API color may override a lease's rule. These colors do not change physical sensor alarms.
 
 ### Legacy and dual profiles
 

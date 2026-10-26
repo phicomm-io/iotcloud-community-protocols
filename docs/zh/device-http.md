@@ -98,9 +98,9 @@ HTTP 和 TMCP 共用动作及 JSON 信封：
 
 ## DAIKIN 显式 full → hub 转换
 
-此接口属于未正式发布的开发扩展。仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
+显式转换接口已随 v1.0.0-rc 预发布；下述设备 Web 密码可选行为属于面向 v1.0.0-rc.1 的未发布修复，不改写原 RC 标签或制品。仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
 
-必须先设置本地设备 Web 密码，以该密码通过 Basic `admin` 认证，再向独立接口提交完整 `PHOTA001` 签名二进制文件：
+设备 Web 密码可选：未设置时无需 Basic 认证；已有密码时仍必须以该密码通过 Basic `admin` 认证。向独立接口提交完整 `PHOTA001` 签名二进制文件；以下 `Authorization` 头仅在已设设备 Web 密码时必需：
 
 ```http
 POST /api/v1/ota/convert
@@ -112,14 +112,14 @@ X-IoTCloud-Confirm: full-to-hub
 <完整 PHOTA001 签名二进制文件>
 ```
 
-两个确认头的值必须精确匹配；不能使用本地 Hub owner 或上游账户会话代替设备 Basic 认证。设备当前配置必须健康，且没有进行中的 OTA、待处理命令或已安排的重启；配置恢复期间禁止转换。
+两个确认头的值必须精确匹配；已设设备 Web 密码时，不能使用本地 Hub owner 或上游账户会话代替设备 Basic 认证。设备当前配置必须健康，且没有进行中的 OTA、待处理命令或已安排的重启；配置恢复期间禁止转换。
 
 设备使用实际下一 OTA 槽容量检查应用负载，不采用构建 CSV 的假定容量。应用前缀必须在固定偏移匹配 DAIKIN 硬件、项目与目标 `hub` 身份，不能通过搜索散落字符串识别镜像。擦除非运行槽前，先检查固定前缀并以可信密钥认证签名封套。完整接收后，从 Flash 读回整个暂存负载并校验签名覆盖的摘要，再读回并核对固定身份，全部通过后才选择新启动分区。
 
 | 正反例 | 结果 |
 | --- | --- |
-| 已声明能力的 `full`，密码认证与确认头正确，健康且空闲，签名 Hub 镜像装得下且全部校验通过 | HTTP 202，`{"code":"accepted"}`；安排重启 |
-| 设备未设置 Web 密码 | HTTP 403，`set_web_password_first` |
+| 已声明能力的 `full`，已设密码时认证通过、确认头正确，健康且空闲，签名 Hub 镜像装得下且全部校验通过 | HTTP 202，`{"code":"accepted"}`；安排重启 |
+| 设备未设置 Web 密码 | 无需 Basic 认证；仍须确认头、健康/空闲检查、签名与目标校验全部通过 |
 | 已设 Web 密码，但 Basic 认证缺失或错误 | HTTP 401，`unauthorized` |
 | 确认头的值缺失或错误 | HTTP 400，`invalid_params` |
 | 当前处于配置恢复 | HTTP 409，`migration_required` |
@@ -129,7 +129,7 @@ X-IoTCloud-Confirm: full-to-hub
 | 普通 `/api/v1/ota/upload` 或 `/api/v1/ota/upload-unsigned` 提交不同 variant，即使附带转换头 | HTTP 400，`invalid_image`；普通入口始终保持当前 variant |
 | `hub` 请求转换为 `full` | Hub 不提供转换接口，普通接口拒绝跨 variant；Hub 大配置与 Full 不兼容 |
 
-转换不改写分区表或普通配置，保留共用的 Wi-Fi、MQTT 和设备 Web 密码。首次 Hub 初始化仍须原设备 Web 密码，HAP 默认关闭；安装新镜像不等于已创建本地 owner 或完成 HomeKit 配对。转换也不扩大 OTA 槽：原厂 1.5 MiB 槽仍不能接受超出该容量的镜像。HTTP 202 只确认校验通过并安排重启；重新连接后，读取 `info` / `status` 的 `firmware_variant:"hub"` 才能确认 Hub 已运行。
+转换不改写分区表或普通配置，保留共用的 Wi-Fi、MQTT 和设备 Web 密码。首次 Hub 初始化仅在已有设备 Web 密码时要求原密码认证；独立本地 owner 密码要求不变，HAP 默认关闭；安装新镜像不等于已创建本地 owner 或完成 HomeKit 配对。转换也不扩大 OTA 槽：原厂 1.5 MiB 槽仍不能接受超出该容量的镜像。HTTP 202 只确认校验通过并安排重启；重新连接后，读取 `info` / `status` 的 `firmware_variant:"hub"` 才能确认 Hub 已运行。
 
 ## M1 CO₂ 来源
 

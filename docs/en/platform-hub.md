@@ -2,7 +2,7 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/platform-hub/)
 
-Hub contracts are **implemented-unreleased**: they describe development source, without a new v1 firmware release or acceptance of Apple Home pairing, physical outputs or long-running operation. Registry paths beginning `firmware/` identify the [firmware repository](https://github.com/phicomm-io/iotcloud-community-firmware). Consumers pin this specification through `protocols.lock.json` and record the implementation commit separately at delivery.
+The hub baseline was published as the **v1.0.0-rc** prerelease. The optional device Web password, automatic local-device listing and read-only restart recovery described here target **v1.0.0-rc.1 (not yet released)** and remain `implemented-unreleased` fixes; do not assume the published RC includes them. The original v1.0.0-rc tag and assets remain unchanged. Prereleases, interface checks and documentation publication do not establish Apple Home pairing, physical output or long-running acceptance. Registry paths beginning `firmware/` identify the [firmware repository](https://github.com/phicomm-io/iotcloud-community-firmware). Consumers pin this specification through `protocols.lock.json` and record the implementation commit separately at delivery.
 
 ## Shared platform integration
 
@@ -20,9 +20,9 @@ HTTPS pages cannot directly connect to the hub's HTTP/WS services. The hub serve
 
 ## Embedded console and device setup
 
-On the same LAN, open `http://<hub>/iotcloud/#/` for the hub's embedded WebUI. First set the device Web password at `http://<hub>/`, then create the independent local owner on the setup page: 3–32 ASCII letters, digits or underscores for the username, and 8–63 UTF-8 bytes for the password. Cloud credentials do not sign in to this account.
+On the same LAN, open `http://<hub>/iotcloud/#/` for the hub's embedded WebUI. Create the independent local owner on the setup page: 3–32 ASCII letters, digits or underscores for the username, and 8–63 UTF-8 bytes for the password. The device Web password is optional: setup may proceed directly when none exists; an existing password still requires device Basic `admin` authentication. This does not relax the local owner password requirements. Cloud credentials do not sign in to this account.
 
-Open each community device's own WebUI and manually set its MQTT server to the hub's address, TCP port `1883`, the local owner username and its MQTT password. Initially this password equals the owner password; use the separate MQTT password after changing it. Add the device's MAC and model under **Settings → Devices** in the hub console. Registration creates a management record; it does not write MQTT settings to another device over HTTP. The browser console uses `ws://<hub>:9001/mqtt`.
+Open each community device's own WebUI and manually set its MQTT server to the hub's address, TCP port `1883`, the local owner username and its MQTT password. Initially this password equals the owner password; use the separate MQTT password after changing it. Add other devices' MACs and models under **Settings → Devices** in the hub console; the hub itself appears automatically and needs no manual registration. Registration creates a management record; it does not write MQTT settings to another device over HTTP. The browser console uses `ws://<hub>:9001/mqtt`.
 
 | Integration | Configuration entry |
 | --- | --- |
@@ -35,7 +35,7 @@ These are existing console functions; local owner login remains required for the
 
 ## Local owner and HTTP sessions
 
-The hub uses the independent `variant:"hub"`; ordinary `full` remains the sensor edition. Set the device Web password first, then use device Basic authentication as `admin`:
+The hub uses the independent `variant:"hub"`; ordinary `full` remains the sensor edition. Call setup directly if no device Web password exists. If one exists, include `Authorization: Basic <base64(admin:device-Web-password)>`:
 
 ```http
 POST /api/hub/setup
@@ -44,7 +44,7 @@ Content-Type: application/json
 {"username":"local","password":"local-password"}
 ```
 
-Usernames contain 3–32 ASCII letters, digits or underscores. Passwords contain 8–63 UTF-8 bytes and no NUL. There is one local owner; cloud identities are not imported. Setup returns HTTP 409 when an owner already exists and cannot run without a device Web password. Password verifiers use separately salted PBKDF2-HMAC-SHA256. A failed configuration save returns HTTP 503 `storage_error` and preserves the previous configuration.
+Usernames contain 3–32 ASCII letters, digits or underscores. Passwords contain 8–63 UTF-8 bytes and no NUL. There is one local owner; cloud identities are not imported. Setup returns HTTP 409 when an owner already exists. An absent device Web password no longer blocks setup; when a password exists, missing or incorrect Basic authentication still returns HTTP 401 `unauthorized`. Password verifiers use separately salted PBKDF2-HMAC-SHA256. A failed configuration save returns HTTP 503 `storage_error` and preserves the previous configuration.
 
 `POST /api/auth/login {username,password}` returns an account object and a 64-character hex token in `X-IotCloud-Session`. Send `Authorization: Bearer <token>` afterwards. The hub neither issues nor reads session cookies. Up to four memory sessions last 12 hours from login and disappear on reboot. Account fields are `username`, `mqtt_username`, `aliases:[]`, `is_admin:false`, `hub:true` and `mqtt_password_separate`. Counted account/MQTT password failures share a five-failure, 30-second backoff window.
 
@@ -57,14 +57,18 @@ HTTP accepts the device IP, AP IP or `daikin-<device_id>.local` as Host. Writes 
 | `/api/auth/logout` | POST `{}`, revoke the current session |
 | `/api/auth/password` | POST `{current_password,password}`, revoke sessions; update MQTT password too unless separated |
 | `/api/auth/mqtt-password` | POST `{current_password,password}`; current password means the account password; separate MQTT credentials and disconnect Broker clients while retaining HTTP sessions |
-| `/api/devices` | GET; POST `{mac,model,version:"v2"}`; server assigns the owner and `status:"active"` |
-| `/api/devices/<mac>` | DELETE registration and related Bemfa mappings; disable Bemfa when its last mapping disappears |
+| `/api/devices` | GET starts with the read-only local device, followed by registrations; POST `{mac,model,version:"v2"}` assigns the owner and `status:"active"`; POST for the local device returns 409 `conflict` |
+| `/api/devices/<mac>` | DELETE registration and related Bemfa mappings; disable Bemfa when its last mapping disappears; deleting the local device returns 403 `hub_local_device` |
 | `/api/hub/bridge` | GET/PUT explicit upstream routes |
 | `/api/integrations/bemfa` | GET/PUT/DELETE Bemfa mappings |
 | `/api/hub/homekit` | GET/PUT HAP settings and status |
 | `/api/hub/homekit/pairing` | DELETE `{"confirm":true}`, clear pairing and schedule reboot |
 
-Apart from the documented setup/public endpoints, these require a local session. Branch on stable `code`: 401 `unauthorized`, 400 `invalid_params`, 409 `conflict`, 429 `hub_rate_limited`, 503 `storage_error` or `busy`. Register up to 12 devices of model `a1`, `m1`, `tc1` or `daikin`. MACs are lowercase 12-digit hex IDs, excluding all-zero/all-f values.
+Apart from the documented setup/public endpoints, these require a local session. Branch on stable `code`: 401 `unauthorized`, 400 `invalid_params`, 409 `conflict`, 429 `hub_rate_limited`, 503 `storage_error` or `busy`. There are up to 12 user registration slots; the local device uses no slot. Models are `a1`, `m1`, `tc1` or `daikin`. MACs are lowercase 12-digit hex IDs, excluding all-zero/all-f values.
+
+`GET /api/devices` automatically prepends `{mac:local-lowercase-12-digit-ID, model:"daikin", version:"v2", status:"active", username:current-owner, self:true}`. This entry is generated from the local identity without persistent writes. A legacy manual registration with the same local MAC is deduplicated in the response; GET neither rewrites nor deletes that old registration. The response can therefore contain the local device plus 12 user registrations. Clients must not count `self` against the registration limit or offer it as a deletable registration. Older clients may ignore the additive `self` field.
+
+After entering `Restarting`, the console observes service recovery through read-only requests. An HTTP 401 returns to local owner login. Reboot clears memory sessions: an expired token must not leave the console permanently on the restart page. Never automatically replay setup, conversion, configuration writes or reboot requests. A recovered page is not physical-device acceptance.
 
 ## Hub memory diagnostics
 
@@ -118,7 +122,7 @@ Fresh-air A1 is identified by `fresh_air_on`/`fresh_air_speed` and uses `fresh_a
 
 ## HomeKit HAP
 
-The optional HAP Bridge uses port 51826 and `protocol:"hap"`. **Matter commissioning and device services are not provided.**
+The optional HAP Bridge uses port 51826 and `protocol:"hap"`. **Matter commissioning and device services are not provided.** HAP already includes the hub itself automatically. Adding `self` to the management list does not change that behavior or establish any new Apple Home physical pairing acceptance.
 
 ```json
 {"enabled":true}

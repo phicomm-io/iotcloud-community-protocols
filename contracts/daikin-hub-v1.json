@@ -19,7 +19,10 @@
     "session_lifetime_ms": 43200000,
     "body_bytes": 12288,
     "cross_origin": false,
-    "setup_requires_device_basic": true
+    "setup_requires_device_basic": false,
+    "setup_requires_device_basic_when_password_set": true,
+    "device_web_password_required": false,
+    "full_to_hub_requires_device_basic_when_password_set": true
   },
   "broker": {
     "tcp_port": 1883,
@@ -103,5 +106,45 @@
     "default_nvs_erase": false,
     "included_in_configuration_backup": false
   },
-  "validation_boundary": "Schemas and wire vectors do not establish account ownership, runtime freshness, persistence rollback, physical output or Apple Home acceptance."
+  "validation_boundary": "Schemas and wire vectors do not establish account ownership, runtime freshness, persistence rollback, physical output or Apple Home acceptance.",
+  "devices": {
+    "user_registration_slots": 12,
+    "local_device": {
+      "response_position": 0,
+      "mac": "local lowercase 12-digit hexadecimal ID",
+      "model": "daikin",
+      "version": "v2",
+      "status": "active",
+      "username": "current owner",
+      "self": true,
+      "uses_user_registration_slot": false,
+      "persisted": false,
+      "deduplicate_legacy_local_registration_in_response": true,
+      "post": {
+        "status": 409,
+        "code": "conflict"
+      },
+      "delete": {
+        "status": 403,
+        "code": "hub_local_device"
+      }
+    },
+    "homekit_already_includes_local_device": true
+  },
+  "release_scope": {
+    "published_baseline": {
+      "repository": "phicomm-io/iotcloud-community-firmware",
+      "tag": "v1.0.0-rc"
+    },
+    "pending_fixes": {
+      "target": "v1.0.0-rc.1",
+      "status": "implemented-unreleased",
+      "changes": [
+        "optional device Web password; existing password still requires Basic authentication",
+        "automatic read-only local device in management list",
+        "read-only console recovery after restart; HTTP 401 returns to login"
+      ]
+    },
+    "physical_apple_home_acceptance": false
+  }
 }

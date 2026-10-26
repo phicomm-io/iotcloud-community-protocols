@@ -96,9 +96,9 @@ Implementation: [DAIKIN status diagnostic](https://github.com/phicomm-io/iotclou
 
 ## Explicit DAIKIN full → hub conversion
 
-This is a development extension without a formal release. Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
+Explicit conversion was published in the v1.0.0-rc prerelease. The optional device Web password behavior below is an unreleased fix targeting v1.0.0-rc.1; the original RC tag and assets are not replaced. Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
 
-Set a local device Web password first. Authenticate as Basic `admin` with that password, then send a complete `PHOTA001` signed binary to the dedicated endpoint:
+The device Web password is optional: no Basic authentication is required when none exists; an existing password still requires Basic `admin` authentication. Send a complete `PHOTA001` signed binary to the dedicated endpoint. The following `Authorization` header is required only when a device Web password exists:
 
 ```http
 POST /api/v1/ota/convert
@@ -110,14 +110,14 @@ X-IoTCloud-Confirm: full-to-hub
 <complete PHOTA001 signed binary>
 ```
 
-Both confirmation header values must match exactly. Local Hub owner sessions and upstream account sessions cannot replace device Basic authentication. The current configuration must be healthy, with no active OTA, pending command or scheduled reboot; configuration recovery blocks conversion.
+Both confirmation header values must match exactly. When a device Web password exists, local Hub owner sessions and upstream account sessions cannot replace device Basic authentication. The current configuration must be healthy, with no active OTA, pending command or scheduled reboot; configuration recovery blocks conversion.
 
 Check application payload size against the actual next OTA partition, independently of the build CSV. The application prefix must match DAIKIN hardware, project and target `hub` identity at fixed offsets; finding identity strings elsewhere is insufficient. Check the fixed prefix and authenticate the envelope against a trusted signing key before erasing the inactive slot. After receiving the complete file, verify the signed payload digest by reading the entire staged payload from Flash, then read and verify the fixed identity again. Select the new boot partition only after every check passes.
 
 | Positive/negative case | Result |
 | --- | --- |
-| Supporting `full`, correct password authentication and confirmation headers, healthy and idle, signed Hub image fits and passes all checks | HTTP 202, `{"code":"accepted"}`; schedule reboot |
-| No device Web password is configured | HTTP 403, `set_web_password_first` |
+| Supporting `full`, authenticated if a password exists, correct confirmation headers, healthy and idle, signed Hub image fits and passes all checks | HTTP 202, `{"code":"accepted"}`; schedule reboot |
+| No device Web password is configured | No Basic authentication required; confirmation headers, healthy/idle checks, signature and target validation still apply |
 | Device Web password exists but Basic authentication is missing or incorrect | HTTP 401, `unauthorized` |
 | Missing or incorrect confirmation header values | HTTP 400, `invalid_params` |
 | Configuration recovery is active | HTTP 409, `migration_required` |
@@ -127,7 +127,7 @@ Check application payload size against the actual next OTA partition, independen
 | Different variant sent to ordinary `/api/v1/ota/upload` or `/api/v1/ota/upload-unsigned`, even with conversion headers | HTTP 400, `invalid_image`; ordinary endpoints preserve the running variant |
 | `hub` requests conversion to `full` | No conversion endpoint on Hub; reject cross-variant ordinary uploads because Hub's larger configuration is incompatible |
 
-Conversion preserves the partition table and ordinary configuration, including shared Wi-Fi, MQTT and device Web passwords. Initial Hub setup still requires the original device Web password; HAP defaults off. Installing the image neither creates a local owner nor completes HomeKit pairing. Conversion does not enlarge OTA slots: a factory 1.5 MiB slot still rejects larger images. HTTP 202 confirms verification and a scheduled reboot; reconnect and read `info` / `status` with `firmware_variant:"hub"` to establish that Hub is running.
+Conversion preserves the partition table and ordinary configuration, including shared Wi-Fi, MQTT and device Web passwords. Initial Hub setup requires the original device Web password only when one exists; the separate local owner password requirements remain unchanged. HAP defaults off. Installing the image neither creates a local owner nor completes HomeKit pairing. Conversion does not enlarge OTA slots: a factory 1.5 MiB slot still rejects larger images. HTTP 202 confirms verification and a scheduled reboot; reconnect and read `info` / `status` with `firmware_variant:"hub"` to establish that Hub is running.
 
 ## M1 CO₂ source
 
