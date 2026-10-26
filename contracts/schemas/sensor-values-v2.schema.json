@@ -41,7 +41,7 @@
     },
     "sensors": {
       "type": "object",
-      "minProperties": 1,
+      "minProperties": 0,
       "maxProperties": 16,
       "propertyNames": {
         "type": "string",

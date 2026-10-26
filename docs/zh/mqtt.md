@@ -20,7 +20,7 @@ TMCP（Tom MQTT Cloud Protocol）使用 `protocol:"tmcp"`、`protocol_version:2`
 | `device_id` | 规范小写12位十六进制，必须等于主题中的设备身份 |
 | `boot`、`sequence` | 整数1..4294967295；启动身份与单调递增序号用于实时防重放，不是墙钟时间 |
 | `model` | 可选介绍信息，1..32 UTF-8字节；不作机型白名单或数据源绑定 |
-| `sensors` | 含1..16字段的对象；键是稳定 `field_id`，ASCII `[a-z][a-z0-9_]{0,31}` |
+| `sensors` | 含0..16字段的对象；键是稳定 `field_id`，ASCII `[a-z][a-z0-9_]{0,31}` |
 | `name` | 必填显示名称，1..64 UTF-8字节；改名不改变字段身份 |
 | `type` | 必填1..16位ASCII `[a-z][a-z0-9_]{0,15}`；当前仅消费 `number` |
 | `unit` | 必填0..24 UTF-8字节，可为空；由发布者声明，不按机型或字段名推导 |
@@ -29,7 +29,7 @@ TMCP（Tom MQTT Cloud Protocol）使用 `protocol:"tmcp"`、`protocol_version:2`
 
 名称、单位必须是合法UTF-8，无孤立代理项、ASCII C0控制字符U+0000..U+001F或DEL U+007F；字节上限不等于字符数量。响应包和字段描述允许追加扩展，配置写入仍严格拒绝未知字段。每次实时值都携带描述，避免独立发现缓存过期或描述/数值版本错配。发布者为真实测量或生效输出选择稳定字段ID及准确名称/单位；TC1功率、A1生效风机百分比仅是例子，不是接收白名单。描述不能把请求设置伪装为测量值。
 
-接收端先核对账号、主题身份、非retained实时来源、boot/sequence与时效，然后逐字段处理：未知type可为未来类型携带任意JSON值，但当前M1/前端必须**忽略其值**，不转换为数字或零。每个已接受的新boot/sequence都是**完整快照**：字段缺失、不支持、格式错误或无效时立即撤销旧number候选，不续有效数值租约；配置绑定保留，即使所有number消失也记录新boot/sequence，防旧数值帧重放恢复。一个不支持或无效字段不阻止同帧有效number兄弟字段使用。schema不合法的包不能作为有效样本证明。同一boot下重复/倒退序号、越权身份、retained、离线或过期来源均不能续期。
+接收端先核对账号、主题身份、非retained实时来源、boot/sequence与时效，然后逐字段处理：未知type可为未来类型携带任意JSON值，但当前M1/前端必须**忽略其值**，不转换为数字或零。每个已接受的新boot/sequence都是**完整快照**：字段缺失、不支持、格式错误或无效时立即撤销旧number候选，不续有效数值租约；配置绑定保留，即使所有number消失也记录新boot/sequence，防旧数值帧重放恢复。空 `sensors:{}` 是合法完整快照，撤销全部旧number候选、保留配置并记录counter；一个不支持或无效字段不阻止同帧有效number兄弟字段使用。schema不合法的包不能作为有效样本证明。同一boot下重复/倒退序号、越权身份、retained、离线或过期来源均不能续期。
 
 M1的MQTT来源绑定 `device_id + field_id + 预期type + 预期unit`，不绑定model/name；当前只可选number。已识别样本无效或预期单位不匹配时不能驱动该区域。已接受的新完整快照中，字段缺失、不支持或单位变化立即使旧number候选失效，相应区域回退而保留配置；name变化只更新名称。发布时帧龄加本地经过时间须同时满足20秒feed上限和区域TTL。负数可作为有效数据缓存，但M1非负玻璃格式返回 `out_of_range`。单位是元数据，不会给固定玻璃增加字形。见[profile4](device-http.md#m1-generic-profile4)。
 

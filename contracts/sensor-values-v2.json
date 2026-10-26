@@ -66,6 +66,8 @@
     "unknown_type": "invalidate old numeric cache; ignore unknown value; no synthetic zero",
     "unit_mismatch": "invalidate bound numeric candidate",
     "numeric_siblings": "accept independently when valid",
-    "retained_or_replayed": "reject without changing accepted numeric snapshot"
-  }
+    "retained_or_replayed": "reject without changing accepted numeric snapshot",
+    "empty_object": "Valid complete snapshot revokes all numeric candidates and records boot/sequence; configured sources remain saved."
+  },
+  "minimum_fields_per_message": 0
 }

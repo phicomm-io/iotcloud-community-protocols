@@ -1128,6 +1128,19 @@
         }
       },
       "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "empty complete snapshot revokes all previous numeric candidates",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 9,
+        "sensors": {}
+      },
+      "valid": true
     }
   ]
 }
