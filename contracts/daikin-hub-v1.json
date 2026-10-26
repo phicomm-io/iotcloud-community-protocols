@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "contract": "daikin-hub-v1",
-  "status": "implemented-unreleased",
+  "status": "released",
   "variant": "hub",
   "matter": false,
   "owner": {
@@ -136,9 +136,9 @@
       "repository": "phicomm-io/iotcloud-community-firmware",
       "tag": "v1.0.0-rc"
     },
-    "pending_fixes": {
-      "target": "v1.0.0-rc.1",
-      "status": "implemented-unreleased",
+    "published_fixes": {
+      "tag": "v1.0.0-rc.1",
+      "status": "released",
       "changes": [
         "optional device Web password; existing password still requires Basic authentication",
         "automatic read-only local device in management list",

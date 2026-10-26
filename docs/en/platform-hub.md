@@ -2,7 +2,7 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/platform-hub/)
 
-The hub baseline was published as the **v1.0.0-rc** prerelease. The optional device Web password, automatic local-device listing and read-only restart recovery described here target **v1.0.0-rc.1 (not yet released)** and remain `implemented-unreleased` fixes; do not assume the published RC includes them. The original v1.0.0-rc tag and assets remain unchanged. Prereleases, interface checks and documentation publication do not establish Apple Home pairing, physical output or long-running acceptance. Registry paths beginning `firmware/` identify the [firmware repository](https://github.com/phicomm-io/iotcloud-community-firmware). Consumers pin this specification through `protocols.lock.json` and record the implementation commit separately at delivery.
+The hub baseline was published as the **v1.0.0-rc** prerelease. The optional device Web password, automatic local-device listing and read-only restart recovery described here were published in **v1.0.0-rc.1**. The original v1.0.0-rc does not include these fixes; its tag and assets remain unchanged. Prereleases, interface checks and documentation publication do not establish Apple Home pairing, physical output or long-running acceptance. Registry paths beginning `firmware/` identify the [firmware repository](https://github.com/phicomm-io/iotcloud-community-firmware). Consumers pin this specification through `protocols.lock.json` and record the implementation commit separately at delivery.
 
 ## Shared platform integration
 

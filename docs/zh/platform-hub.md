@@ -2,7 +2,7 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/platform-hub/)
 
-中枢基础功能已随 **v1.0.0-rc** 预发布；本页新增的可选设备 Web 密码、本机设备自动列出及重启后只读恢复行为面向 **v1.0.0-rc.1（尚未发布）**，属于 `implemented-unreleased` 修复，不能据此推定已发布 RC 已包含这些行为。原 v1.0.0-rc 标签与制品保持不变。预发布、接口检查或文档发布均不代表 Apple Home 配对、物理输出或长期运行已经验收。接口索引中的 `firmware/` 路径对应 [固件仓库](https://github.com/phicomm-io/iotcloud-community-firmware)，由实现仓库的 `protocols.lock.json` 固定本规范提交；交付时另记录实际实现提交。
+中枢基础功能已随 **v1.0.0-rc** 预发布；本页新增的可选设备 Web 密码、本机设备自动列出及重启后只读恢复行为已随 **v1.0.0-rc.1** 预发布。原 v1.0.0-rc 不包含这些修复，标签与制品保持不变。预发布、接口检查或文档发布均不代表 Apple Home 配对、物理输出或长期运行已经验收。接口索引中的 `firmware/` 路径对应 [固件仓库](https://github.com/phicomm-io/iotcloud-community-firmware)，由实现仓库的 `protocols.lock.json` 固定本规范提交；交付时另记录实际实现提交。
 
 ## 管理平台接入面
 
