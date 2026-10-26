@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "specification": "1.0.0-dev.4",
+  "specification": "1.0.0-dev.5",
   "repository": "phicomm-io/iotcloud-community-protocols",
   "contracts": [
     {
@@ -376,6 +376,106 @@
         "firmware/TC1/tests/test_power_sensor.py",
         "firmware/A1/tests/test_fan_sensor.py",
         "firmware/tests/test_m1_display_source.py"
+      ]
+    },
+    {
+      "id": "m1-uart-v4",
+      "version": 4,
+      "status": "implemented-unreleased",
+      "document": "m1-uart.md",
+      "producers": [
+        "mcu"
+      ],
+      "consumers": [
+        "firmware",
+        "frontend"
+      ],
+      "implementation": [
+        "mcu/src/debug.c",
+        "mcu/src/display.c",
+        "mcu/src/runtime.c",
+        "mcu/include/m1/runtime.h",
+        "firmware/M1/mcu.c"
+      ],
+      "verification": [
+        "mcu/tests/test_core.c",
+        "mcu/tests/test_runtime.c",
+        "firmware/tests/test_m1_display_source.py",
+        "firmware/tests/test_m1_display_format.py"
+      ],
+      "artifacts": [
+        "contracts/m1-uart-v4.json",
+        "contracts/vectors/m1-uart-v4.json"
+      ]
+    },
+    {
+      "id": "m1-display-v3",
+      "version": 3,
+      "status": "implemented-unreleased",
+      "document": "m1-display.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "mcu",
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/M1/display_source.c",
+        "firmware/M1/display_source.h",
+        "firmware/M1/mcu.c",
+        "firmware/M1/main.c",
+        "firmware/M1/storage.h",
+        "firmware/common/backup.h",
+        "firmware/common/service_product.inc",
+        "mcu/src/debug.c",
+        "mcu/src/display.c",
+        "mcu/src/runtime.c",
+        "frontend/M1/web/display-format.js",
+        "frontend/M1/web/display-profile.js"
+      ],
+      "verification": [
+        "firmware/tests/test_m1_display_format.py",
+        "firmware/tests/test_backup.py",
+        "mcu/tests/test_core.c",
+        "mcu/tests/test_runtime.c",
+        "frontend/tests/test_m1_display_format.cjs",
+        "frontend/tests/test_m1_display_profile.cjs",
+        "frontend/tests/test_m1_display_profile_browser.cjs"
+      ],
+      "artifacts": [
+        "contracts/m1-display-v3.json",
+        "contracts/vectors/m1-display-v3.json",
+        "contracts/schemas/m1-display-profile-set-v3.schema.json",
+        "contracts/schemas/m1-display-profile-state-v3.schema.json",
+        "contracts/schemas/m1-display-value-set-v3.schema.json",
+        "contracts/examples/m1-display-v3.json"
+      ]
+    },
+    {
+      "id": "m1-co2-source-v2",
+      "version": 2,
+      "status": "implemented-unreleased",
+      "document": "device-http.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/M1/co2_source.c",
+        "firmware/M1/display_source.h",
+        "frontend/M1/web/page.js"
+      ],
+      "verification": [
+        "firmware/tests/test_m1_external_co2_mqtt.py",
+        "firmware/tests/test_m1_display_format.py",
+        "frontend/tests/test_m1_co2_source.cjs"
+      ],
+      "artifacts": [
+        "contracts/schemas/m1-co2-source-set-v2.schema.json",
+        "contracts/examples/m1-display-v3.json"
       ]
     }
   ],

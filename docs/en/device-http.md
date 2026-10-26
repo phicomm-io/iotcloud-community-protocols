@@ -152,9 +152,64 @@ Reject the device's own ID; `local` requires an empty ID. A stale revision retur
 
 `co2_display.get` / `co2_display.set` manage mode, position, thresholds and interval. Display overrides do not modify physical HCHO, PM or CO₂ measurements. See [display sources](m1-display.md) for MCU behavior and button priority.
 
+<a id="m1-display_profile-api"></a>
+
+## M1 display_profile API
+
+The additive `m1-display-v3` contract provides `display_profile.get {}`, `display_profile.set` and `display_value.set`, advertised in `capabilities.actions`. It requires formatted UART support; the HTTP version alone does not prove MCU support. GET returns `schema:3` with configuration and a separate `runtime`. SET accepts a complete configuration without `schema` or `runtime`, using the existing shared revision/CAS token:
+
+```json
+{
+  "revision": 12,
+  "selected_source": "user",
+  "double_click": "switch_display",
+  "lanes": [
+    {
+      "slot": 0, "source": "api", "device_id": "",
+      "metric": "custom", "unit": "", "ttl_seconds": 20,
+      "display": {"mode": "integer", "show_label": false, "show_unit": false},
+      "color": {"mode": "fixed", "lamps": [
+        {"red": false, "green": false, "yellow": false},
+        {"red": false, "green": false, "yellow": false},
+        {"red": false, "green": false, "yellow": false}
+      ]}
+    },
+    {
+      "slot": 1, "source": "mqtt", "device_id": "F0:E1:D2:C3:B4:A5",
+      "metric": "fan_speed_percent", "unit": "%", "ttl_seconds": 15,
+      "display": {"mode": "integer", "show_label": false, "show_unit": false},
+      "color": {"mode": "thresholds", "low": 25, "high": 75}
+    }
+  ]
+}
+```
+
+Sources, metrics and physical configuration units retain the [schema2 rules](#m1-dual-display-api). Replace `decimals`/`scale` with the required `display` object. [Five display modes and nine lamps per region](m1-display.md#m1-display-v3) describe local/MQTT conversion. PM accepts only `integer`. Fixed colors require all three lamp objects; thresholds must remain finite float32 values with low<high after conversion and compare the unscaled physical input. For an api lane, mode, physical unit metadata and color policy are retained configuration fields and do not transform direct writes.
+
+MQTT IDs accept exactly 12 hex digits or six colon-separated octets, in either case. Normalize to lowercase compact form before self-device checks and persistence; responses always emit that canonical form. Non-MQTT IDs must be empty. `co2_source.set` has the same additive input normalization, defined in its new [v2 input schema](contracts/schemas/m1-co2-source-set-v2.schema.json). The existing `display_source.set` implementation also accepts those spellings as input leniency beyond its frozen v2 contract; the old published schema bytes remain unchanged.
+
+`display_value.set` directly writes one region. First explicitly save a formatted profile with that lane's source set to `api`; require the latest revision and TTL no greater than its configured limit. `number` is the integer digit register 0..999. `decimal`, `show_label` and `show_unit` are required booleans; PM requires `decimal:false`. Lamps are the complete left/middle/right array, with all three color switches in every position. No input scaling, rounding, saturation or threshold coloring occurs. Reject fractional or overflowing numbers, physical `value`/`unit` fields, scalar `color` and unknown fields.
+
+```json
+{"request_id":"raw_display_1","action":"display_value.set","params":{"revision":13,"slot":0,"ttl_seconds":15,"number":123,"decimal":true,"show_label":false,"show_unit":true,"lamps":[{"red":true,"green":false,"yellow":false},{"red":false,"green":true,"yellow":false},{"red":true,"green":false,"yellow":true}]}}
+{"request_id":"raw_clear_1","action":"display_value.set","params":{"revision":13,"slot":0,"ttl_seconds":0}}
+```
+
+The first request displays `1.23`, the original mg/m³ unit, no HCHO label, and exactly the requested nine lamps. TTL0 accepts only revision/slot/ttl_seconds and restores that region's original reading. Writes are volatile; expiry, offline or reboot cannot replay a previous API lease. Authentication, retained-command rejection and request-ID deduplication follow existing command rules; replaying the same request ID does not renew a lease. `accepted` does not establish MCU confirmation.
+
+GET runtime uses `profile:legacy|dual|formatted`. A valid API lane's `value` is its displayed number (`number/100` when decimal, otherwise `number`), with possible float32 representation differences; `unit` is the actual native glyph unit (slot0 mg/m³, slot1 µg/m³), or empty when hidden. Local/MQTT runtime retains the original physical value/unit. `number`, format flags and the three-object `lamps` array describe the exact encoded output. Invalid lanes have null value/number/format/lamps and zero remaining TTL; confirmed clear and valid data remain separate concepts.
+
+After SET, independently GET and compare the revision/full configuration. After a direct write, compare the raw number/flags/lamps and fresh TTL. Confirmation requires a matching OP25 selector ACK for the current configuration generation, then independent OP26 queries of both lanes with formatted-active=1 and matching selection/output. Only `profile=formatted`, supported MCU and two confirmed lanes can yield global `confirmed:true`; legacy/dual projections are unconfirmed and ineffective. A query alone or an old v2 cache cannot prove formatted selection.
+
+Reading v3 while v2 is active projects configuration without saving or activating it: PM→integer; HCHO scale1000→milli, otherwise decimals0/1/2→integer/decimal_1/decimal_2. Scalar fixed color becomes uniform lamps and the old combined legend decision becomes two flags. Explicit v3 SET activates formatted control. A v2 GET during formatted control returns a disabled legacy view with the current shared revision and unconfirmed/ineffective lanes; explicit v2 SET replaces active control with v2. Legacy CO₂ SET selects legacy while retaining both newer configurations. Persist profile/settings together under the [storage commit rules](configuration.md#storage-commit-results); see [v10 migration](configuration.md#m1-display-storage-v10).
+
+Machine inputs and state: [profile SET](contracts/schemas/m1-display-profile-set-v3.schema.json), [profile GET](contracts/schemas/m1-display-profile-state-v3.schema.json), [raw value SET](contracts/schemas/m1-display-value-set-v3.schema.json).
+
 <a id="m1-dual-display-api"></a>
 
 ## M1 dual user display API
+
+This section retains the published schema2 `display_source` / `display_data` behavior. Formatted schema3 uses the actions above.
 
 Development contract `m1-display-v2` adds `display_source.get {}`, `display_source.set` and `display_data.set`. Require these actions in `capabilities.actions`; their presence does not prove sensor MCU support. `mcu.version.get` adds `display_source_schema` (2 or 0) and `dual_display_source_supported`. Existing `display_source_supported` still means scalar schema1. Control also requires [dual negotiation and readback](m1-display.md).
 

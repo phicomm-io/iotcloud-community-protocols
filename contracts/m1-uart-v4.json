@@ -1,0 +1,875 @@
+{
+  "schema": 1,
+  "endianness": "big",
+  "request": {
+    "length": 12,
+    "header": [
+      35,
+      112
+    ],
+    "footer": 33,
+    "op_offset": 2,
+    "sequence_offset": 3,
+    "arguments_offset": 4,
+    "arguments_length": 7
+  },
+  "reply": {
+    "length": 20,
+    "header": [
+      35,
+      112
+    ],
+    "footer": 33,
+    "status_offset": 4,
+    "data_offset": 5,
+    "data_length": 14,
+    "op_offset": 2,
+    "sequence_offset": 3
+  },
+  "statuses": {
+    "0": "accepted",
+    "1": "invalid_params",
+    "2": "ota_busy",
+    "3": "unsupported",
+    "4": "peripheral_failed",
+    "5": "generation_changed"
+  },
+  "capabilities": {
+    "protocol": {
+      "data_offset": 0,
+      "value": 2
+    },
+    "button_schema": {
+      "data_offset": 9,
+      "value": 1
+    },
+    "button_kinds": {
+      "data_offset": 10,
+      "value": 15
+    },
+    "display_schema": {
+      "data_offset": 11,
+      "value": 1
+    },
+    "sensor_alarm_schema": {
+      "data_offset": 12,
+      "values": [
+        0,
+        1
+      ],
+      "required_value_for_operation_20": 1
+    },
+    "dual_display_schema": {
+      "data_offset": 13,
+      "values": [
+        0,
+        2
+      ],
+      "required_value_for_operations_21_to_23": 2
+    }
+  },
+  "operations": [
+    {
+      "op": 0,
+      "name": "capabilities",
+      "arguments": [
+        {
+          "offset": 0,
+          "bytes": 7,
+          "value": 0
+        }
+      ],
+      "reply": [
+        {
+          "name": "protocol",
+          "offset": 0,
+          "bytes": 1,
+          "value": 2
+        },
+        {
+          "name": "legacy_bitmap",
+          "offset": 1,
+          "bytes": 2,
+          "value": 65535
+        },
+        {
+          "name": "max_lease_ms",
+          "offset": 3,
+          "bytes": 2,
+          "value": 10000
+        },
+        {
+          "name": "buzzer_pwm",
+          "offset": 5,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "sensor_frame_schema",
+          "offset": 6,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "sensor_kinds",
+          "offset": 7,
+          "bytes": 1,
+          "minimum": 1,
+          "maximum": 255
+        },
+        {
+          "name": "sensor_chunk",
+          "offset": 8,
+          "bytes": 1,
+          "value": 9
+        },
+        {
+          "name": "button_schema",
+          "offset": 9,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "button_kinds",
+          "offset": 10,
+          "bytes": 1,
+          "value": 15
+        },
+        {
+          "name": "display_schema",
+          "offset": 11,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "sensor_alarm_schema",
+          "offset": 12,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "dual_display_schema",
+          "offset": 13,
+          "bytes": 1,
+          "values": [
+            0,
+            2
+          ]
+        }
+      ],
+      "error_data_zero": true
+    },
+    {
+      "op": 17,
+      "name": "display.write",
+      "arguments": [
+        {
+          "name": "number",
+          "offset": 0,
+          "bytes": 2,
+          "minimum": 0,
+          "maximum": 999
+        },
+        {
+          "name": "format",
+          "offset": 2,
+          "bytes": 1,
+          "values": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "color",
+          "offset": 3,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 3
+        },
+        {
+          "name": "ttl_seconds",
+          "offset": 4,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 60
+        },
+        {
+          "name": "slot",
+          "offset": 5,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "offset": 6,
+          "bytes": 1,
+          "value": 0
+        }
+      ],
+      "reply": [
+        {
+          "offset": 0,
+          "bytes": 14,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true
+    },
+    {
+      "op": 18,
+      "name": "display.select",
+      "arguments": [
+        {
+          "name": "source",
+          "offset": 0,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 1,
+          "bytes": 6,
+          "value": 0
+        }
+      ],
+      "reply": [
+        {
+          "offset": 0,
+          "bytes": 14,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true
+    },
+    {
+      "op": 19,
+      "name": "display.query",
+      "arguments": [
+        {
+          "offset": 0,
+          "bytes": 7,
+          "value": 0
+        }
+      ],
+      "reply": [
+        {
+          "name": "schema",
+          "offset": 0,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "source",
+          "offset": 1,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "effective",
+          "offset": 2,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "slot",
+          "offset": 3,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "name": "number",
+          "offset": 4,
+          "bytes": 2,
+          "minimum": 0,
+          "maximum": 999
+        },
+        {
+          "name": "format",
+          "offset": 6,
+          "bytes": 1,
+          "values": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "color",
+          "offset": 7,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 3
+        },
+        {
+          "name": "ttl_seconds",
+          "offset": 8,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 60
+        },
+        {
+          "offset": 9,
+          "bytes": 5,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true
+    },
+    {
+      "op": 20,
+      "name": "sensor_alarm.configure",
+      "capability": {
+        "data_offset": 12,
+        "value": 1
+      },
+      "arguments": [
+        {
+          "name": "mode",
+          "offset": 0,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "mask",
+          "offset": 1,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 7
+        },
+        {
+          "offset": 2,
+          "bytes": 5,
+          "value": 0
+        }
+      ],
+      "conditions": [
+        {
+          "when": {
+            "mode": 0
+          },
+          "require": {
+            "mask": 0
+          }
+        }
+      ],
+      "reply": [
+        {
+          "name": "schema",
+          "offset": 0,
+          "bytes": 1,
+          "value": 1
+        },
+        {
+          "name": "actual_mask",
+          "offset": 1,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 7
+        },
+        {
+          "name": "alarm_latched",
+          "offset": 2,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 3,
+          "bytes": 11,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true,
+      "cold_start_mask": 0,
+      "storage": "volatile RAM",
+      "write_ack_is_readback": false
+    },
+    {
+      "op": 21,
+      "name": "dual_display.write",
+      "arguments": [
+        {
+          "name": "number",
+          "offset": 0,
+          "bytes": 2,
+          "minimum": 0,
+          "maximum": 999
+        },
+        {
+          "name": "format",
+          "offset": 2,
+          "bytes": 1,
+          "values": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "color",
+          "offset": 3,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 3
+        },
+        {
+          "name": "ttl_seconds",
+          "offset": 4,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 60
+        },
+        {
+          "name": "slot",
+          "offset": 5,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "offset": 6,
+          "bytes": 1,
+          "value": 0
+        }
+      ],
+      "capability": {
+        "data_offset": 13,
+        "value": 2
+      },
+      "reply": [
+        {
+          "offset": 0,
+          "bytes": 14,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true
+    },
+    {
+      "op": 22,
+      "name": "dual_display.select",
+      "arguments": [
+        {
+          "name": "source",
+          "offset": 0,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 1,
+          "bytes": 6,
+          "value": 0
+        }
+      ],
+      "capability": {
+        "data_offset": 13,
+        "value": 2
+      },
+      "reply": [
+        {
+          "offset": 0,
+          "bytes": 14,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true
+    },
+    {
+      "op": 23,
+      "name": "dual_display.query",
+      "capability": {
+        "data_offset": 13,
+        "value": 2
+      },
+      "arguments": [
+        {
+          "name": "slot",
+          "offset": 0,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "offset": 1,
+          "bytes": 6,
+          "value": 0
+        }
+      ],
+      "reply": [
+        {
+          "name": "schema",
+          "offset": 0,
+          "bytes": 1,
+          "value": 2
+        },
+        {
+          "name": "source",
+          "offset": 1,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "effective",
+          "offset": 2,
+          "bytes": 1,
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "name": "slot",
+          "offset": 3,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "name": "number",
+          "offset": 4,
+          "bytes": 2,
+          "minimum": 0,
+          "maximum": 999
+        },
+        {
+          "name": "format",
+          "offset": 6,
+          "bytes": 1,
+          "values": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "name": "color",
+          "offset": 7,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 3
+        },
+        {
+          "name": "ttl_seconds",
+          "offset": 8,
+          "bytes": 1,
+          "minimum": 0,
+          "maximum": 60
+        },
+        {
+          "offset": 9,
+          "bytes": 5,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true,
+      "storage": "two independent volatile RAM lanes and one global source selector",
+      "write_ack_is_readback": false
+    },
+    {
+      "op": 24,
+      "name": "formatted_display.write",
+      "arguments": [
+        {
+          "offset": 0,
+          "bytes": 2,
+          "name": "number",
+          "minimum": 0,
+          "maximum": 999
+        },
+        {
+          "offset": 2,
+          "bytes": 1,
+          "name": "format",
+          "minimum": 0,
+          "maximum": 7
+        },
+        {
+          "offset": 3,
+          "bytes": 2,
+          "name": "lamps",
+          "minimum": 0,
+          "maximum": 511
+        },
+        {
+          "offset": 5,
+          "bytes": 1,
+          "name": "ttl_seconds",
+          "minimum": 0,
+          "maximum": 60
+        },
+        {
+          "offset": 6,
+          "bytes": 1,
+          "name": "slot",
+          "minimum": 0,
+          "maximum": 1
+        }
+      ],
+      "conditions": [
+        {
+          "when": {
+            "slot": 1
+          },
+          "forbid_bits": {
+            "format": 1
+          }
+        }
+      ],
+      "reply": [
+        {
+          "offset": 0,
+          "bytes": 14,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true,
+      "capability_query": {
+        "op": 26,
+        "schema": 3
+      },
+      "changes_profile": false
+    },
+    {
+      "op": 25,
+      "name": "formatted_display.select",
+      "arguments": [
+        {
+          "offset": 0,
+          "bytes": 1,
+          "name": "source",
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 1,
+          "bytes": 6,
+          "value": 0
+        }
+      ],
+      "reply": [
+        {
+          "offset": 0,
+          "bytes": 14,
+          "value": 0
+        }
+      ],
+      "error_data_zero": true,
+      "capability_query": {
+        "op": 26,
+        "schema": 3
+      },
+      "changes_profile": true
+    },
+    {
+      "op": 26,
+      "name": "formatted_display.query",
+      "arguments": [
+        {
+          "offset": 0,
+          "bytes": 1,
+          "name": "slot",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "offset": 1,
+          "bytes": 6,
+          "value": 0
+        }
+      ],
+      "reply": [
+        {
+          "offset": 0,
+          "bytes": 1,
+          "name": "schema",
+          "value": 3
+        },
+        {
+          "offset": 1,
+          "bytes": 1,
+          "name": "source",
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 2,
+          "bytes": 1,
+          "name": "effective",
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 3,
+          "bytes": 1,
+          "name": "slot",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "offset": 4,
+          "bytes": 2,
+          "name": "number",
+          "minimum": 0,
+          "maximum": 999
+        },
+        {
+          "offset": 6,
+          "bytes": 1,
+          "name": "format",
+          "minimum": 0,
+          "maximum": 7
+        },
+        {
+          "offset": 7,
+          "bytes": 2,
+          "name": "lamps",
+          "minimum": 0,
+          "maximum": 511
+        },
+        {
+          "offset": 9,
+          "bytes": 1,
+          "name": "ttl_seconds",
+          "minimum": 0,
+          "maximum": 60
+        },
+        {
+          "offset": 10,
+          "bytes": 1,
+          "name": "formatted_active",
+          "values": [
+            0,
+            1
+          ]
+        },
+        {
+          "offset": 11,
+          "bytes": 3,
+          "value": 0
+        }
+      ],
+      "reply_conditions": [
+        {
+          "when": {
+            "slot": 1
+          },
+          "forbid_bits": {
+            "format": 1
+          }
+        },
+        {
+          "when": {
+            "effective": 1
+          },
+          "require": {
+            "source": 1,
+            "formatted_active": 1
+          },
+          "minimum": {
+            "ttl_seconds": 1
+          }
+        }
+      ],
+      "error_data_zero": true,
+      "changes_profile": false,
+      "write_ack_is_readback": false
+    }
+  ],
+  "button_event": {
+    "length": 20,
+    "header": [
+      35,
+      113,
+      1
+    ],
+    "footer": 33,
+    "kind_offset": 3,
+    "kinds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "sequence_offset": 4,
+    "held_offset": 5,
+    "held_bytes": 2,
+    "reserved_offset": 7,
+    "reserved_length": 12
+  },
+  "contract_revision": 4,
+  "formatted_display": {
+    "schema": 3,
+    "discovery": {
+      "prerequisite_op": 0,
+      "data_offset": 13,
+      "value": 2,
+      "query_op": 26,
+      "query_schema": 3,
+      "query_changes_profile": false
+    },
+    "old_operation_ownership": {
+      "10": "legacy",
+      "18": "scalar",
+      "22": "dual"
+    },
+    "new_operation_ownership": {
+      "24": "none",
+      "25": "formatted",
+      "26": "none"
+    },
+    "caches": "independent of legacy scalar and dual caches; volatile RAM",
+    "confirmation": "matching OP25 ACK for the current configuration generation, then independent matching OP26 queries for both lanes; active=1 required",
+    "write_ack_is_readback": false
+  },
+  "frozen_artifacts": {
+    "contracts/m1-uart-v1.json": "f306968ec339fcc9586902a1ab31f8f740f94aca622155070067e4b6187ada60",
+    "contracts/m1-uart-v3.json": "a1a4553e311ef418431bd0f96c5b525907827656fb1e6d8cf3359741bdbf8dac",
+    "contracts/vectors/m1-uart-v1.json": "7f44f036aec406e9ed0d998a9a5bc86f5412dbd4e74697de16d8f7a4cc47af41",
+    "contracts/vectors/m1-uart-v3.json": "81fb84721003b801c9b80d7aa3c97f718e5a506ccc41406a3023d122559da45d"
+  }
+}
