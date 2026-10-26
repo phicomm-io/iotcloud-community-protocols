@@ -31,6 +31,16 @@ Append dual configuration after the v8 payload without moving its prefix or COâ‚
 
 A full v8 backup is an explicit compatibility exception: validate original model/variant, exact v8 length, CRC and legacy semantics before bounded migration into v9 with an initialized tail. V9 backups still require exact v9 length and semantics; reject unknown future versions. Persist profile/settings together and interpret the result using the commit boundaries below. Leased API values and remaining lifetimes are excluded from backups.
 
+<a id="m1-display-storage-v10"></a>
+
+## M1 formatted display storage v10
+
+V10 appends two presentation records (mode, label/unit flags, nine-bit lamp mask and reserved bytes) after the existing two 32-byte source lanes. Every v9 offset, the v8 prefix and all network/product settings remain fixed. The formerly reserved display-level byte distinguishes dual=0 from formatted=1. Existing v2 fields remain available for v2 operation; do not reinterpret them as new format flags.
+
+Validate v9 using its frozen v2 rules, initialize the appended presentation defaults and atomically persist v10. Preserve the active legacy/dual profile, selection, revision and all unrelated configuration; migration itself never activates formatted control. Existing v8 boot/import behavior is retained. Only an explicit successful `display_profile.set` activates the formatted profile. API samples, decoded runtime values and leases remain RAM-only and are excluded from backups.
+
+Accept full v8/v9 backups only with their exact historical native sizes and padding, matching model/variant/schema/CRC and valid historical field semantics; convert in RAM before one commit. V10 backups require the exact v10 layout. Reject malformed, cross-variant and future-layout records without accepting partial settings; use the commit-result boundary below for failures. An old v9 firmware encountering v10 must enter its unsupported-layout recovery path rather than read changed offsets or silently overwrite configuration.
+
 <a id="storage-commit-results"></a>
 
 ## MiCO storage commit results

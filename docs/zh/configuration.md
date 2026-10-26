@@ -31,6 +31,16 @@ DAIKIN 使用独立 JSON 信封：`schema`、`model`、`variant`、`firmware`、
 
 v8完整备份是明确的兼容例外：先校验原model/variant、v8精确长度、CRC及旧字段，再有界迁移到v9并初始化新尾段。v9备份继续要求v9精确长度与语义；未知未来版本拒绝。候选配置与profile同笔持久化，结果按下述提交边界判断；短期API数值和剩余租期不进入备份。
 
+<a id="m1-display-storage-v10"></a>
+
+## M1 格式显示存储 v10
+
+v10 在现有两个 32 字节来源记录之后追加两个 presentation 记录，包含模式、标识/单位标志、九位灯掩码和保留字节。所有 v9 偏移、v8 前缀及网络/产品配置保持不动。原 display 级保留字节区分 dual=0、formatted=1；旧 v2 字段仍供 v2 使用，不能直接重解释为新格式标志。
+
+先按冻结的 v2 规则验证 v9，再初始化追加的显示默认值，原子保存 v10；保留既有 legacy/dual profile、选择、revision 和其他配置，迁移本身不激活 formatted。既有 v8 启动和导入行为保留；只有成功的显式 `display_profile.set` 才激活格式显示。API 样本、解码运行值和租期仅在 RAM，不进入备份。
+
+v8/v9 完整备份必须匹配各自历史原生长度及 padding、model/variant/schema/CRC 和历史字段语义，先在 RAM 转换再一次提交；v10 备份要求精确 v10 布局。畸形、跨变体或未来版本记录整笔拒绝，不接受部分配置；失败按下述提交边界处理。旧 v9 固件遇到 v10 必须进入既有“不支持布局”恢复路径，不能按改动偏移读取或静默覆盖配置。
+
 <a id="storage-commit-results"></a>
 
 ## MiCO 存储提交结果
