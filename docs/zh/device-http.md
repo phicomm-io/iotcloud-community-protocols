@@ -4,6 +4,21 @@
 
 以下为 Wi-Fi 固件的设备接口。管理平台的账户 API 使用独立的 `/api/auth/...`，见 [平台接口](platform-hub.md)。
 
+<a id="m1-generic-profile4"></a>
+
+## M1 通用字段 profile4
+
+`display_profile.get` 返回schema4；`display_profile.set`动作名保持不变，**SET不得带schema键**。新 `m1-display-v4` 替代已弃用的旧RC profile3，不保证向后兼容。revision/CAS、整体选择、格式、TTL、色灯、raw `display_value.set`及MCU读回规则仍见下文。Wi-Fi配置版本与UART操作/schema编号独立：OP24/25/26与raw API v3不变。
+
+MQTT区域严格为**九键**：`slot`、`source:"mqtt"`、`device_id`、`field_id`、`type:"number"`、`unit`、`display`、`ttl_seconds`、`color`。不存metric、model或显示名称。SET接受连续或带冒号、任意大小写MAC，GET返回规范小写12位。field_id为1..32位ASCII `[a-z][a-z0-9_]*`；unit为0..24合法UTF-8字节，无C0/DEL。预期type/unit须与当前[schema2字段描述](mqtt.md#sensor-values-v2)一致，任意发布字段/单位不需要增加机型适配。
+
+none/local/api区域仍为含metric的严格**八键**，不用field_id/type。本地metric仍对应M1实际传感器；none/custom与raw API行为不变，MQTT发现不能改写本地硬件列表。PM只支持整数、甲醛五种显示模式不变。runtime单位允许通用MQTT字段有界UTF-8元数据，负数/不可显示值返回out_of_range而不是零。每个已接受boot/sequence是完整快照：不支持/缺失/格式错误/无效字段或预期单位不匹配立即撤销旧number候选，不删除配置、不把未知值当零；记录counter防旧数值重放，number兄弟相互独立。过期/离线不能续期。
+
+应用配置v11在冻结的v9/v10前缀后追加remote[2]。明确迁移已校验的旧MQTT metric/unit对：canonical旧metric写为field_id、canonical旧单位写为unit，保留revision、选择、双击和样式；这不恢复旧HTTP/feed schema。新MQTT写入在内部使用remote绑定，不用机型metric。none/local/api设置语义保留，运行期租约不持久化。不支持的布局应保护配置并说明恢复方式，不保证任意旧RC配置可用。display_source.get/set旧动作名只是当前schema4别名，不实现旧HTTP形状；仅旧profile只读投影不能启用新UART格式。
+
+[SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [机器约定](contracts/m1-display-v4.json) · [样例](contracts/examples/m1-display-v4.json)。下方保留历史schema3/schema2细节，其中MQTT metric/model映射已弃用。
+
+
 ## 接入
 
 设备 WebUI 以同源 HTTP 访问。局域网管理端先读取 `info` / `capabilities` 并核对机型和能力。设备 HTTP 使用 Basic 认证，用户名 `admin`、密码为设备 Web 密码；浏览器跨域请求必须通过设备允许的 Origin 与预检。HTTPS 页面连接 HTTP 设备仍受浏览器混合内容限制。

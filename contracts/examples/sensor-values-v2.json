@@ -1,0 +1,1133 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "schema": "sensor-values-v2",
+      "name": "arbitrary field and producer model",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "unsupported future typed sibling remains a valid envelope",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "future": {
+            "name": "future data",
+            "type": "string",
+            "unit": "",
+            "value": {
+              "future": true
+            },
+            "valid": true,
+            "age_ms": 4
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "negative numeric sample",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": -42,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "false validity uses null",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": null,
+            "valid": false,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "boolean is not number",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": true,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "string is not number",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": "12",
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "null valid number",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": null,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "float32 overflow",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 1e+39,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "age upper valid boundary",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 19999
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "expired valid field",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 20000
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "empty name",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "64 ascii name",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "65 ascii name",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "21 Chinese name chars63bytes",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "22 Chinese name chars66bytes",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570\u6570",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "unit24bytes",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "\u91cf\u91cf\u91cf\u91cf\u91cf\u91cf\u91cf\u91cf",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "unit27bytes",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "\u91cf\u91cf\u91cf\u91cf\u91cf\u91cf\u91cf\u91cf\u91cf",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "control name",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "bad\nname",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "DEL unit",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "\u007f",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "unpaired surrogate",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\ud800",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "empty type",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "long future type",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "xxxxxxxxxxxxxxxxx",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "future type token",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "string",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "invalid numeric sample cannot carry zero",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": false,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "responses permit additive extension",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0,
+            "extra_descriptor": "additive"
+          }
+        },
+        "extra_envelope": 1
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "field id a",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "a": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "field id abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "field id abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "field id Upper",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "Upper": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "field id bad-key",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "bad-key": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "field id 123",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "123": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "field count 16",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "field_0": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_1": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_2": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_3": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_4": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_5": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_6": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_7": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_8": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_9": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_10": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_11": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_12": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_13": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_14": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_15": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "field count 17",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "field_0": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_1": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_2": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_3": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_4": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_5": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_6": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_7": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_8": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_9": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_10": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_11": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_12": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_13": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_14": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_15": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          },
+          "field_16": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "missing envelope schema",
+      "data": {
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "missing envelope device_id",
+      "data": {
+        "schema": 2,
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "missing envelope boot",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "sequence": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "missing envelope sequence",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sensors": {
+          "custom_load": {
+            "name": "\u5de5\u4f5c\u8d1f\u8f7d",
+            "type": "number",
+            "unit": "widgets/s",
+            "value": 12.5,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "missing envelope sensors",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 1
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "complete snapshot only unknown type revokes prior numeric binding",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 8,
+        "sensors": {
+          "custom_load": {
+            "name": "future",
+            "type": "string",
+            "unit": "",
+            "value": {
+              "future": true
+            },
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v2",
+      "name": "complete snapshot missing prior field but numeric sibling remains",
+      "data": {
+        "schema": 2,
+        "device_id": "001122334455",
+        "model": "unlisted_meter",
+        "boot": 1,
+        "sequence": 8,
+        "sensors": {
+          "different_field": {
+            "name": "Other",
+            "type": "number",
+            "unit": "arbitrary",
+            "value": -12,
+            "valid": true,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    }
+  ]
+}

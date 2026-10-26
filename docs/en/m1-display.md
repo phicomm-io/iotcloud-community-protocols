@@ -4,6 +4,10 @@
 
 Formatting and individual-lamp contract `m1-display-v3` uses additive `m1-uart-v4`. Existing dual schema 2 and scalar schema 1 retain their meanings. These are development interfaces without a formal release.
 
+## Wi-Fi profile4 and UART versions
+
+RC.1 uses [generic profile4](device-http.md#m1-generic-profile4) and [sensor-values-v2](mqtt.md#sensor-values-v2). MQTT binds device identity plus field_id/type/unit, without TC1/A1 model adapters. Old-RC profile3/schema1 feeds are deprecated with no compatibility guarantee. The glass formats, raw API and UART schema3 below retain their existing definitions; profile4 adds no UART opcode. RC.1 is not yet publicly released.
+
 ## M1 display v3
 
 Slot0 is the HCHO region; slot1 is PM2.5. HCHO has a fixed decimal point after the first digit. PM supports integers only. `unit` in local/MQTT configuration describes the source's physical value; it cannot create ppm, W or % glyphs on the glass. `display.show_label` enables the original HCHO/PM2.5 legend, while `display.show_unit` independently enables the original mg/m³ / µg/m³ unit. Both are required booleans, initially false for custom/external data.

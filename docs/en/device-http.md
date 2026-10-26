@@ -4,6 +4,21 @@
 
 These are Wi-Fi firmware endpoints. Platform accounts use the separate `/api/auth/...` API described under [platform integration](platform-hub.md).
 
+<a id="m1-generic-profile4"></a>
+
+## M1 generic field profile4
+
+`display_profile.get` reports schema4; `display_profile.set` keeps its action name and **must not include a `schema` key**. This is `m1-display-v4`, replacing the deprecated old-RC profile3 without a backwards-compatibility guarantee. The revision/CAS, selection, display modes, TTL, lamps, raw `display_value.set` and MCU readback rules remain as documented below. The Wi-Fi profile version is independent of UART operation/schema numbering: existing OP24/25/26 and raw API v3 are unchanged.
+
+A MQTT lane has exactly **nine** keys: `slot`, `source:"mqtt"`, `device_id`, `field_id`, `type:"number"`, `unit`, `display`, `ttl_seconds`, `color`. No `metric`, model or display name is stored. SET accepts compact or colon-separated MACs in either case; GET returns canonical lower12. `field_id` is1..32 ASCII `[a-z][a-z0-9_]*`; unit is0..24 valid UTF-8 bytes without C0/DEL. The expected type and unit must match the current [schema2 descriptor](mqtt.md#sensor-values-v2); arbitrary publisher fields/units do not require a firmware model adapter.
+
+`none` / `local` / `api` lanes retain exactly the eight keys containing `metric` instead of `field_id`/`type`. Local metrics still name M1's actual local sensors; none/custom and raw API behavior are unchanged. MQTT discovery cannot alter this local hardware list. PM's integer-only glass and the five HCHO modes remain unchanged. Runtime unit metadata is bounded arbitrary UTF-8 for generic MQTT fields; negative/unrepresentable values report `out_of_range` rather than becoming zero. Every accepted boot/sequence is a complete snapshot: unsupported/missing/malformed/invalid fields or an expected-unit mismatch immediately revoke the old numeric candidate, without deleting the configured source or turning unknown values into zero. Record counters to prevent old numeric replay; numeric siblings remain independent. Stale/offline sources cannot renew a lane lease.
+
+Application config v11 appends remote[2] after the frozen v9/v10 prefix. An explicit migration of validated old MQTT metric/unit pairs stores the canonical old metric as field_id and its canonical unit, preserving revision, selection, double-click and style; it does not restore the old HTTP/feed schema. New MQTT writes use the generic remote binding internally rather than model-specific metrics. none/local/api settings retain their original meaning. Runtime leases are not persistent. Unsupported layouts must protect stored configuration and explain recovery; arbitrary old RC configuration acceptance is not guaranteed. The display_source.get/set action names are aliases of the current schema4 interface, not compatibility implementations of old HTTP shapes. A legacy profile projection alone cannot enable the new UART formatted profile.
+
+[Profile SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [Contract](contracts/m1-display-v4.json) · [Examples](contracts/examples/m1-display-v4.json). The sections below retain historical schema3/schema2 details; their MQTT metric/model mapping is deprecated.
+
+
 ## Access
 
 Embedded WebUI uses same-origin HTTP. LAN clients query `info` and `capabilities` before selecting a device implementation. Device HTTP uses Basic authentication with username `admin` and the device Web password. Cross-origin browser access requires an allowed Origin and preflight; HTTPS-to-HTTP connections remain subject to browser mixed-content restrictions.

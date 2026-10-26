@@ -1,0 +1,71 @@
+{
+  "schema": 2,
+  "contract": "sensor-values-v2",
+  "status": "implemented-unreleased",
+  "release_target": "v1.0.0-rc.1",
+  "topic": "phicomm/v2/<scope>/sensor/<device_id>/state",
+  "retained": false,
+  "field_id": {
+    "pattern": "^[a-z][a-z0-9_]{0,31}$",
+    "maximum_ascii_bytes": 32
+  },
+  "descriptor": {
+    "name_utf8_bytes": [
+      1,
+      64
+    ],
+    "type_pattern": "^[a-z][a-z0-9_]{0,15}$",
+    "unit_utf8_bytes": [
+      0,
+      24
+    ],
+    "text_rejects": [
+      "invalid UTF-8",
+      "unpaired surrogate",
+      "U+0000..U+001F",
+      "U+007F"
+    ]
+  },
+  "maximum_fields_per_message": 16,
+  "current_consumed_types": [
+    "number"
+  ],
+  "number": {
+    "representation": "finite JSON int/double representable as finite IEEE754 binary32",
+    "negative": "valid sample; M1 glass may reject out_of_range",
+    "invalid": "valid=false and value=null; never synthetic zero"
+  },
+  "unknown_types": "Future typed fields may carry arbitrary JSON values. Current consumers do not cache their values or turn them into zero. In a newly accepted complete snapshot, they revoke any old numeric candidate at that field_id without renewing a valid lease; numeric siblings remain usable and boot/sequence is recorded to prevent replay.",
+  "binding": [
+    "account scope",
+    "topic device_id equals envelope device_id",
+    "field_id",
+    "expected type",
+    "expected unit"
+  ],
+  "identity": [
+    "boot",
+    "sequence"
+  ],
+  "freshness": {
+    "valid_age_ms_maximum": 19999,
+    "retained_rejected": true,
+    "consumer_ttl_required": true,
+    "name_and_model_are_binding_keys": false
+  },
+  "compatibility": {
+    "replaces": "sensor-values-v1",
+    "wire_schema": 2,
+    "old_rc": "deprecated; no RC.1 source compatibility guarantee",
+    "field_identity": "Stable device_id+field_id; name does not change binding. Each accepted boot/sequence is a complete snapshot: missing, unsupported typed, malformed, invalid or mismatching-unit fields revoke old numeric candidates, while configuration bindings are retained."
+  },
+  "snapshot_policy": {
+    "mode": "complete",
+    "identity_counter_update": "Record each accepted boot/sequence even when no numeric field remains, so stale numeric replay cannot restore a revoked candidate",
+    "missing_field": "invalidate old numeric cache; keep configuration",
+    "unknown_type": "invalidate old numeric cache; ignore unknown value; no synthetic zero",
+    "unit_mismatch": "invalidate bound numeric candidate",
+    "numeric_siblings": "accept independently when valid",
+    "retained_or_replayed": "reject without changing accepted numeric snapshot"
+  }
+}

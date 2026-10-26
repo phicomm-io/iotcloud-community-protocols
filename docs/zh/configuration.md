@@ -74,3 +74,7 @@ OTA 选择必须同时核对机型、variant、签名和版本。DAIKIN `hub` �
 声明 `ota_variant_conversion:"full-to-hub"` 的 DAIKIN `full` 固件可使用独立的[显式签名转换接口](device-http.md#daikin-full-hub)。普通签名/未签名 OTA 仍保持同 variant；转换不改分区表，且不支持 `hub` → `full`。
 
 Wi-Fi 固件、传感器 MCU 和前端制品分别记录版本。固件使用完整提交与 SHA-256 固定的前端发布制品；构建或 UART 接收成功不代表新固件已经运行。
+
+## 通用来源配置的破坏性升级
+
+RC.1使用display_profile schema4与sensor-values schema2；旧RC接口弃用，MQTT来源保存device_id/field_id/type/unit，不保存机型适配或显示名称。配置v11保留冻结的v9/v10前缀、追加remote[2]，仅将已校验canonical metric/unit对明确迁移为field_id/unit，保留revision/选择/样式；不恢复旧HTTP/feed schema。拒绝与恢复须保护未支持的存储布局。SET参数不带schema键，raw数字/18灯写入不变。详见[profile4](device-http.md#m1-generic-profile4)。RC.1尚未公开发布。

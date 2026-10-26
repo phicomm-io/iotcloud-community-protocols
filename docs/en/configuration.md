@@ -74,3 +74,7 @@ Select OTA by model, variant, signature and version. DAIKIN `hub` is a separate 
 DAIKIN `full` firmware declaring `ota_variant_conversion:"full-to-hub"` may use the dedicated [explicit signed conversion endpoint](device-http.md#explicit-daikin-full-hub-conversion). Ordinary signed/unsigned OTA preserves the variant. Conversion does not alter the partition table and does not support `hub` → `full`.
 
 Record Wi-Fi firmware, sensor MCU and frontend versions independently. Firmware consumes a full-commit, SHA-256-pinned frontend release. A successful build or UART transfer does not prove the new application is running.
+
+## Breaking generic-source configuration update
+
+RC.1 uses display_profile schema4 and sensor-values schema2; old-RC interfaces are deprecated. MQTT sources store device_id/field_id/type/unit, without model adapters or display labels. Config v11 preserves the frozen v9/v10 prefix and appends remote[2]; validated canonical metric/unit pairs migrate explicitly to field_id/unit while revision/selection/styles remain unchanged. This does not restore old HTTP/feed schemas. Rejection and recovery preserve unsupported storage layouts. SET has no schema key; raw digits/18-lamp writes remain unchanged. See [profile4](device-http.md#m1-generic-profile4). RC.1 is not yet publicly released.

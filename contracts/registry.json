@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "specification": "1.0.0-dev.5",
+  "specification": "1.0.0-dev.6",
   "repository": "phicomm-io/iotcloud-community-protocols",
   "contracts": [
     {
@@ -352,7 +352,7 @@
     {
       "id": "sensor-values-v1",
       "version": 1,
-      "status": "implemented-unreleased",
+      "status": "deprecated",
       "document": "mqtt.md",
       "producers": [
         "firmware"
@@ -376,7 +376,9 @@
         "firmware/TC1/tests/test_power_sensor.py",
         "firmware/A1/tests/test_fan_sensor.py",
         "firmware/tests/test_m1_display_source.py"
-      ]
+      ],
+      "replaced_by": "sensor-values-v2",
+      "deprecation_reason": "Old v1.0.0-rc protocol; RC.1 deliberately uses generic schema2 fields/profile4 without backward compatibility guarantee."
     },
     {
       "id": "m1-uart-v4",
@@ -411,7 +413,7 @@
     {
       "id": "m1-display-v3",
       "version": 3,
-      "status": "implemented-unreleased",
+      "status": "deprecated",
       "document": "m1-display.md",
       "producers": [
         "firmware"
@@ -450,7 +452,9 @@
         "contracts/schemas/m1-display-profile-state-v3.schema.json",
         "contracts/schemas/m1-display-value-set-v3.schema.json",
         "contracts/examples/m1-display-v3.json"
-      ]
+      ],
+      "replaced_by": "m1-display-v4",
+      "deprecation_reason": "Old v1.0.0-rc protocol; RC.1 deliberately uses generic schema2 fields/profile4 without backward compatibility guarantee."
     },
     {
       "id": "m1-co2-source-v2",
@@ -476,6 +480,79 @@
       "artifacts": [
         "contracts/schemas/m1-co2-source-set-v2.schema.json",
         "contracts/examples/m1-display-v3.json"
+      ]
+    },
+    {
+      "id": "sensor-values-v2",
+      "version": 2,
+      "status": "implemented-unreleased",
+      "document": "mqtt.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "firmware",
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/common/runtime.c",
+        "firmware/M1/display_source.c",
+        "firmware/DAIKIN/src/sessions.inc",
+        "firmware/TC1/mqtt_server/user_mqtt_client.c",
+        "firmware/TC1/user_power.c",
+        "firmware/A1/mqtt.c"
+      ],
+      "artifacts": [
+        "contracts/sensor-values-v2.json",
+        "contracts/schemas/sensor-values-v2.schema.json",
+        "contracts/examples/sensor-values-v2.json"
+      ],
+      "verification": [
+        "firmware/TC1/tests/test_power_sensor.py",
+        "firmware/A1/tests/test_fan_sensor.py",
+        "firmware/tests/test_m1_display_source.py"
+      ]
+    },
+    {
+      "id": "m1-display-v4",
+      "version": 4,
+      "status": "implemented-unreleased",
+      "document": "m1-display.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "mcu",
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/M1/display_source.c",
+        "firmware/M1/display_source.h",
+        "firmware/M1/mcu.c",
+        "firmware/M1/main.c",
+        "firmware/M1/storage.h",
+        "firmware/common/backup.h",
+        "firmware/common/service_product.inc",
+        "mcu/src/debug.c",
+        "mcu/src/display.c",
+        "mcu/src/runtime.c",
+        "frontend/M1/web/display-format.js",
+        "frontend/M1/web/display-profile.js"
+      ],
+      "verification": [
+        "firmware/tests/test_m1_display_format.py",
+        "firmware/tests/test_backup.py",
+        "mcu/tests/test_core.c",
+        "mcu/tests/test_runtime.c",
+        "frontend/tests/test_m1_display_format.cjs",
+        "frontend/tests/test_m1_display_profile.cjs",
+        "frontend/tests/test_m1_display_profile_browser.cjs"
+      ],
+      "artifacts": [
+        "contracts/m1-display-v4.json",
+        "contracts/schemas/m1-display-profile-set-v4.schema.json",
+        "contracts/schemas/m1-display-profile-state-v4.schema.json",
+        "contracts/examples/m1-display-v4.json"
       ]
     }
   ],

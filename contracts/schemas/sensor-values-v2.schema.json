@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phicomm-io.github.io/iotcloud-community-protocols/contracts/schemas/sensor-values-v2.schema.json",
+  "title": "Generic self-describing device fields, wire schema 2",
+  "type": "object",
+  "required": [
+    "schema",
+    "device_id",
+    "boot",
+    "sequence",
+    "sensors"
+  ],
+  "properties": {
+    "schema": {
+      "type": "integer",
+      "const": 2
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{12}$",
+      "minLength": 12,
+      "maxLength": 12
+    },
+    "boot": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "model": {
+      "type": "string",
+      "pattern": "^[^\\u0000-\\u001f\\u007f]*$",
+      "x-utf8Bytes": {
+        "minimum": 1,
+        "maximum": 32
+      }
+    },
+    "sensors": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 16,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,31}$",
+        "minLength": 1,
+        "maxLength": 32
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/field"
+      }
+    }
+  },
+  "$defs": {
+    "field": {
+      "type": "object",
+      "required": [
+        "name",
+        "type",
+        "unit",
+        "value",
+        "valid",
+        "age_ms"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$",
+          "x-utf8Bytes": {
+            "minimum": 1,
+            "maximum": 64
+          }
+        },
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{0,15}$",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "unit": {
+          "type": "string",
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$",
+          "x-utf8Bytes": {
+            "minimum": 0,
+            "maximum": 24
+          }
+        },
+        "value": {},
+        "valid": {
+          "type": "boolean"
+        },
+        "age_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "valid": {
+                "const": false
+              }
+            },
+            "required": [
+              "valid"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "valid": {
+                "const": true
+              }
+            },
+            "required": [
+              "valid"
+            ]
+          },
+          "then": {
+            "properties": {
+              "age_ms": {
+                "maximum": 19999
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "number"
+              },
+              "valid": {
+                "const": true
+              }
+            },
+            "required": [
+              "type",
+              "valid"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number",
+                "x-float32Finite": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "x-consumerPolicy": "Every accepted boot/sequence is a complete snapshot: remove old numeric candidates missing, unknown-typed, malformed, invalid or unit-mismatched in the new snapshot, recording counters against replay. Never cache unknown values or synthesize zero; independent valid number siblings remain usable. model is informational only."
+}

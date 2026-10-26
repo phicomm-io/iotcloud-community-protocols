@@ -4,6 +4,38 @@
 
 TMCP (Tom MQTT Cloud Protocol) uses `protocol:"tmcp"`, `protocol_version:2`, `version:"v2"`. Normalize a MAC to 12 lowercase hex digits. Account scope is `u_` followed by the hex encoding of the MQTT username's UTF-8 bytes; a Broker with no username uses `local`.
 
+<a id="sensor-values-v2"></a>
+
+## Generic device fields: sensor-values-v2
+
+The RC.1 implementation targets wire **schema2**. `sensor-values-v1` / schema1 from the old v1.0.0-rc are **deprecated**; RC.1 does not promise old-RC feed compatibility. This protocol is implemented but the revised RC.1 release is not yet public. The topic remains `phicomm/v2/<scope>/sensor/<device_id>/state`, non-retained, under the authenticated account. Device model never chooses accepted fields.
+
+```json
+{"schema":2,"device_id":"001122334455","model":"custom_meter","boot":123,"sequence":7,"sensors":{"load":{"name":"Load","type":"number","unit":"widgets/s","value":12.5,"valid":true,"age_ms":0},"future":{"name":"Future status","type":"string","unit":"","value":"ready","valid":true,"age_ms":0}}}
+```
+
+| Field | Contract |
+| --- | --- |
+| `schema` | Integer 2; old schema1 is not reinterpreted |
+| `device_id` | Canonical lower-case 12-hex identity, equal to the topic identity |
+| `boot`, `sequence` | Integers 1..4294967295; boot identity and monotonically advancing sequence provide live replay protection, not wall-clock timestamps |
+| `model` | Optional informational name, 1..32 UTF-8 bytes; no model whitelist or source binding |
+| `sensors` | Object containing 1..16 fields, keyed by stable `field_id`: ASCII `[a-z][a-z0-9_]{0,31}` |
+| `name` | Required display label, 1..64 UTF-8 bytes; changing a label does not change field identity |
+| `type` | Required 1..16 ASCII token `[a-z][a-z0-9_]{0,15}`; only `number` is currently consumed |
+| `unit` | Required 0..24 UTF-8 bytes, including empty; metadata from the publisher, not inferred from model or field name |
+| `valid`, `value` | Boolean validity. `valid=false` requires `value:null`; a valid `number` requires a finite JSON number whose float32 conversion remains finite. Booleans, numeric strings and non-finite/overflow numbers are not numbers; signed values are allowed |
+| `age_ms` | Required integer 0..4294967295. A valid field must have age below 20000 ms; invalid fields may report greater age |
+
+Names/units must be valid UTF-8 without unpaired surrogates, ASCII C0 controls U+0000..U+001F or DEL U+007F. Byte limits are independent of character counts. Envelope and descriptor response extensions are additive; configuration writes remain strict. A descriptor accompanies every live value, avoiding a separate stale discovery cache or descriptor/value revision race. Publishers choose stable field IDs and accurate names/units for their real measurements or applied outputs; current TC1 power and A1 effective fan percentage are examples, not a whitelist. Field descriptors do not turn a requested setting into a measured value.
+
+Consumers first check account/topic identity, non-retained live delivery, boot/sequence and freshness. Then handle each field independently: unknown types are future extension envelopes and may carry arbitrary JSON values, but current M1/frontend must **ignore their values** without numeric conversion or synthetic zero. Each accepted new boot/sequence is a **complete snapshot**: missing, unsupported typed, malformed or invalid fields immediately revoke the previous numeric candidate; they never renew a valid numeric lease. Retain the configured source binding and record the accepted boot/sequence even when all numeric fields disappear, preventing old numeric replay from restoring them. A bad or unsupported field must not prevent a valid numeric sibling from being used. A schema-invalid envelope is not proof of a valid sample. Same-boot duplicate/out-of-order sequence numbers, unauthorized identities, retained frames and offline/stale producers cannot renew leases.
+
+M1 MQTT sources bind `device_id + field_id + expected type + expected unit`, not `model` or `name`. Only `type:number` is selectable now. A recognized sample with invalid data or a mismatching expected unit cannot drive that lane. Missing/unsupported fields or a changed unit immediately invalidate the old numeric candidate in a newly accepted complete snapshot; the affected lane falls back without deleting its configuration. Renaming `name` only changes the label. Original source age plus local elapsed time must stay below both the feed 20 s limit and configured lane TTL. Negative numbers can be valid feed values while M1's nonnegative glass format returns `out_of_range`. Unit strings are metadata: the fixed glass does not gain new symbols. See [profile4](device-http.md#m1-generic-profile4).
+
+[Normative contract](contracts/sensor-values-v2.json) · [Schema](contracts/schemas/sensor-values-v2.schema.json) · [Positive/negative examples](contracts/examples/sensor-values-v2.json). `x-utf8Bytes` and `x-float32Finite` are enforced by this repository validator; generic JSON Schema tools must implement equivalent runtime checks.
+
+
 ## Device topics
 
 Device root: `phicomm/v2/<scope>/<model>/<mac>`. Models include `tc1`, `m1`, `a1`, `daikin`, according to discovery.
@@ -55,7 +87,7 @@ Additive profile `sensor-values-v1` uses the same account-scoped topic and wire 
 {"schema":1,"device_id":"aabbccddeeff","model":"a1","boot":456,"sequence":2,"sensors":{"fan_speed_percent":{"valid":true,"value":60,"unit":"%","age_ms":0}}}
 ```
 
-Every declared known field requires strict boolean `valid`, `value`, exact `unit`, and nonnegative integer `age_ms`. valid=true requires a finite number, exact unit, source age below20000ms and the bounds below. valid=false requires value=null, never fake zero. Include at least one known metric. Unknown additive fields may be ignored without skipping validation of known fields.
+Every declared known field requires strict boolean `valid`, `value`, exact `unit`, and nonnegative integer `age_ms`. valid=true requires a finite number, exact unit, source age below 20000 ms and the bounds below. valid=false requires value=null, never fake zero. Include at least one known metric. Unknown additive fields may be ignored without skipping validation of known fields.
 
 | Sensors field | Unit | Range and meaning |
 | --- | --- | --- |
