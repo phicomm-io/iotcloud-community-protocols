@@ -14,6 +14,7 @@ nav:
   - Device interfaces:
       - HTTP and commands: device-http.md
       - MQTT and sensors: mqtt.md
+      - Daikin G3 media and camera: daikin-g3-media.md
       - Backups, language and updates: configuration.md
   - MCU protocols:
       - UART and capabilities: m1-uart.md
