@@ -102,6 +102,8 @@ true. HTTP/HTTPS paths accept `{width}/{height}/{fps}`. Embedded credentials,
 IPv6 literals, fragments and redirects are unsupported. Omit password to retain
 it; an empty password clears it. ESP NVS persists configuration. Queries expose
 `password_set`, never the password.
+Send `url:"",enabled:false` to clear the source and credentials. Configure a valid
+URL before starting again.
 
 ```python
 {"action":"screen.stream.set", "request_id":"camera-1", "params":{
@@ -134,8 +136,10 @@ disable it for a test source with a self-signed certificate.
 ## UART rates and recovery
 
 `screen.link.get` returns configured/actual rates, session, CRC/framing errors,
-retries and fallbacks. `set` accepts `mode:"fixed"|"auto"`, `rate`, `max_rate`,
-`apply_now`. Rates: 115200, 230400, 460800, 921600; default fixed 115200. Auto
+retries and fallbacks. `framing` separates timeout/format errors and reports the
+last frame size, declared size and header validity. `set` accepts
+`mode:"fixed"|"auto"`, `rate`, `max_rate`, `apply_now`.
+Rates: 115200, 230400, 460800, 921600; default fixed 115200. Auto
 tries downward from its ceiling. Switching occurs only during MCU recovery:
 drain TX, READY at old rate, CRC probe at new rate, mutual confirmation;
 timeout falls back to 115200. `apply_now:true` restarts the screen MCU to enter

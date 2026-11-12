@@ -91,6 +91,7 @@ python3 BRY88BBA15G/tools/screen_media.py --url http://device get push
 HTTP/HTTPS URL 支持路径中的 `{width}/{height}/{fps}`；不支持 URL 内嵌凭据、
 IPv6 字面量、片段或重定向。省略 password 保留原密码，传空串清除。
 配置保存在 ESP NVS；查询只返回 `password_set`，不返回密码。
+发送 `url:"",enabled:false` 可清除摄像头地址及凭据；清除后须先配置有效地址才能启动。
 
 ```python
 {"action":"screen.stream.set", "request_id":"camera-1", "params":{
@@ -118,6 +119,7 @@ reading/backoff）、frames、dropped、bytes、实际尺寸/帧率、像素 CRC
 ## 串口速率与恢复
 
 `screen.link.get` 返回配置、实际速率、会话、CRC/帧错误、重传与回退计数。
+其中 `framing` 细分超时与格式错误，并报告最近错误的帧长度、声明长度及头部是否有效。
 `set` 接受 `mode:"fixed"|"auto"`、`rate`、`max_rate`、`apply_now`。
 支持 115200、230400、460800、921600；默认固定 115200。auto 从上限向下尝试。
 切换仅发生在 MCU 恢复阶段：清空发送、旧速率 READY、新速率 CRC 探测、双向确认；
