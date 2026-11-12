@@ -37,7 +37,7 @@ Writes return `code:"accepted"` and UART sequence `data.request`. Poll
 `result:0`. Check `messages` for actual display/confirmation state. Only one UART
 write is pending at a time; retry `busy` later. After `uncertain` or an MCU reboot,
 query state before retrying. IDs are nonzero uint32. Identical ID/content still
-in the queue or last eight history entries does not replay; changed content
+in the queue or last sixteen history entries does not replay; changed content
 under the same ID is rejected. Reboot clears deduplication history.
 
 | Command | Parameters and behavior |
@@ -50,6 +50,7 @@ under the same ID is rejected. Reboot clears deduplication history.
 | `screen.push.send` | Required `id`; other fields below |
 | `screen.push.get` | No parameters; same media snapshot |
 | `screen.push.dismiss` | `id`; dismiss an active or queued notification |
+| `screen.push.select` | `index:0..4`; select the normal page or one of the first four notifications |
 
 | Push field | Limit/default |
 | --- | --- |
@@ -159,5 +160,9 @@ one u8 index after its opcode. Media status version 2 is 324 bytes followed by
 sixteen queue records of 9 bytes (u32 id, u32 image_id, u8 state); sixteen history
 records of 5 bytes (u32 id, u8 state). Header bytes 22/23 are selected view /
 queue count, 24/25 are JPEG SR / IR flags shifted by 10, 26..27 decode time in
-ms (u16LE), 28..31 are message/image/view capacities and status version. The
-ESP also accepts the earlier 172-byte snapshot during rolling upgrades.
+ms (u16LE), 28..31 are message/image/view capacities and status version.
+An optional 64-byte decoder detail follows (16 LE32 values): SR, IR, CR, CFG,
+scan address, output address, CODLEN, CLKEN1, PRSTR1, first two RGB565 pixels,
+CRC32 of the first 512 output bytes, pre-start SR, pre-start IR, elapsed ms,
+scan CRC32 and scan offset. ESP also accepts the earlier 172-byte snapshot and
+the 364-byte snapshot without this extension during rolling upgrades.
