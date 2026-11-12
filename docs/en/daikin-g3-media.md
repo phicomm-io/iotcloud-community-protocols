@@ -30,7 +30,10 @@ session authentication. MQTT uses
 MessagePack, no retain, and existing broker/account ACLs. Paired openiot UDP v4
 CONTROL sessions may call media/push, queries and stream start/stop.
 `screen.link.set` and `screen.stream.set` require ADMIN through HTTP/MQTT.
-UDP pairing and framing follow the existing implementation.
+UDP pairing and framing follow the existing implementation. UDP v4 permits a
+1200-byte complete frame and a 1024-byte inner MessagePack command. Use HTTP or
+MQTT when a long URL, body and credentials exceed that combined limit; individual
+field limits still apply.
 
 Writes return `code:"accepted"` and UART sequence `data.request`. Poll
 `screen.media.get` until matching `request.sequence`, `state:"complete"` and

@@ -28,7 +28,9 @@ reply = msgpack.unpackb(urllib.request.urlopen(req).read(), raw=False)
 MessagePack、非 retained，权限取决于既有 broker/账户 ACL。
 已配对 openiot UDP v4 的 CONTROL 权限可调用媒体/推送命令、查询及流启停；
 `screen.link.set`、`screen.stream.set` 需要 ADMIN，通过 HTTP/MQTT 管理入口配置。
-UDP 配对和传输格式沿用现有实现。
+UDP 配对和传输格式沿用现有实现。UDP v4 的完整帧最多 1200 字节，内部
+MessagePack 命令体最多 1024 字节；长 URL、正文和鉴权字段合并超出此限制时，
+请使用 HTTP 或 MQTT。各字段的单独上限仍适用。
 
 写请求返回 `code:"accepted"` 和 `data.request` 串口序号。轮询
 `screen.media.get`，仅在 `request.sequence` 匹配、`state:"complete"`、
