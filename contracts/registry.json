@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "specification": "1.0.0-dev.6",
+  "specification": "1.0.0-dev.7",
   "repository": "phicomm-io/iotcloud-community-protocols",
   "contracts": [
     {
@@ -554,13 +554,48 @@
         "contracts/schemas/m1-display-profile-state-v4.schema.json",
         "contracts/examples/m1-display-v4.json"
       ]
+    },
+    {
+      "id": "daikin-g3-media-v1",
+      "version": 1,
+      "status": "implemented-unreleased",
+      "document": "daikin-g3-media.md",
+      "producers": [
+        "firmware",
+        "screenmcu"
+      ],
+      "consumers": [
+        "frontend",
+        "firmware",
+        "screenmcu"
+      ],
+      "implementation": [
+        "firmware/BRY88BBA15G/screen_media.inc",
+        "firmware/BRY88BBA15G/screen_relay.inc",
+        "screenmcu/protocol/media_wire.h",
+        "screenmcu/src/media.c",
+        "screenmcu/src/stream.c",
+        "screenmcu/src/mjpeg.c",
+        "frontend/DAIKIN/web/screen-media.js"
+      ],
+      "verification": [
+        "screenmcu/tests/media_transport.c",
+        "screenmcu/tests/media_queue.c",
+        "screenmcu/tests/media_stream.c",
+        "screenmcu/tests/ui_render.c",
+        "frontend/tests/test_screen_browser.cjs"
+      ],
+      "artifacts": [
+        "contracts/daikin-g3-media-v1.json"
+      ]
     }
   ],
   "repositories": {
     "firmware": "phicomm-io/iotcloud-community-firmware",
     "mcu": "phicomm-io/phicomm_m1_mcu_atsamd20",
     "frontend": "phicomm-io/iotcloud-community-frontend",
-    "platform": "phicomm-io/iotcloud-community-mqtt"
+    "platform": "phicomm-io/iotcloud-community-mqtt",
+    "screenmcu": "phicomm-io/iotcloud-bry88bba15g-screenmcu"
   },
   "reference_policy": "Source paths are repository-alias relative. A consumer pins this specification with a full commit and registry SHA-256. Record the implementation commit and any dirty patch digest separately; source references do not imply published capability."
 }

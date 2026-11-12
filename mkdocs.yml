@@ -35,6 +35,7 @@ nav:
   - 设备接口:
       - HTTP 与命令: device-http.md
       - MQTT 与传感器: mqtt.md
+      - 大金 G3 推送与摄像头: daikin-g3-media.md
       - 备份、语言与升级: configuration.md
   - MCU 协议:
       - UART 与能力查询: m1-uart.md

@@ -1,0 +1,204 @@
+{
+  "id": "daikin-g3-media-v1",
+  "version": 1,
+  "status": "implemented-unreleased",
+  "limits": {
+    "jpeg_bytes": 131072,
+    "width": 480,
+    "height": 854,
+    "upload_chunk": 512,
+    "queue_including_active": 4,
+    "images": 4,
+    "title_utf8_bytes": 64,
+    "text_utf8_bytes": 512,
+    "history": 8,
+    "orphan_expiry_ms": 120000,
+    "max_fps": 10
+  },
+  "defaults": {
+    "baud": 115200,
+    "baud_mode": "fixed",
+    "width": 320,
+    "height": 240,
+    "fps": 1,
+    "duration_ms": 10000,
+    "wake": true,
+    "brightness": 30,
+    "verify_tls": true
+  },
+  "rates": [
+    115200,
+    230400,
+    460800,
+    921600
+  ],
+  "actions": {
+    "screen.link.get": {
+      "required": [],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.link.set": {
+      "required": [
+        "mode"
+      ],
+      "optional": [
+        "rate",
+        "max_rate",
+        "apply_now"
+      ],
+      "access": "ADMIN"
+    },
+    "screen.media.begin": {
+      "required": [
+        "id",
+        "total",
+        "crc32",
+        "width",
+        "height"
+      ],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.media.chunk": {
+      "required": [
+        "id",
+        "offset",
+        "bytes"
+      ],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.media.commit": {
+      "required": [
+        "id"
+      ],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.media.cancel": {
+      "required": [
+        "id"
+      ],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.media.get": {
+      "required": [],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.push.send": {
+      "required": [
+        "id"
+      ],
+      "optional": [
+        "image_id",
+        "title",
+        "text",
+        "duration_ms",
+        "mode",
+        "wake",
+        "brightness"
+      ],
+      "access": "CONTROL"
+    },
+    "screen.push.get": {
+      "required": [],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.push.dismiss": {
+      "required": [
+        "id"
+      ],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.stream.get": {
+      "required": [],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.stream.set": {
+      "required": [
+        "url"
+      ],
+      "optional": [
+        "username",
+        "password",
+        "width",
+        "height",
+        "fps",
+        "enabled",
+        "verify_tls"
+      ],
+      "access": "ADMIN"
+    },
+    "screen.stream.start": {
+      "required": [],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.stream.stop": {
+      "required": [],
+      "optional": [],
+      "access": "CONTROL"
+    }
+  },
+  "uart": {
+    "version": 1,
+    "magic": "GM",
+    "delimiter": 0,
+    "escape": {
+      "00": "dbdc",
+      "db": "dbdd"
+    },
+    "header_bytes": 14,
+    "length_endian": "little",
+    "session_bytes": 4,
+    "sequence_bytes": 4,
+    "payload_max": 640,
+    "crc": "CRC32/ISO-HDLC over header and payload, little endian",
+    "channels": {
+      "link": 0,
+      "command": 1,
+      "reply": 2,
+      "socket": 3,
+      "socket_ack": 4,
+      "socket_event": 5
+    }
+  },
+  "results": {
+    "0": "ok",
+    "1": "range",
+    "2": "busy",
+    "3": "not_found",
+    "4": "crc",
+    "5": "format",
+    "6": "decode",
+    "7": "offline"
+  },
+  "push_states": [
+    "empty",
+    "queued",
+    "displayed",
+    "confirmed",
+    "timedout",
+    "dismissed",
+    "failed"
+  ],
+  "scn3": {
+    "bytes": 9520,
+    "component_type": 8,
+    "image_source_offset": 86,
+    "image_fit_offset": 87,
+    "image_source": 0,
+    "image_fit": {
+      "0": "contain",
+      "1": "cover"
+    },
+    "pages": 8,
+    "components": 32
+  }
+}
