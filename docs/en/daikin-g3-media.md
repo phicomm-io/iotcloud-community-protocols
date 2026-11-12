@@ -41,7 +41,9 @@ Writes return `code:"accepted"` and UART sequence `data.request`. Poll
 write is pending at a time; retry `busy` later. After `uncertain` or an MCU reboot,
 query state before retrying. IDs are nonzero uint32. Identical ID/content still
 in the queue or last sixteen history entries does not replay; changed content
-under the same ID is rejected. Reboot clears deduplication history.
+under the same ID is rejected. A same-URL notice still in the queue follows the
+renewal rules below and may reuse its original ID to update content/options.
+Reboot clears deduplication history.
 
 | Command | Parameters and behavior |
 | --- | --- |
