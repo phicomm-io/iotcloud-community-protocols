@@ -163,6 +163,29 @@
       ],
       "optional": [],
       "access": "CONTROL"
+    },
+    "screen.push.update": {
+      "required": [
+        "id"
+      ],
+      "optional": [
+        "image_id",
+        "title",
+        "text",
+        "duration_ms",
+        "mode",
+        "wake",
+        "brightness",
+        "url",
+        "username",
+        "password",
+        "width",
+        "height",
+        "fps",
+        "verify_tls"
+      ],
+      "access": "CONTROL",
+      "at_least_one_optional": true
     }
   },
   "uart": {
@@ -230,5 +253,33 @@
     "timer": "starts after first decoded and presented frame",
     "last_push_id": "canonical id in screen.media.get",
     "stream_role": "notification or page"
+  },
+  "push_update": {
+    "capability": 67108864,
+    "opcode": 13,
+    "header_bytes": 18,
+    "mask_bits": [
+      "title",
+      "text",
+      "image_id",
+      "mode",
+      "duration_ms",
+      "wake",
+      "brightness",
+      "url",
+      "username",
+      "password",
+      "width",
+      "height",
+      "fps",
+      "verify_tls"
+    ],
+    "source_bytes": 519,
+    "omitted": "preserved",
+    "duration_ms": "extend to at least requested visible time",
+    "missing_id": "not_found, never replayed",
+    "position": "preserved, hidden updates do not select",
+    "credentials": "URL change clears omitted credentials",
+    "dedup": "send retains original creation fingerprint; UART sequence retries are deduplicated"
   }
 }

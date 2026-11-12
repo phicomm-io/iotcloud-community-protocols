@@ -213,3 +213,52 @@ the page source resumes after dismissal, expiry, or selecting view 0.
 `screen.stream.get` reports `role` and `notification_id` for the actual shared
 receiver while returning the saved page configuration. Transient source options
 do not overwrite that configuration or occupy the four uploaded-image slots.
+
+## Update by notification ID
+
+Choose a nonzero `uint32` `id` on creation and retain `last_push_id` from the
+completed receipt (URL coalescing returns the canonical ID). Devices reporting
+`update_supported:true` accept `screen.push.update` with `id` and at least one
+push field. **Only supplied fields change.** Queue position, view selection and
+omitted content are preserved. Missing or completed IDs return MCU `result:3`
+and are never created or replayed.
+
+```python
+{"action":"screen.push.update","params":{"id":2001,"text":"Activity continues"}}
+{"action":"screen.push.update","params":{"id":2001,"duration_ms":15000}}
+{"action":"screen.push.update","params":{"id":2001,"url":"http://camera/new.jpg"}}
+{"action":"screen.push.dismiss","params":{"id":2001}}
+```
+
+Empty `title/text` clears that field; content or a media source must remain.
+`image_id` replaces the uploaded image and 0 removes media. `url` replaces the
+image/stream URL and an empty string removes media. Do not supply both
+`image_id` and `url`. A changed URL clears omitted credentials so they cannot
+reach a new source. Resolution, frame rate or credential patches require an
+existing URL. Unchanged source configuration keeps the TCP connection open
+for text and duration updates. A replacement source pauses timing until its
+first frame is presented. Updating a hidden notice never selects it or wakes
+the display.
+
+`duration_ms` extends remaining visible time to at least the supplied value
+(1..3600000) and never shortens it. `mode:"confirm"` waits for touch confirmation;
+`mode:"timed"` resumes timing. Other field limits match `send`. Keep `send` for
+creation/retry deduplication and use `update` for changed content. The request
+envelope ID, UART sequence and notification `id` are separate identifiers.
+Wait for the matching MCU receipt. Capability bit 26 (67108864) gates updates;
+older MCUs return `unsupported`.
+
+UART opcode 13 uses the first 16 PUSH bytes, followed by a LE16 field mask:
+bits 0..13 are title, text, image_id, mode, duration_ms, wake, brightness, url,
+username, password, width, height, fps, verify_tls. Any source bit includes a
+519-byte source configuration, followed by UTF-8 title/text. Only masked fields
+are merged; reserved bits must be zero. Maximum payload is 1113 bytes within
+the existing 1152-byte limit.
+
+```sh
+python3 BRY88BBA15G/tools/screen_media.py --url http://device update 2001 --text 'Activity continues' --seconds 15
+```
+
+The notification layer reuses its card, labels and image objects. Text and
+queue changes refresh affected regions only. Business content calculation pauses
+while covered and catches up when view 0 returns.

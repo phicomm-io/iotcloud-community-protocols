@@ -178,3 +178,48 @@ ESP 在分步升级期间也接受早期 172 字节及 v2 的 364/428 字节状�
 页面与通知共用一个网络连接及 JPEG/RGB 缓冲；关闭、到时或选回展示页 0 后恢复原页面图源。
 `screen.stream.get` 通过 `role`、`notification_id` 说明实际接收者，配置字段仍为
 已保存的页面配置。通知图源不修改持久配置，也不占用 4 张上传图片缓存。
+
+## 按推送 ID 更新
+
+创建通知时由调用端指定非零 `uint32` 的 `id`，保存回执状态中的
+`last_push_id`（同地址合并时返回实际保留的 ID）。支持 `update_supported:true`
+的设备可调用 `screen.push.update`。它要求 `id` 和至少一个推送字段；
+**只修改传入字段**，保留队列位置、当前展示页及未传入的图文内容。
+已结束或不存在的 ID 返回 MCU `result:3`，不会创建或重播通知。
+
+```python
+# 只更新正文；原图片或流继续显示
+{"action":"screen.push.update","params":{"id":2001,"text":"门口仍有活动"}}
+# 从当前时刻起至少再显示 15 秒，重复调用不会缩短时间
+{"action":"screen.push.update","params":{"id":2001,"duration_ms":15000}}
+# 替换图源；其他显示选项保留
+{"action":"screen.push.update","params":{"id":2001,"url":"http://camera/new.jpg"}}
+# 主动关闭（活动、隐藏或排队中的消息均可）
+{"action":"screen.push.dismiss","params":{"id":2001}}
+```
+
+`title/text` 可传空串清除；清除后至少须保留文字或图源。`image_id` 可替换已提交
+图片，0 表示移除媒体；`url` 可替换图片/视频流地址，空串表示移除媒体。
+`image_id` 与 `url` 不可同时传入。更换 URL 时省略的用户名、密码清空，避免把
+旧凭据发给新图源；只更新分辨率、帧率或凭据时须已有 URL 图源。
+同一 URL 不变且配置不变时，更新文字或时长保持 TCP 连接。
+换图源从新画面实际呈现后继续计时；更新隐藏消息不会亮屏或抢占当前通知。
+
+`duration_ms` 将剩余可见时长延长至至少所给值（1..3600000）；不缩短。
+`mode:"confirm"` 切换为等待触摸确认，`mode:"timed"` 继续定时。其他字段与
+`send` 的范围相同。`send` 保留创建时的重试去重语义，改内容应使用 `update`；
+网络 `request_id`、UART 回执序号和通知 `id` 是不同标识。操作仍须等待匹配的
+MCU 回执。能力位 26（67108864）表示更新支持；旧 MCU 返回 `unsupported`。
+
+更新 UART 包沿用 PUSH 的前 16 字节，操作码为 13，随后为 LE16 字段掩码，
+位 0..13 依次为 title、text、image_id、mode、duration_ms、wake、brightness、
+url、username、password、width、height、fps、verify_tls。只要源字段中任一位
+存在，就附加完整 519 字节源配置，其后按标题长度附加 UTF-8 标题/正文；
+只合并掩码指定的字段，保留位必须为零。最大 1113 字节，帧上限仍为 1152。
+
+```sh
+python3 BRY88BBA15G/tools/screen_media.py --url http://device update 2001 --text '门口仍有活动' --seconds 15
+```
+
+通知层复用卡片、标题、正文和图片对象；修改文字或队列状态仅刷新相应区域。
+通知遮挡业务页时暂停其内容计算，返回第 0 页时更新至最新数据。
