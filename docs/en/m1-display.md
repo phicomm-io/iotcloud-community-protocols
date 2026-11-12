@@ -4,6 +4,10 @@
 
 Formatting and individual-lamp contract `m1-display-v3` uses additive `m1-uart-v4`. Existing dual schema 2 and scalar schema 1 retain their meanings. These are development interfaces without a formal release.
 
+## Wi-Fi profile4 and UART versions
+
+RC.1 uses [generic profile4](device-http.md#m1-generic-profile4) and [sensor-values-v2](mqtt.md#sensor-values-v2). MQTT binds device identity plus field_id/type/unit, without TC1/A1 model adapters. Old-RC profile3/schema1 feeds are deprecated with no compatibility guarantee. The glass formats, raw API and UART schema3 below retain their existing definitions; profile4 adds no UART opcode. RC.1 is not yet publicly released.
+
 ## M1 display v3
 
 Slot0 is the HCHO region; slot1 is PM2.5. HCHO has a fixed decimal point after the first digit. PM supports integers only. `unit` in local/MQTT configuration describes the source's physical value; it cannot create ppm, W or % glyphs on the glass. `display.show_label` enables the original HCHO/PM2.5 legend, while `display.show_unit` independently enables the original mg/m³ / µg/m³ unit. Both are required booleans, initially false for custom/external data.
@@ -122,7 +126,7 @@ Each lane has three nonnegative digits: format0 shows `123`, format1 `1.23`, for
 
 Logical units are separate from glass legends. These positions have no selectable W, kW, ℃, %, CO₂ or ppm glyphs. TC1 power hides the original gas/unit; UI must explain its logical unit and scale. Retain a native legend only for slot0+formaldehyde+`mg/m³`+scale1, or slot1+pm25+`µg/m³`+scale1. Scale1000 always hides it, including native metrics. `1230 W / scale1000 / decimals2` shows approximately `1.23`, without a kW glyph.
 
-Colors are off/red/green/yellow. Threshold mode requires low<high and compares the unscaled physical value: below low green, at/above low but below high yellow, at/above high red. An explicit API color may override a lease's rule. These colors do not change physical sensor alarms.
+Colors are off/red/green/yellow. Threshold mode requires `low < high` and compares the unscaled physical value: below low green, at/above low but below high yellow, at/above high red. An explicit API color may override a lease's rule. These colors do not change physical sensor alarms.
 
 ### Legacy and dual profiles
 

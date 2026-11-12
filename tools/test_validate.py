@@ -46,6 +46,17 @@ class NumericValidation(unittest.TestCase):
                     mutate(invalid, value)
                     self.assertFalse(validator.is_valid(invalid))
 
+    def test_generic_utf8_and_float32_extensions(self):
+        utf8 = validate.Validator({"type": "string", "x-utf8Bytes": {"minimum": 1, "maximum": 4}})
+        self.assertTrue(utf8.is_valid("数a"))
+        self.assertFalse(utf8.is_valid("数数"))
+        self.assertFalse(utf8.is_valid("\ud800"))
+        number = validate.Validator({"type": "number", "x-float32Finite": True})
+        for value in (-42, 0, 3.4028234663852886e38):
+            self.assertTrue(number.is_valid(value))
+        for value in (True, "1", float("nan"), float("inf"), 3.4028236e38, 10 ** 1000):
+            self.assertFalse(number.is_valid(value))
+
     def test_large_integer_does_not_raise_float_overflow(self):
         validator = validate.Validator({"type": "number"})
         self.assertTrue(validator.is_valid(10 ** 1000))

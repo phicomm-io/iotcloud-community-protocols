@@ -4,6 +4,10 @@
 
 格式与独立灯段合同 `m1-display-v3` 使用增量 `m1-uart-v4`，保留双路 schema 2 和 scalar schema 1 的原义。以下是未正式发布的开发接口。
 
+## Wi-Fi profile4 与 UART 版本
+
+RC.1改用[通用字段profile4](device-http.md#m1-generic-profile4)和[sensor-values-v2](mqtt.md#sensor-values-v2)，MQTT来源只按设备身份+field_id/type/unit绑定，不按TC1/A1等机型适配。旧RC profile3/schema1 feed已弃用，不保证兼容。下方玻璃格式、raw API与UART schema3仍使用既有定义；profile4没有增加UART操作码。RC.1尚未公开发布。
+
 ## M1 display v3
 
 slot0 是甲醛区域，slot1 是 PM2.5 区域。甲醛区域的小数点固定在第一位之后，PM 区域仅支持整数。本地/MQTT 配置的 `unit` 表示来源数值的物理单位；它不会在玻璃上生成 ppm、W 或 % 字形。`display.show_label` 控制原有“甲醛”/“PM2.5”字样，`display.show_unit` 独立控制原有 mg/m³ / µg/m³ 单位段。两者均为必填布尔值；自定义/外部数据的初始值为 false。

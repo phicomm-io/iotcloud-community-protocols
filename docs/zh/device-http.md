@@ -4,6 +4,21 @@
 
 以下为 Wi-Fi 固件的设备接口。管理平台的账户 API 使用独立的 `/api/auth/...`，见 [平台接口](platform-hub.md)。
 
+<a id="m1-generic-profile4"></a>
+
+## M1 通用字段 profile4
+
+`display_profile.get` 返回schema4；`display_profile.set`动作名保持不变，**SET不得带schema键**。新 `m1-display-v4` 替代已弃用的旧RC profile3，不保证向后兼容。revision/CAS、整体选择、格式、TTL、色灯、raw `display_value.set`及MCU读回规则仍见下文。Wi-Fi配置版本与UART操作/schema编号独立：OP24/25/26与raw API v3不变。
+
+MQTT区域严格为**九键**：`slot`、`source:"mqtt"`、`device_id`、`field_id`、`type:"number"`、`unit`、`display`、`ttl_seconds`、`color`。不存metric、model或显示名称。SET接受连续或带冒号、任意大小写MAC，GET返回规范小写12位。field_id为1..32位ASCII `[a-z][a-z0-9_]*`；unit为0..24合法UTF-8字节，无C0/DEL。预期type/unit须与当前[schema2字段描述](mqtt.md#sensor-values-v2)一致，任意发布字段/单位不需要增加机型适配。
+
+none/local/api区域仍为含metric的严格**八键**，不用field_id/type。本地metric仍对应M1实际传感器；none/custom与raw API行为不变，MQTT发现不能改写本地硬件列表。PM只支持整数、甲醛五种显示模式不变。runtime单位允许通用MQTT字段有界UTF-8元数据，负数/不可显示值返回out_of_range而不是零。每个已接受boot/sequence是完整快照：不支持/缺失/格式错误/无效字段或预期单位不匹配立即撤销旧number候选，不删除配置、不把未知值当零；记录counter防旧数值重放，number兄弟相互独立。过期/离线不能续期。
+
+应用配置v11在冻结的v9/v10前缀后追加remote[2]。明确迁移已校验的旧MQTT metric/unit对：canonical旧metric写为field_id、canonical旧单位写为unit，保留revision、选择、双击和样式；这不恢复旧HTTP/feed schema。新MQTT写入在内部使用remote绑定，不用机型metric。none/local/api设置语义保留，运行期租约不持久化。不支持的布局应保护配置并说明恢复方式，不保证任意旧RC配置可用。display_source.get/set旧动作名只是当前schema4别名，不实现旧HTTP形状；仅旧profile只读投影不能启用新UART格式。
+
+[SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [机器约定](contracts/m1-display-v4.json) · [样例](contracts/examples/m1-display-v4.json)。下方保留历史schema3/schema2细节，其中MQTT metric/model映射已弃用。
+
+
 ## 接入
 
 设备 WebUI 以同源 HTTP 访问。局域网管理端先读取 `info` / `capabilities` 并核对机型和能力。设备 HTTP 使用 Basic 认证，用户名 `admin`、密码为设备 Web 密码；浏览器跨域请求必须通过设备允许的 Origin 与预检。HTTPS 页面连接 HTTP 设备仍受浏览器混合内容限制。
@@ -98,9 +113,9 @@ HTTP 和 TMCP 共用动作及 JSON 信封：
 
 ## DAIKIN 显式 full → hub 转换
 
-此接口属于未正式发布的开发扩展。仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
+显式转换接口已随 v1.0.0-rc 预发布；下述设备 Web 密码可选行为属于面向 v1.0.0-rc.1 的未发布修复，不改写原 RC 标签或制品。仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
 
-必须先设置本地设备 Web 密码，以该密码通过 Basic `admin` 认证，再向独立接口提交完整 `PHOTA001` 签名二进制文件：
+设备 Web 密码可选：未设置时无需 Basic 认证；已有密码时仍必须以该密码通过 Basic `admin` 认证。向独立接口提交完整 `PHOTA001` 签名二进制文件；以下 `Authorization` 头仅在已设设备 Web 密码时必需：
 
 ```http
 POST /api/v1/ota/convert
@@ -112,14 +127,14 @@ X-IoTCloud-Confirm: full-to-hub
 <完整 PHOTA001 签名二进制文件>
 ```
 
-两个确认头的值必须精确匹配；不能使用本地 Hub owner 或上游账户会话代替设备 Basic 认证。设备当前配置必须健康，且没有进行中的 OTA、待处理命令或已安排的重启；配置恢复期间禁止转换。
+两个确认头的值必须精确匹配；已设设备 Web 密码时，不能使用本地 Hub owner 或上游账户会话代替设备 Basic 认证。设备当前配置必须健康，且没有进行中的 OTA、待处理命令或已安排的重启；配置恢复期间禁止转换。
 
 设备使用实际下一 OTA 槽容量检查应用负载，不采用构建 CSV 的假定容量。应用前缀必须在固定偏移匹配 DAIKIN 硬件、项目与目标 `hub` 身份，不能通过搜索散落字符串识别镜像。擦除非运行槽前，先检查固定前缀并以可信密钥认证签名封套。完整接收后，从 Flash 读回整个暂存负载并校验签名覆盖的摘要，再读回并核对固定身份，全部通过后才选择新启动分区。
 
 | 正反例 | 结果 |
 | --- | --- |
-| 已声明能力的 `full`，密码认证与确认头正确，健康且空闲，签名 Hub 镜像装得下且全部校验通过 | HTTP 202，`{"code":"accepted"}`；安排重启 |
-| 设备未设置 Web 密码 | HTTP 403，`set_web_password_first` |
+| 已声明能力的 `full`，已设密码时认证通过、确认头正确，健康且空闲，签名 Hub 镜像装得下且全部校验通过 | HTTP 202，`{"code":"accepted"}`；安排重启 |
+| 设备未设置 Web 密码 | 无需 Basic 认证；仍须确认头、健康/空闲检查、签名与目标校验全部通过 |
 | 已设 Web 密码，但 Basic 认证缺失或错误 | HTTP 401，`unauthorized` |
 | 确认头的值缺失或错误 | HTTP 400，`invalid_params` |
 | 当前处于配置恢复 | HTTP 409，`migration_required` |
@@ -129,7 +144,7 @@ X-IoTCloud-Confirm: full-to-hub
 | 普通 `/api/v1/ota/upload` 或 `/api/v1/ota/upload-unsigned` 提交不同 variant，即使附带转换头 | HTTP 400，`invalid_image`；普通入口始终保持当前 variant |
 | `hub` 请求转换为 `full` | Hub 不提供转换接口，普通接口拒绝跨 variant；Hub 大配置与 Full 不兼容 |
 
-转换不改写分区表或普通配置，保留共用的 Wi-Fi、MQTT 和设备 Web 密码。首次 Hub 初始化仍须原设备 Web 密码，HAP 默认关闭；安装新镜像不等于已创建本地 owner 或完成 HomeKit 配对。转换也不扩大 OTA 槽：原厂 1.5 MiB 槽仍不能接受超出该容量的镜像。HTTP 202 只确认校验通过并安排重启；重新连接后，读取 `info` / `status` 的 `firmware_variant:"hub"` 才能确认 Hub 已运行。
+转换不改写分区表或普通配置，保留共用的 Wi-Fi、MQTT 和设备 Web 密码。首次 Hub 初始化仅在已有设备 Web 密码时要求原密码认证；独立本地 owner 密码要求不变，HAP 默认关闭；安装新镜像不等于已创建本地 owner 或完成 HomeKit 配对。转换也不扩大 OTA 槽：原厂 1.5 MiB 槽仍不能接受超出该容量的镜像。HTTP 202 只确认校验通过并安排重启；重新连接后，读取 `info` / `status` 的 `firmware_variant:"hub"` 才能确认 Hub 已运行。
 
 ## M1 CO₂ 来源
 

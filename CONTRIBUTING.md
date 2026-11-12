@@ -4,7 +4,7 @@
 
 一次接口变更包含：
 
-1. 使用范围、规范版本和状态：`implemented-unreleased`、`draft` 或 `released`。发布状态需要填写可核对的实现版本。
+1. 使用范围、规范版本和状态：`implemented-unreleased`、`draft`、`released` 或 `deprecated`（需替代接口和原因）。发布状态需要填写可核对的实现版本。
 2. 请求、响应、单位、范围、预留位、权限、时效、重试和错误行为。
 3. 新旧实现的兼容策略，以及固件、MCU、前端、平台各自的变更链接。
 4. 对应的 JSON Schema、正反样例或 UART 向量；更新中英文正文。

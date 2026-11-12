@@ -4,6 +4,8 @@
 
 Review machine-readable artifacts with the prose. Reuse them in firmware host tests, frontend and platform tests. Passing checks establishes the covered contract behavior, not physical-device acceptance.
 
+New RC.1 interfaces (not yet published): [sensor-values-v2 contract](contracts/sensor-values-v2.json) / [schema2](contracts/schemas/sensor-values-v2.schema.json) / [examples](contracts/examples/sensor-values-v2.json), and [display-v4](contracts/m1-display-v4.json) / [profile SET4](contracts/schemas/m1-display-profile-set-v4.schema.json) / [GET4](contracts/schemas/m1-display-profile-state-v4.schema.json) / [examples](contracts/examples/m1-display-v4.json). Original sensor-values-v1/display-v3 artifacts remain frozen for history and are marked deprecated in the registry; RC.1 does not promise old-RC compatibility. `x-utf8Bytes` validates UTF-8 byte limits/unpaired surrogates; `x-float32Finite` validates finite float32 conversion.
+
 | File | Contents |
 | --- | --- |
 | [Interface registry](contracts/registry.json) | Interface IDs, versions, status, producers/consumers and implementation paths |

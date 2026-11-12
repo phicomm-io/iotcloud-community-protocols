@@ -4,6 +4,8 @@
 
 机器可读内容与正文一起审查。下载后可以在固件主机测试、前端或平台测试中复用；测试通过表示符合该样例与规则，不代表设备物理验收。
 
+新RC.1接口（尚未发布）：[sensor-values-v2定义](contracts/sensor-values-v2.json) / [schema2](contracts/schemas/sensor-values-v2.schema.json) / [正反样例](contracts/examples/sensor-values-v2.json)，以及[display-v4](contracts/m1-display-v4.json) / [profile SET4](contracts/schemas/m1-display-profile-set-v4.schema.json) / [GET4](contracts/schemas/m1-display-profile-state-v4.schema.json) / [样例](contracts/examples/m1-display-v4.json)。旧sensor-values-v1与display-v3保留原字节供历史参考，registry标deprecated；RC.1不保证旧RC兼容。字符串扩展 `x-utf8Bytes` 校验UTF-8字节/孤立代理项，`x-float32Finite`校验数值可转换为有限float32。
+
 | 文件 | 内容 |
 | --- | --- |
 | [接口索引](contracts/registry.json) | 接口 ID、规范版本、状态、生产者/消费者和实现入口 |

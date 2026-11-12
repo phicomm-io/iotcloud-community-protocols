@@ -4,6 +4,21 @@
 
 These are Wi-Fi firmware endpoints. Platform accounts use the separate `/api/auth/...` API described under [platform integration](platform-hub.md).
 
+<a id="m1-generic-profile4"></a>
+
+## M1 generic field profile4
+
+`display_profile.get` reports schema4; `display_profile.set` keeps its action name and **must not include a `schema` key**. This is `m1-display-v4`, replacing the deprecated old-RC profile3 without a backwards-compatibility guarantee. The revision/CAS, selection, display modes, TTL, lamps, raw `display_value.set` and MCU readback rules remain as documented below. The Wi-Fi profile version is independent of UART operation/schema numbering: existing OP24/25/26 and raw API v3 are unchanged.
+
+A MQTT lane has exactly **nine** keys: `slot`, `source:"mqtt"`, `device_id`, `field_id`, `type:"number"`, `unit`, `display`, `ttl_seconds`, `color`. No `metric`, model or display name is stored. SET accepts compact or colon-separated MACs in either case; GET returns canonical lower12. `field_id` is1..32 ASCII `[a-z][a-z0-9_]*`; unit is0..24 valid UTF-8 bytes without C0/DEL. The expected type and unit must match the current [schema2 descriptor](mqtt.md#sensor-values-v2); arbitrary publisher fields/units do not require a firmware model adapter.
+
+`none` / `local` / `api` lanes retain exactly the eight keys containing `metric` instead of `field_id`/`type`. Local metrics still name M1's actual local sensors; none/custom and raw API behavior are unchanged. MQTT discovery cannot alter this local hardware list. PM's integer-only glass and the five HCHO modes remain unchanged. Runtime unit metadata is bounded arbitrary UTF-8 for generic MQTT fields; negative/unrepresentable values report `out_of_range` rather than becoming zero. Every accepted boot/sequence is a complete snapshot: unsupported/missing/malformed/invalid fields or an expected-unit mismatch immediately revoke the old numeric candidate, without deleting the configured source or turning unknown values into zero. Record counters to prevent old numeric replay; numeric siblings remain independent. Stale/offline sources cannot renew a lane lease.
+
+Application config v11 appends remote[2] after the frozen v9/v10 prefix. An explicit migration of validated old MQTT metric/unit pairs stores the canonical old metric as field_id and its canonical unit, preserving revision, selection, double-click and style; it does not restore the old HTTP/feed schema. New MQTT writes use the generic remote binding internally rather than model-specific metrics. none/local/api settings retain their original meaning. Runtime leases are not persistent. Unsupported layouts must protect stored configuration and explain recovery; arbitrary old RC configuration acceptance is not guaranteed. The display_source.get/set action names are aliases of the current schema4 interface, not compatibility implementations of old HTTP shapes. A legacy profile projection alone cannot enable the new UART formatted profile.
+
+[Profile SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [Contract](contracts/m1-display-v4.json) · [Examples](contracts/examples/m1-display-v4.json). The sections below retain historical schema3/schema2 details; their MQTT metric/model mapping is deprecated.
+
+
 ## Access
 
 Embedded WebUI uses same-origin HTTP. LAN clients query `info` and `capabilities` before selecting a device implementation. Device HTTP uses Basic authentication with username `admin` and the device Web password. Cross-origin browser access requires an allowed Origin and preflight; HTTPS-to-HTTP connections remain subject to browser mixed-content restrictions.
@@ -96,9 +111,9 @@ Implementation: [DAIKIN status diagnostic](https://github.com/phicomm-io/iotclou
 
 ## Explicit DAIKIN full → hub conversion
 
-This is a development extension without a formal release. Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
+Explicit conversion was published in the v1.0.0-rc prerelease. The optional device Web password behavior below is an unreleased fix targeting v1.0.0-rc.1; the original RC tag and assets are not replaced. Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
 
-Set a local device Web password first. Authenticate as Basic `admin` with that password, then send a complete `PHOTA001` signed binary to the dedicated endpoint:
+The device Web password is optional: no Basic authentication is required when none exists; an existing password still requires Basic `admin` authentication. Send a complete `PHOTA001` signed binary to the dedicated endpoint. The following `Authorization` header is required only when a device Web password exists:
 
 ```http
 POST /api/v1/ota/convert
@@ -110,14 +125,14 @@ X-IoTCloud-Confirm: full-to-hub
 <complete PHOTA001 signed binary>
 ```
 
-Both confirmation header values must match exactly. Local Hub owner sessions and upstream account sessions cannot replace device Basic authentication. The current configuration must be healthy, with no active OTA, pending command or scheduled reboot; configuration recovery blocks conversion.
+Both confirmation header values must match exactly. When a device Web password exists, local Hub owner sessions and upstream account sessions cannot replace device Basic authentication. The current configuration must be healthy, with no active OTA, pending command or scheduled reboot; configuration recovery blocks conversion.
 
 Check application payload size against the actual next OTA partition, independently of the build CSV. The application prefix must match DAIKIN hardware, project and target `hub` identity at fixed offsets; finding identity strings elsewhere is insufficient. Check the fixed prefix and authenticate the envelope against a trusted signing key before erasing the inactive slot. After receiving the complete file, verify the signed payload digest by reading the entire staged payload from Flash, then read and verify the fixed identity again. Select the new boot partition only after every check passes.
 
 | Positive/negative case | Result |
 | --- | --- |
-| Supporting `full`, correct password authentication and confirmation headers, healthy and idle, signed Hub image fits and passes all checks | HTTP 202, `{"code":"accepted"}`; schedule reboot |
-| No device Web password is configured | HTTP 403, `set_web_password_first` |
+| Supporting `full`, authenticated if a password exists, correct confirmation headers, healthy and idle, signed Hub image fits and passes all checks | HTTP 202, `{"code":"accepted"}`; schedule reboot |
+| No device Web password is configured | No Basic authentication required; confirmation headers, healthy/idle checks, signature and target validation still apply |
 | Device Web password exists but Basic authentication is missing or incorrect | HTTP 401, `unauthorized` |
 | Missing or incorrect confirmation header values | HTTP 400, `invalid_params` |
 | Configuration recovery is active | HTTP 409, `migration_required` |
@@ -127,7 +142,7 @@ Check application payload size against the actual next OTA partition, independen
 | Different variant sent to ordinary `/api/v1/ota/upload` or `/api/v1/ota/upload-unsigned`, even with conversion headers | HTTP 400, `invalid_image`; ordinary endpoints preserve the running variant |
 | `hub` requests conversion to `full` | No conversion endpoint on Hub; reject cross-variant ordinary uploads because Hub's larger configuration is incompatible |
 
-Conversion preserves the partition table and ordinary configuration, including shared Wi-Fi, MQTT and device Web passwords. Initial Hub setup still requires the original device Web password; HAP defaults off. Installing the image neither creates a local owner nor completes HomeKit pairing. Conversion does not enlarge OTA slots: a factory 1.5 MiB slot still rejects larger images. HTTP 202 confirms verification and a scheduled reboot; reconnect and read `info` / `status` with `firmware_variant:"hub"` to establish that Hub is running.
+Conversion preserves the partition table and ordinary configuration, including shared Wi-Fi, MQTT and device Web passwords. Initial Hub setup requires the original device Web password only when one exists; the separate local owner password requirements remain unchanged. HAP defaults off. Installing the image neither creates a local owner nor completes HomeKit pairing. Conversion does not enlarge OTA slots: a factory 1.5 MiB slot still rejects larger images. HTTP 202 confirms verification and a scheduled reboot; reconnect and read `info` / `status` with `firmware_variant:"hub"` to establish that Hub is running.
 
 ## M1 CO₂ source
 

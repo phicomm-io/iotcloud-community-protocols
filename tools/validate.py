@@ -46,9 +46,36 @@ def float32_ordered_fields(validator, fields, instance, schema):
         yield ValidationError(f"{fields[0]} must be less than {fields[1]} after finite float32 conversion")
 
 
+def utf8_bytes(validator, limits, instance, schema):
+    """Byte limits for shared embedded strings, including invalid Unicode."""
+    if not isinstance(instance, str):
+        return
+    try:
+        size = len(instance.encode("utf-8", errors="strict"))
+    except UnicodeEncodeError:
+        yield ValidationError("String must be valid UTF-8 without unpaired surrogates")
+        return
+    if size < limits["minimum"] or size > limits["maximum"]:
+        yield ValidationError("UTF-8 byte length outside shared contract bounds")
+
+
+def float32_finite(validator, enabled, instance, schema):
+    if not enabled or type(instance) not in (int, float):
+        return
+    try:
+        value = struct.unpack("!f", struct.pack("!f", instance))[0]
+    except (OverflowError, struct.error):
+        yield ValidationError("Number must remain finite after float32 conversion")
+        return
+    if not math.isfinite(value):
+        yield ValidationError("Number must remain finite after float32 conversion")
+
+
 Validator = validators.extend(Draft202012Validator,
                              {"x-orderedFields": ordered_fields,
-                              "x-float32OrderedFields": float32_ordered_fields},
+                              "x-float32OrderedFields": float32_ordered_fields,
+                              "x-utf8Bytes": utf8_bytes,
+                              "x-float32Finite": float32_finite},
                              type_checker=STRICT_TYPES)
 
 
@@ -144,10 +171,12 @@ def validate_registry():
         if item["id"] in ids or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", item["id"]):
             fail("Duplicate or invalid contract ID")
         ids.add(item["id"])
-        if item["status"] not in ("draft", "implemented-unreleased", "released"):
+        if item["status"] not in ("draft", "implemented-unreleased", "released", "deprecated"):
             fail("Unknown contract status")
         if item["status"] != "draft" and not item["implementation"]:
             fail("Implemented contract needs source references")
+        if item["status"] == "deprecated" and not (item.get("replaced_by") and item.get("deprecation_reason")):
+            fail("Deprecated contract needs replacement and reason")
         if item["status"] == "released" and not item.get("releases"):
             fail("Released contract needs release references")
         for source in item["implementation"] + item.get("verification", []):
