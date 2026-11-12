@@ -223,3 +223,28 @@ python3 BRY88BBA15G/tools/screen_media.py --url http://device update 2001 --text
 
 通知层复用卡片、标题、正文和图片对象；修改文字或队列状态仅刷新相应区域。
 通知遮挡业务页时暂停其内容计算，返回第 0 页时更新至最新数据。
+
+## 过期与队列满策略
+
+能力 `policy_supported:true`（位 27）支持 `ttl_ms` 和 `overflow`。`ttl_ms` 为接收起的硬过期时间，0 关闭，范围 0～86400000 毫秒；排队、隐藏、等待确认和维护暂停时仍计时。它与实际显示时长 `duration_ms` 独立，任何一个到期都会结束通知。`update` 传入 `ttl_ms` 会从本次接收起重新计时，可缩短或关闭；不传则保留。同地址 `send` 合并时 TTL 只延长。
+
+```json
+{"action":"screen.push.send","params":{"id":3001,"text":"门口运动","duration_ms":15000,"ttl_ms":30000,"overflow":"drop_oldest"}}
+{"action":"screen.push.update","params":{"id":3001,"ttl_ms":10000}}
+```
+
+| `overflow` | 队列满时 |
+| --- | --- |
+| `reject`（默认） | 拒绝，返回 busy，不更改队列或留下去重记录，可稍后重试 |
+| `drop_newest` | 主动丢弃新消息，MCU 回执成功，历史状态为 `dropped` |
+| `drop_oldest` | 淘汰最早的等待消息并接收新消息；保护当前项，淘汰项为 `evicted` |
+
+策略作用于新通知；同 ID 更新、原请求重试和同地址续期先于容量检查。淘汰只释放队列引用，上传的图片仍可复用，未引用图片按原有两分钟规则回收。
+
+`queue[].expires_in_ms` 返回剩余硬过期毫秒数（0 表示未启用），硬过期记为 `expired`，显示时长结束仍为 `timedout`。历史最多 16 条，去重保留窗口也受此限制；应用应给新事件使用新 ID，更新只对仍在队列中的 ID 生效。通知及策略不跨 MCU 重启保存。
+
+UART 扩展 `MEDIA_PUSH_POLICY=14` 的前 16 字节沿用 PUSH，随后为 TTL LE32、overflow 字节和 URL 标志；可选 519 字节图源配置后跟标题/正文。`MEDIA_PUSH_UPDATE` 掩码位 14 表示 TTL，在原 18 字节头后附 LE32，然后才是可选图源和文字。状态版本 4 的队列项由 10 字节增至 14 字节，末尾附剩余 TTL。新 ESP 仍转换读取旧版状态，不支持能力位时拒绝新选项。
+
+## 运动检测接入例程
+
+Frigate 的 `frigate/<camera>/motion` MQTT 事件、Scrypted MotionSensor 脚本或 MQTT 插件均可触发 webhook 桥。服务器用 go2rtc/FFmpeg 按需生成 320×240、1 fps MJPEG，运动时更新同一 ID，停止后由 TTL 结束。完整的容器、Home Assistant 自动化和 Scrypted 脚本见固件仓库的 [中文教程](https://github.com/phicomm-io/iotcloud-community-firmware/blob/main/BRY88BBA15G/docs/motion-notifications.zh.md)。

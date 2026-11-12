@@ -262,3 +262,28 @@ python3 BRY88BBA15G/tools/screen_media.py --url http://device update 2001 --text
 The notification layer reuses its card, labels and image objects. Text and
 queue changes refresh affected regions only. Business content calculation pauses
 while covered and catches up when view 0 returns.
+
+## Expiry and full-queue policy
+
+`policy_supported:true` (capability bit 27) enables `ttl_ms` and `overflow`. TTL is a hard lifetime from receipt, 0 disables it, maximum 86400000 ms. It includes queued, hidden, confirmation and maintenance-suspended time. It is independent of visible `duration_ms`; either expiry ends the notice. An update resets TTL from receipt, allowing shortening or disabling it; omitted TTL is preserved. Same-URL send renewal only extends TTL.
+
+```json
+{"action":"screen.push.send","params":{"id":3001,"text":"Motion at the door","duration_ms":15000,"ttl_ms":30000,"overflow":"drop_oldest"}}
+{"action":"screen.push.update","params":{"id":3001,"ttl_ms":10000}}
+```
+
+| `overflow` | Full queue behavior |
+| --- | --- |
+| `reject` (default) | Return busy; preserve the queue and leave no dedup record, allowing a later retry |
+| `drop_newest` | Deliberately discard the incoming message; successful MCU receipt with history state `dropped` |
+| `drop_oldest` | Evict the oldest waiting message and accept the new one; protect the current notice and record `evicted` |
+
+Policies apply to new notices. ID updates, original-request retries and same-URL renewals precede capacity checks. Eviction releases the queue reference; uploaded images remain reusable and unreferenced images retain their two-minute cleanup rule.
+
+`queue[].expires_in_ms` reports remaining hard lifetime (0 means disabled). Hard expiry records `expired`; visible time completion remains `timedout`. History, and therefore the dedup window, is bounded to 16 entries. Use a new ID for a new event; update addresses queued IDs only. Notices and policies are transient across MCU reboots.
+
+UART `MEDIA_PUSH_POLICY=14` retains the first 16 PUSH bytes, then adds TTL LE32, overflow byte and URL flag; optional 519-byte source configuration precedes title/text. Update mask bit 14 adds TTL LE32 after the 18-byte header and before optional source/text. Status version 4 extends queue entries from 10 to 14 bytes with remaining TTL. New ESP firmware normalizes older status layouts and rejects new options without the capability bit.
+
+## Motion-triggered integration examples
+
+Frigate's `frigate/<camera>/motion` MQTT events and Scrypted MotionSensor scripts/MQTT plugins can trigger a webhook bridge. Server-side go2rtc/FFmpeg generates on-demand 320×240, 1 fps MJPEG. Motion renews the same ID; TTL ends the preview after it stops. Container, Home Assistant and Scrypted examples are in the firmware repository's [English guide](https://github.com/phicomm-io/iotcloud-community-firmware/blob/main/BRY88BBA15G/docs/motion-notifications.en.md).
