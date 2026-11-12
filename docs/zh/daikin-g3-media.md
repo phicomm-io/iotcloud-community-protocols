@@ -57,9 +57,15 @@ UDP 配对和传输格式沿用现有实现。
 | `wake` | 默认 true；黑屏时临时亮屏；false 时等待屏幕自然亮起 |
 | `brightness` | 临时请求亮度 1..100%，默认 30%，仍受硬件/用户亮度上限限制 |
 
-队列容量四条，包含正在显示的一条，FIFO。`confirm` 模式由前面触摸按钮短按
-关闭，该次按键不再触发翻页。定时通知也可短按关闭。结束后恢复原页面和
-亮屏策略。状态为 `queued/displayed/confirmed/timedout/dismissed/failed`。
+队列容量 **16 条**，包含正在显示的一条，图片缓存仍限 **4 张**。前四条通知
+以圆角卡片堆叠显示；在 350 毫秒内双击前面触摸键，按 **0（原页面）→ 1 → 2 →
+3 → 4 → 0** 循环，跳过不存在的通知页。切换时保留消息，未显示通知的计时暂停。
+前面的通知消失后，后续队列自动补入前四条。单击等待双击判定结束后确认当前
+通知，按键被消费，不切换原页面；长按保留原关机行为。第 0 页恢复原页面及亮屏
+策略。远程可调用 `screen.push.select {"index":0..4}` 选择同一展示页。
+`screen.push.get` 返回 `view_index`、`queued`、`queue_capacity`（16）、
+`image_capacity`（4）、`stack_capacity`（4）、完整 `queue` 和最近 16 条 `messages`。
+状态为 `queued/displayed/confirmed/timedout/dismissed/failed`。
 图片最多四张，每张 128 KiB、1..480 × 1..854；仅存 SDRAM，未被引用的图片
 120 秒过期，MCU 重启清空。解码失败标为 failed，继续下一条。
 
@@ -126,3 +132,12 @@ sequence 和内容校验处理重复。工厂 OTA 独占原始串口。
 错误码：0成功、1范围、2忙、3不存在、4 CRC、5格式、6解码、7离线。
 
 规范常量见 [机器可读契约](contracts/daikin-g3-media-v1.json)。
+
+媒体操作码为 begin=1、chunk=2、commit=3、cancel=4、push=5、dismiss=6、
+query=7、stream_config=8、stream_start=9、stream_stop=10、select=11。
+select 的操作码后带一个 u8 展示页号。媒体状态版本 2 长 324 字节，后接 40 字节
+流状态：32 字节头、4 个 17 字节图片记录、16 个 9 字节队列记录（u32 id、
+u32 image_id、u8 state）、16 个 5 字节历史记录（u32 id、u8 state）。
+头的字节 22/23 为展示页/队列数，24/25 为 JPEG SR / 右移 10 位的 IR 标志，
+26..27 为解码耗时毫秒（u16LE），28..31 为消息/图片/展示页容量及状态版本。
+ESP 在分步升级期间也接受早期 172 字节状态快照。

@@ -7,13 +7,15 @@
     "width": 480,
     "height": 854,
     "upload_chunk": 512,
-    "queue_including_active": 4,
+    "queue_including_active": 16,
     "images": 4,
     "title_utf8_bytes": 64,
     "text_utf8_bytes": 512,
-    "history": 8,
+    "history": 16,
     "orphan_expiry_ms": 120000,
-    "max_fps": 10
+    "max_fps": 10,
+    "notification_views": 4,
+    "double_tap_ms": 350
   },
   "defaults": {
     "baud": 115200,
@@ -142,6 +144,13 @@
     },
     "screen.stream.stop": {
       "required": [],
+      "optional": [],
+      "access": "CONTROL"
+    },
+    "screen.push.select": {
+      "required": [
+        "index"
+      ],
       "optional": [],
       "access": "CONTROL"
     }

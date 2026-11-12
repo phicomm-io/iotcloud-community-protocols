@@ -60,10 +60,18 @@ under the same ID is rejected. Reboot clears deduplication history.
 | `wake` | Default true; temporarily wake a dark screen; false waits for natural wake |
 | `brightness` | Temporary request 1..100%, default 30%, subject to hardware/user ceiling |
 
-Four FIFO entries including the active notification. A short press on the front
-capacitive button dismisses `confirm` mode and consumes that press, preventing a
-page change. Timed notifications can also be dismissed with a short press.
-Original page and display policy resume afterwards. States are
+Sixteen FIFO entries including the active notification, with at most four image
+slots. The first four notifications form a stack of rounded cards. Double-tap
+the front capacitive button within 350 ms to cycle **0 (the original page),
+1, 2, 3, 4, 0**; absent views are skipped. Switching keeps all notifications and
+pauses their visible timers. The next queued message joins the stack when an
+earlier notification disappears. A single tap confirms the selected notice
+after the double-tap window and consumes that press. Original page and display
+policy resume at view 0. Long presses retain the device's power behavior.
+`screen.push.select {"index":0..4}` provides the same view selection remotely.
+`screen.push.get` returns `view_index`, `queued`, `queue_capacity` (16),
+`image_capacity` (4), `stack_capacity` (4), the full `queue` and 16 recent
+`messages`. Notification states are
 `queued/displayed/confirmed/timedout/dismissed/failed`.
 Four transient SDRAM image slots, each at most 128 KiB, 1..480 × 1..854.
 Unreferenced images expire after 120 seconds; MCU reboot clears them.
@@ -143,3 +151,13 @@ credit and bounded retries. Session isolates old boots; sequence/content checks
 handle duplicates. Factory OTA has exclusive raw UART access.
 Results: 0 success, 1 range, 2 busy, 3 not found, 4 CRC, 5 format, 6 decode,
 7 offline. See the [machine-readable contract](contracts/daikin-g3-media-v1.json).
+
+Media opcodes are begin=1, chunk=2, commit=3, cancel=4, push=5, dismiss=6,
+query=7, stream_config=8, stream_start=9, stream_stop=10, select=11. Select has
+one u8 index after its opcode. Media status version 2 is 324 bytes followed by
+40 bytes of stream status: base header 32 bytes; four image records of 17 bytes;
+sixteen queue records of 9 bytes (u32 id, u32 image_id, u8 state); sixteen history
+records of 5 bytes (u32 id, u8 state). Header bytes 22/23 are selected view /
+queue count, 24/25 are JPEG SR / IR flags shifted by 10, 26..27 decode time in
+ms (u16LE), 28..31 are message/image/view capacities and status version. The
+ESP also accepts the earlier 172-byte snapshot during rolling upgrades.
