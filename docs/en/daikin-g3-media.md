@@ -115,9 +115,13 @@ The screen MCU builds HTTP requests, handles Basic / Digest MD5 (qop=auth or
 legacy no-qop), multipart MJPEG, HTTP chunked and single JPEG responses, then
 validates and hardware-decodes to RGB565. ESP32 only relays bounded DNS/TCP/TLS
 bytes with credit. Actual source frames must fit requested dimensions; the
-source service determines whether URL parameters resize frames. Excess frames
-are discarded without a backlog. RTSP/H.264 sources require a camera server
-that produces MJPEG at the desired resolution.
+source service determines whether URL parameters resize frames. `fps` is a
+requested ceiling; JPEG size, UART rate and MCU drawing time determine the
+actual rate. The MCU skips frames that arrive before its pacing deadline.
+Configure the source to produce a sustainable rate so TCP buffering does not
+delay the picture. Start at the default 1 FPS and adjust using the actual rate
+reported by `get`. RTSP/H.264 sources require a camera server that produces
+MJPEG at the desired resolution.
 
 Configure the source under Screen → Services → Camera; choose “Add camera page”
 and save the layout. This adds a full 4×6 grid page and preserves existing pages.
