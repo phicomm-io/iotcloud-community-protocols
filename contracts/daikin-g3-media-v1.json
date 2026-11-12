@@ -15,7 +15,10 @@
     "orphan_expiry_ms": 120000,
     "max_fps": 10,
     "notification_views": 4,
-    "double_tap_ms": 350
+    "double_tap_ms": 350,
+    "source_url_bytes": 383,
+    "source_credential_bytes": 63,
+    "first_frame_timeout_ms": 15000
   },
   "defaults": {
     "baud": 115200,
@@ -101,7 +104,14 @@
         "duration_ms",
         "mode",
         "wake",
-        "brightness"
+        "brightness",
+        "url",
+        "username",
+        "password",
+        "width",
+        "height",
+        "fps",
+        "verify_tls"
       ],
       "access": "CONTROL"
     },
@@ -167,7 +177,7 @@
     "length_endian": "little",
     "session_bytes": 4,
     "sequence_bytes": 4,
-    "payload_max": 640,
+    "payload_max": 1152,
     "crc": "CRC32/ISO-HDLC over header and payload, little endian",
     "channels": {
       "link": 0,
@@ -209,5 +219,16 @@
     },
     "pages": 8,
     "components": 32
+  },
+  "url_push": {
+    "capability": 33554432,
+    "opcode": 12,
+    "same_url": "renew canonical queued id without shortening remaining duration",
+    "storage": "transient",
+    "image_id": "mutually exclusive with nonzero image_id",
+    "source": "HTTP(S) JPEG or MJPEG, detected from response",
+    "timer": "starts after first decoded and presented frame",
+    "last_push_id": "canonical id in screen.media.get",
+    "stream_role": "notification or page"
   }
 }

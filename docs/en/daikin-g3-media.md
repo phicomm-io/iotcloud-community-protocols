@@ -154,7 +154,7 @@ own; a reboot of either endpoint resynchronizes.
 Binary frames use zero delimiters and escaping `00 → DB DC`, `DB → DB DD`.
 Unescaped content is `"GM",version=1,channel,u32LE session,u32LE sequence,`
 `u16LE length,payload,CRC32LE`; CRC covers header and payload, maximum payload
-640 bytes. Channels: link=0, command=1, reply=2, socket=3, socket_ack=4,
+1152 bytes. Channels: link=0, command=1, reply=2, socket=3, socket_ack=4,
 socket_event=5. Image/TCP chunks are at most 512 bytes with one outstanding
 credit and bounded retries. Session isolates old boots; sequence/content checks
 handle duplicates. Factory OTA has exclusive raw UART access.
@@ -162,15 +162,49 @@ Results: 0 success, 1 range, 2 busy, 3 not found, 4 CRC, 5 format, 6 decode,
 7 offline. See the [machine-readable contract](contracts/daikin-g3-media-v1.json).
 
 Media opcodes are begin=1, chunk=2, commit=3, cancel=4, push=5, dismiss=6,
-query=7, stream_config=8, stream_start=9, stream_stop=10, select=11. Select has
-one u8 index after its opcode. Media status version 2 is 324 bytes followed by
-40 bytes of stream status: base header 32 bytes; four image records of 17 bytes;
-sixteen queue records of 9 bytes (u32 id, u32 image_id, u8 state); sixteen history
-records of 5 bytes (u32 id, u8 state). Header bytes 22/23 are selected view /
-queue count, 24/25 are JPEG SR / IR flags shifted by 10, 26..27 decode time in
-ms (u16LE), 28..31 are message/image/view capacities and status version.
+query=7, stream_config=8, stream_start=9, stream_stop=10, select=11, push_url=12. Select has
+one u8 index after its opcode. URL push requires capability bit 25
+(33554432): its 16-byte push header is followed by the existing 519-byte
+stream configuration, then title and text. Nonzero `image_id` is rejected.
+Media status version 3 is 352 bytes followed by 44 bytes of stream status:
+base header 44 bytes; four image records of 17 bytes; sixteen queue records of
+10 bytes (u32 id, u32 image_id, u8 state, u8 URL source); sixteen history records
+of 5 bytes (u32 id, u8 state). Header bytes 22/23 are selected view / queue
+count, 24/25 JPEG flags, 26..27 decode time (u16LE), 28..31 capacities/version;
+u32LE offsets 32/36/40 are canonical last push ID, source error, active remaining
+milliseconds. Stream offset 40 is the owning notification ID (0 for page).
 An optional 64-byte decoder detail follows (16 LE32 values): SR, IR, CR, CFG,
 scan address, output address, CODLEN, CLKEN1, PRSTR1, first two RGB565 pixels,
 CRC32 of the first 512 output bytes, pre-start SR, pre-start IR, elapsed ms,
 scan CRC32 and scan offset. ESP also accepts the earlier 172-byte snapshot and
-the 364-byte snapshot without this extension during rolling upgrades.
+v2 snapshots (364/428 bytes) during rolling upgrades.
+
+## Transient image / stream notifications
+
+`screen.push.send` also accepts `url`, `username`, `password`, `width`, `height`,
+`fps`, `verify_tls`, using the same source rules as `screen.stream.set`.
+A URL alone is valid; JPEG and MJPEG are detected from the HTTP response.
+The source supplies the requested resolution (placeholders `{width}`, `{height}`,
+`{fps}`); the MCU decodes and fits the image. `image_id` must be 0 or omitted.
+Credentials default empty and are held only in the notification queue.
+
+```json
+{"action":"screen.push.send","params":{"id":2001,"title":"Motion detected",
+ "url":"http://camera/mjpeg?width={width}&height={height}&fps={fps}",
+ "width":320,"height":240,"fps":1,"duration_ms":20000,"wake":true}}
+```
+
+The notice overlays the current page. Its duration starts after the first frame
+is displayed. No first frame within 15 visible seconds fails the notice and
+continues the queue. Repeating the exact URL of a queued notice renews its
+remaining duration to at least the requested value, updates its content/options,
+and returns that notice's canonical `last_push_id` in `screen.media.get`.
+Unchanged source options reuse the connection, even when all 16 slots are full.
+Use this ID for dismissal. New events after expiry should use new IDs.
+A retransmitted UART sequence remains idempotent and does not renew time.
+
+One connection and JPEG/RGB arena is shared by page and notification sources;
+the page source resumes after dismissal, expiry, or selecting view 0.
+`screen.stream.get` reports `role` and `notification_id` for the actual shared
+receiver while returning the saved page configuration. Transient source options
+do not overwrite that configuration or occupy the four uploaded-image slots.

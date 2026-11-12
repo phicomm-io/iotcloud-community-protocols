@@ -130,7 +130,7 @@ reading/backoff）、frames、dropped、bytes、实际尺寸/帧率、像素 CRC
 
 新增二进制帧使用零分隔及转义：`00 → DB DC`、`DB → DB DD`。
 未转义内容为 `"GM",version=1,channel,u32LE session,u32LE sequence,u16LE length,`
-`payload,CRC32LE`；CRC 覆盖头和载荷，载荷最多 640 字节。
+`payload,CRC32LE`；CRC 覆盖头和载荷，载荷最多 1152 字节。
 通道为 link=0、command=1、reply=2、socket=3、socket_ack=4、socket_event=5。
 图片和 TCP 块最多 512 字节，单块确认/有限重试；session 隔离重启前数据，
 sequence 和内容校验处理重复。工厂 OTA 独占原始串口。
@@ -139,13 +139,39 @@ sequence 和内容校验处理重复。工厂 OTA 独占原始串口。
 规范常量见 [机器可读契约](contracts/daikin-g3-media-v1.json)。
 
 媒体操作码为 begin=1、chunk=2、commit=3、cancel=4、push=5、dismiss=6、
-query=7、stream_config=8、stream_start=9、stream_stop=10、select=11。
-select 的操作码后带一个 u8 展示页号。媒体状态版本 2 长 324 字节，后接 40 字节
-流状态：32 字节头、4 个 17 字节图片记录、16 个 9 字节队列记录（u32 id、
-u32 image_id、u8 state）、16 个 5 字节历史记录（u32 id、u8 state）。
-头的字节 22/23 为展示页/队列数，24/25 为 JPEG SR / 右移 10 位的 IR 标志，
-26..27 为解码耗时毫秒（u16LE），28..31 为消息/图片/展示页容量及状态版本。
+query=7、stream_config=8、stream_start=9、stream_stop=10、select=11、push_url=12。
+select 的操作码后带一个 u8 展示页号。地址推送需能力位 25（33554432）：
+16 字节原推送头后接 519 字节现有图源配置，再接标题和正文；image_id 必须为 0。
+媒体状态版本 3 长 352 字节，后接 44 字节流状态：44 字节头、4 个 17 字节图片记录、
+16 个 10 字节队列记录（u32 id、u32 image_id、u8 state、u8 地址图源标志）、
+16 个 5 字节历史记录。头字节 22/23 为展示页/队列数，24/25 为 JPEG 标志，
+26..27 为解码耗时毫秒（u16LE），28..31 为容量/版本；偏移 32/36/40 的 LE32
+依次为合并后的最近推送 ID、图源错误、当前剩余毫秒。流状态偏移 40 为通知 ID（0 为页面）。
 其后可附加 64 字节解码诊断（16 个 LE32）：SR、IR、CR、CFG、码流地址、输出
 地址、CODLEN、CLKEN1、PRSTR1、前两个 RGB565 像素、前 512 字节像素 CRC32、
 启动前 SR、启动前 IR、耗时、扫描数据 CRC32、扫描偏移。
-ESP 在分步升级期间也接受早期 172 字节和无诊断扩展的 364 字节状态快照。
+ESP 在分步升级期间也接受早期 172 字节及 v2 的 364/428 字节状态快照。
+
+## 临时图片 / 视频流通知
+
+`screen.push.send` 增加 `url`、`username`、`password`、`width`、`height`、`fps`、
+`verify_tls`，图源规则与 `screen.stream.set` 相同。仅地址也可推送，按 HTTP 响应
+自动识别 JPEG 或 MJPEG；图源需提供指定分辨率，支持 `{width}`、`{height}`、
+`{fps}` 占位符，MCU 负责解码和适配显示。`image_id` 必须省略或为 0。
+凭据默认空，仅保留在临时队列内。
+
+```json
+{"action":"screen.push.send","params":{"id":2001,"title":"检测到动作",
+ "url":"http://camera/mjpeg?width={width}&height={height}&fps={fps}",
+ "width":320,"height":240,"fps":1,"duration_ms":20000,"wake":true}}
+```
+
+通知覆盖当前页面，首帧显示成功后才开始倒计时；可见期间 15 秒仍无首帧则标记失败，
+继续后续通知。同一完整地址仍在队列中时，再推送会将剩余时间延长至至少本次指定值，
+更新文字和选项，并在 `screen.media.get.last_push_id` 返回原通知 ID。图源选项不变
+时复用连接，16 条队列已满也能续时。关闭通知使用该 ID；通知结束后的新事件应换新 ID。
+同一串口序号的传输重试保持幂等，不重复续时。
+
+页面与通知共用一个网络连接及 JPEG/RGB 缓冲；关闭、到时或选回展示页 0 后恢复原页面图源。
+`screen.stream.get` 通过 `role`、`notification_id` 说明实际接收者，配置字段仍为
+已保存的页面配置。通知图源不修改持久配置，也不占用 4 张上传图片缓存。
