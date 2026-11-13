@@ -231,8 +231,8 @@
       ],
       "implementation": [
         "firmware/DAIKIN/include/hub_service.h",
-        "firmware/DAIKIN/include/hub_broker.h",
-        "firmware/DAIKIN/include/hub_transport.h",
+        "firmware/DAIKIN/include/hub_device_bus.h",
+        "firmware/DAIKIN/include/hub_lan_client.h",
         "firmware/DAIKIN/include/hub_relay.h",
         "firmware/DAIKIN/include/hub_home.h",
         "firmware/DAIKIN/src/hub.inc",
@@ -576,7 +576,7 @@
         "screenmcu/src/media.c",
         "screenmcu/src/stream.c",
         "screenmcu/src/mjpeg.c",
-        "frontend/DAIKIN/web/screen-media.js"
+        "frontend/DAIKIN/web/screen.js"
       ],
       "verification": [
         "screenmcu/tests/media_transport.c",
