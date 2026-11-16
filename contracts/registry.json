@@ -588,6 +588,36 @@
       "artifacts": [
         "contracts/daikin-g3-media-v1.json"
       ]
+    },
+    {
+      "id": "sensor-values-v3",
+      "version": 3,
+      "status": "implemented-unreleased",
+      "document": "sensor-age.md",
+      "producers": [
+        "firmware"
+      ],
+      "consumers": [
+        "firmware",
+        "frontend"
+      ],
+      "implementation": [
+        "firmware/common/sensor_mp.h",
+        "firmware/common/lan_wire.inc",
+        "firmware/DAIKIN/src/sensors.inc",
+        "frontend/DAIKIN/web/page.js"
+      ],
+      "verification": [
+        "firmware/tests/test_diagnostics_schema.py"
+      ],
+      "artifacts": [
+        "contracts/sensor-values-v3.json",
+        "contracts/schemas/sensor-values-v3.schema.json",
+        "contracts/schemas/sensor-metadata-v3.schema.json",
+        "contracts/schemas/lan-pm-age-v1.schema.json",
+        "contracts/schemas/daikin-pm-power-v1.schema.json",
+        "contracts/examples/sensor-values-v3.json"
+      ]
     }
   ],
   "repositories": {

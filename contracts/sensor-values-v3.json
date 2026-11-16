@@ -1,0 +1,65 @@
+{
+  "contract": "sensor-values-v3",
+  "status": "implemented-unreleased",
+  "wire_schema": 3,
+  "encoding": "MessagePack",
+  "metadata_topic": "phicomm/v2/<scope>/sensor/<device_id>/metadata",
+  "state_topic": "phicomm/v2/<scope>/sensor/<device_id>/state",
+  "descriptor_identity": [
+    "device_id",
+    "boot",
+    "descriptor_revision",
+    "field_id",
+    "type",
+    "unit"
+  ],
+  "state_retained": false,
+  "metadata": "Retained descriptor map; numeric fields use strict name/type/unit; state refers to matching descriptor_revision. TTL is a sample property, not metadata.",
+  "sample_max_age_ms": {
+    "optional_fields": [
+      "pm25",
+      "pm10"
+    ],
+    "minimum": 1,
+    "maximum": 3600000,
+    "missing": "existing short timeout",
+    "g12_normal": 120000,
+    "g12_night": 3600000
+  },
+  "freshness": "Require real source age + receiver elapsed < max_age_ms, and receiver elapsed below existing communications lease (A1 15s; frontend/M1 at most20s or configured shorter). Replayed/retained state never renews communications. Preserve counters and full snapshot invalidation.",
+  "compatibility": "Additive contract documents current schema3 split metadata/state. Frozen schema2 remains unchanged. Strict older schema3 consumers may reject extended PM samples and need updating before night operation.",
+  "runtime_validation": [
+    "Extended fields must bind to number and µg/m³ metadata",
+    "age_ms must be strictly below max_age_ms",
+    "All non-PM fields retain short age rules",
+    "Unknown metadata/type/unit, missing or invalid fields revoke old numeric values without losing configuration",
+    "Broker session/availability expiry is independent of source age"
+  ],
+  "lan": {
+    "envelope_version": 3,
+    "optional_body_property": "pm25_max_age_ms",
+    "ages_index": 2,
+    "slots": [
+      "temperature",
+      "humidity",
+      "pm25",
+      "formaldehyde",
+      "co2"
+    ],
+    "note": "No PM10 slot. Other envelope, token, identity, replay and integer-unit rules unchanged."
+  },
+  "pm_power": {
+    "action": "config.set",
+    "section": "pm_power",
+    "defaults": {
+      "enabled": false,
+      "start_minute": 1380,
+      "end_minute": 420,
+      "timezone_minutes": 480
+    },
+    "interval": "Local [start,end), crossing midnight allowed; equal start/end means inactive; invalid time uses dynamic measurement",
+    "sampling": "mode5 at startup and outside night; night mode1 off, 59000ms policy interval, every60th step mode5 for59000ms; first36000ms after enable cannot produce a new accepted measurement",
+    "cache": "Source timestamp only advances on an eligible complete, checksum-correct successful sample. Ordinary age limit120000; active night3600000. Module fault/TTL expiry invalidates sample."
+  },
+  "diagnostics": "Raw PM, CO2, HCHO and climate inputs remain separate from corrected business values; diagnostic registry additions are append-only. SGP baseline private cache is not transferable user configuration."
+}
