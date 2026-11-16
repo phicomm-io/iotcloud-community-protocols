@@ -326,5 +326,22 @@
     "status_expires_in_ms_offset": 10,
     "timer_relation": "ttl expiry is independent of visible duration and applies to confirm notices",
     "storage": "transient per-message settings"
+  },
+  "measurement_warmup": {
+    "field": "tvoc_warmup_seconds_remaining",
+    "location": "status.get data and HTTP business status",
+    "optional": true,
+    "type": [
+      "integer",
+      "null"
+    ],
+    "minimum": 0,
+    "maximum": 3600,
+    "unit": "seconds",
+    "unknown": "null or absent; includes stopped measurement and snapshot age >=20000 ms",
+    "zero": "measurement warmup elapsed; does not imply a valid sample",
+    "source": "MCU measurement phase clock, independent of calibration session",
+    "age": "ESP subtracts floor(monotonic snapshot age /1000), clamps at zero; WebUI subtracts local response age and stops displaying the countdown after 20000 ms without a new response",
+    "compatibility": "optional read-only extension, ignored by older clients; existing sample valid flag remains authoritative"
   }
 }

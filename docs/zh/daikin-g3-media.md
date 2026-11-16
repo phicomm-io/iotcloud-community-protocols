@@ -248,3 +248,7 @@ UART 扩展 `MEDIA_PUSH_POLICY=14` 的前 16 字节沿用 PUSH，随后为 TTL L
 ## 运动检测接入例程
 
 Frigate 的 `frigate/<camera>/motion` MQTT 事件、Scrypted MotionSensor 脚本或 MQTT 插件均可触发 webhook 桥。服务器用 go2rtc/FFmpeg 按需生成 320×240、1 fps MJPEG，运动时更新同一 ID，停止后由 TTL 结束。完整的容器、Home Assistant 自动化和 Scrypted 脚本见固件仓库的 [中文教程](https://github.com/phicomm-io/iotcloud-community-firmware/blob/main/BRY88BBA15G/docs/motion-notifications.zh.md)。
+
+## TVOC 测量预热
+
+G3 业务状态可包含 `tvoc_warmup_seconds_remaining`（0–3600 的整数，单位秒，或 null）。此只读扩展来自 MCU 实际测量阶段计时，与手动校准会话独立。正数表示剩余预热时间；零表示预热计时结束，仍需有效传感器样本才显示浓度。null 或字段缺失表示剩余时间未知，包括停止测量或 MCU 快照已满 20 秒。ESP 按源快照的单调时钟年龄扣减，最小为零。网页也按本地单调时间推进倒计时，连续 20 秒没有新响应后隐藏。旧客户端可忽略该可选字段；样本有效性与浓度单位保持原定义。

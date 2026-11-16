@@ -287,3 +287,7 @@ UART `MEDIA_PUSH_POLICY=14` retains the first 16 PUSH bytes, then adds TTL LE32,
 ## Motion-triggered integration examples
 
 Frigate's `frigate/<camera>/motion` MQTT events and Scrypted MotionSensor scripts/MQTT plugins can trigger a webhook bridge. Server-side go2rtc/FFmpeg generates on-demand 320×240, 1 fps MJPEG. Motion renews the same ID; TTL ends the preview after it stops. Container, Home Assistant and Scrypted examples are in the firmware repository's [English guide](https://github.com/phicomm-io/iotcloud-community-firmware/blob/main/BRY88BBA15G/docs/motion-notifications.en.md).
+
+## TVOC measurement warmup
+
+G3 business status optionally includes `tvoc_warmup_seconds_remaining` (integer 0–3600, seconds, or null). This read-only extension uses the MCU measurement phase clock, independently of a manual calibration session. Positive values report remaining warmup; zero means the warmup elapsed and still requires a valid sensor sample. Null or a missing field means the remaining time is unknown, including stopped measurement or a MCU snapshot at least 20 seconds old. ESP subtracts the monotonic age of the source snapshot and clamps at zero. The WebUI also advances the countdown with local monotonic time and hides it after 20 seconds without a new response. Older clients can ignore this optional field; sensor validity and concentration units stay unchanged.
