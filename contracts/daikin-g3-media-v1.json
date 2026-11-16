@@ -342,6 +342,20 @@
     "zero": "measurement warmup elapsed; does not imply a valid sample",
     "source": "MCU measurement phase clock, independent of calibration session",
     "age": "ESP subtracts floor(monotonic snapshot age /1000), clamps at zero; WebUI subtracts local response age and stops displaying the countdown after 20000 ms without a new response",
-    "compatibility": "optional read-only extension, ignored by older clients; existing sample valid flag remains authoritative"
+    "compatibility": "optional read-only extension, ignored by older clients; existing sample valid flag remains authoritative",
+    "configuration": {
+      "action": "screen.settings.set",
+      "field": "tvoc_warmup_minutes",
+      "type": "integer",
+      "auto": -1,
+      "custom_minimum": 1,
+      "custom_maximum": 60,
+      "zero": "rejected; warmup cannot be skipped",
+      "default": -1,
+      "persistence": "existing ESP screen settings transactional record; replay on each MCU session",
+      "readback": "screen.settings.get settings and saved_settings; status.screen.settings",
+      "effect": "recompute from current measurement elapsed time without restarting measurement; never set an invalid sample valid",
+      "calibration": "manual calibration timer unchanged"
+    }
   }
 }
