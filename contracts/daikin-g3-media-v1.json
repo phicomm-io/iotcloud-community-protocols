@@ -378,7 +378,36 @@
       },
       "hardware_rx_overruns": "observed RXOV events, not a dropped-byte count",
       "last_rx_loss_ms": "boot monotonic milliseconds; zero before any observed loss",
-      "compatibility": "new ESP accepts exact v3 or v4 lengths and versions; v3 has no loss fields; older ESP may ignore v4 diagnostic notices without changing media wire framing"
+      "compatibility": "new ESP accepts exact v3 or v4 lengths and versions; v3 has no loss fields; older ESP may ignore v4 diagnostic notices without changing media wire framing",
+      "exposure": "four appended loss fields are returned only by explicit maintenance queries screen.recovery.get and screen.boot.result.get; ordinary business status retains the original 20 diagnostic fields"
     }
+  },
+  "display_page_policy": {
+    "actions": [
+      "screen.display.get",
+      "screen.display.set"
+    ],
+    "capability": 268435456,
+    "home_page_id": "stable enabled scene page.id; 0 selects first enabled page",
+    "page_overrides": "up to 8 unique existing page IDs; absent entry inherits all global standby fields; each entry requires page_id, external_minutes, battery_minutes and idle_brightness",
+    "limits": {
+      "external_minutes": [
+        0,
+        1440
+      ],
+      "battery_minutes": [
+        0,
+        1440
+      ],
+      "idle_brightness": [
+        0,
+        100
+      ]
+    },
+    "priority": "global weekly plans take precedence; zero minutes disables idle timeout; zero brightness switches the backlight off",
+    "compatibility": "old 6-field requests preserve home/overrides; extended 8-field requests require PAGE_POLICY; old MCU receives v1 368-byte policy, new MCU v2 472-byte policy; v1 persisted records load with home=0 and no overrides",
+    "status": "new fields only in explicit display get/set replies; ordinary status remains compact",
+    "identity": "page sorting preserves stable IDs; deleted page overrides are pruned; disabled page overrides retained; disabled/deleted home falls back to 0",
+    "revision": "unchanged saves preserve revision and storage; actual changes persist transactionally and replay by revision"
   }
 }

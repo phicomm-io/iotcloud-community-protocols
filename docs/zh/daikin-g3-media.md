@@ -259,4 +259,12 @@ G3 业务状态可包含 `tvoc_warmup_seconds_remaining`（0–3600 的整数，
 
 稳定默认仍为固定 115200 波特率。检测到 UART 硬件接收溢出或接收环丢字节后，由接收任务丢弃已损坏的缓存片段，并吞至下一个零分隔符重新同步。媒体头、CRC、会话和序号校验保持不变。这用于检测丢失后的恢复，不保证高波特率不丢数据。
 
-Guard 诊断 `0xe2` 版本 4 严格为 98 字节。前 82 字节沿用版本 3 布局，仅版本字节 1 改为 4；随后依次追加四个小端 uint32：偏移 82 的 `hardware_rx_overruns`（观察到的 RXOV 次数，不代表丢字节数）、86 的 `ring_dropped_bytes`、90 的 `rx_loss_resets`、94 的 `last_rx_loss_ms`（开机单调毫秒，尚未丢失时为零）。新 ESP 严格接受版本 3/82 字节或版本 4/98 字节，四个丢失字段仅在版本 4 时返回；既有 CRC、会话和诊断时效校验继续生效。旧 ESP 可以忽略版本 4 诊断通知，媒体串口格式不变。
+Guard 诊断 `0xe2` 版本 4 严格为 98 字节。前 82 字节沿用版本 3 布局，仅版本字节 1 改为 4；随后依次追加四个小端 uint32：偏移 82 的 `hardware_rx_overruns`（观察到的 RXOV 次数，不代表丢字节数）、86 的 `ring_dropped_bytes`、90 的 `rx_loss_resets`、94 的 `last_rx_loss_ms`（开机单调毫秒，尚未丢失时为零）。新 ESP 严格接受版本 3/82 字节或版本 4/98 字节，四个丢失字段仅在版本 4 的显式维护查询 `screen.recovery.get` 和 `screen.boot.result.get` 中返回，普通业务状态仍仅保留原有 20 项；既有 CRC、会话和诊断时效校验继续生效。旧 ESP 可以忽略版本 4 诊断通知，媒体串口格式不变。
+
+## 主页与每页待机
+
+`screen.display.get` 在全局策略之外返回 `page_policy_supported`、`home_page_id` 和 `page_overrides`；普通状态不扩展这些字段。能力位 `SCREEN_CAP_PAGE_POLICY`（bit 28）支持新设置。主页绑定稳定的 SCN3 page.id，0 表示首个启用页面；双击返回主页，通知确认仍优先。
+
+每项覆盖包含 `{page_id, external_minutes, battery_minutes, idle_brightness}`；无条目则三项全部沿用全局。电池和外电延时各为0–1440分钟，0关闭待机超时；亮度0–100，0熄屏；全局定时计划仍优先。最多八项，页面ID唯一且必须存在。排序不改变绑定，删除清除覆盖，禁用保留覆盖；主页被禁用或删除则回到默认。
+
+扩展设置请求同时包含两个新字段及旧有六字段；旧请求保留已保存的每页设置。旧MCU继续支持全局设置并接收368字节v1策略，新MCU接收472字节v2策略。旧持久记录以默认主页及继承方式载入。不变保存不递增revision，实际变化沿用事务持久化、重播和MCU revision读回。
