@@ -357,5 +357,28 @@
       "effect": "recompute from current measurement elapsed time without restarting measurement; never set an invalid sample valid",
       "calibration": "manual calibration timer unchanged"
     }
+  },
+  "uart_rx_recovery": {
+    "wire_unchanged": true,
+    "default_baud": 115200,
+    "trigger": "observed hardware RX overrun or receive-ring dropped byte",
+    "owner_action": "discard buffered fragments and resynchronize parser through the next zero delimiter; preserve CRC, session and sequence validation",
+    "guard_diagnostic": {
+      "opcode": 226,
+      "accepted_versions": {
+        "3": 82,
+        "4": 98
+      },
+      "v4_prefix": "existing 82-byte v3 fields unchanged except version byte is 4",
+      "appended_u32_le": {
+        "hardware_rx_overruns": 82,
+        "ring_dropped_bytes": 86,
+        "rx_loss_resets": 90,
+        "last_rx_loss_ms": 94
+      },
+      "hardware_rx_overruns": "observed RXOV events, not a dropped-byte count",
+      "last_rx_loss_ms": "boot monotonic milliseconds; zero before any observed loss",
+      "compatibility": "new ESP accepts exact v3 or v4 lengths and versions; v3 has no loss fields; older ESP may ignore v4 diagnostic notices without changing media wire framing"
+    }
   }
 }
