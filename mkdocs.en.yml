@@ -6,7 +6,7 @@ edit_uri: blob/main/docs/en/
 docs_dir: docs/en
 site_dir: build/en
 theme:
-  locale: en
+  language: en
 nav:
   - Development:
       - Overview: index.md
