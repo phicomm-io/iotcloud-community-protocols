@@ -2,11 +2,20 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/m1-display/)
 
-格式与独立灯段合同 `m1-display-v3` 使用增量 `m1-uart-v4`，保留双路 schema 2 和 scalar schema 1 的原义。以下是未正式发布的开发接口。
+这一页同时定义四代显示接口。先确认设备实际协商到哪一代，再只读对应的那一节：
+
+| 代际 | 用在哪 | 本节 |
+| --- | --- | --- |
+| profile4 + 通用字段 | 当前接口，Wi-Fi 侧选择来源；UART 仍是 schema3 | [Wi-Fi profile4 与 UART 版本](#wi-fi-profile4-uart) |
+| 格式与独立灯段 `m1-display-v3` | 当前 UART 显示契约，配合 `m1-uart-v4` | [M1 display v3](#m1-display-v3) |
+| 双路 schema 2 | 兼容契约，仍需维护 | [兼容的双路 schema 2](#schema-2) |
+| scalar schema 1 | 兼容契约，仍需维护 | [兼容的 scalar schema 1](#scalar-schema-1) |
+
+设备必须先声明能力再写入；不能仅凭 HTTP 或 UART 版本号认定 MCU 已支持某一代。
 
 ## Wi-Fi profile4 与 UART 版本
 
-RC.1改用[通用字段profile4](device-http.md#m1-generic-profile4)和[sensor-values-v2](mqtt.md#sensor-values-v2)，MQTT来源只按设备身份+field_id/type/unit绑定，不按TC1/A1等机型适配。旧RC profile3/schema1 feed已弃用，不保证兼容。下方玻璃格式、raw API与UART schema3仍使用既有定义；profile4没有增加UART操作码。RC.1尚未公开发布。
+当前使用[通用字段 profile4](device-http.md#m1-generic-profile4)和 [sensor-values-v2](mqtt.md#sensor-values-v2)。MQTT 来源只按设备身份 + `field_id`/`type`/`unit` 绑定，不按 TC1/A1 等机型适配。旧 profile3 / schema1 feed 已弃用，不保证兼容。下方玻璃格式、raw API 与 UART schema3 仍使用既有定义；profile4 没有增加 UART 操作码。
 
 ## M1 display v3
 

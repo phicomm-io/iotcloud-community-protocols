@@ -8,15 +8,15 @@
 
 ## M1 通用字段 profile4
 
-`display_profile.get` 返回schema4；`display_profile.set`动作名保持不变，**SET不得带schema键**。新 `m1-display-v4` 替代已弃用的旧RC profile3，不保证向后兼容。revision/CAS、整体选择、格式、TTL、色灯、raw `display_value.set`及MCU读回规则仍见下文。Wi-Fi配置版本与UART操作/schema编号独立：OP24/25/26与raw API v3不变。
+`display_profile.get` 返回 schema4；`display_profile.set`动作名保持不变，**SET 不得带 schema 键**。新 `m1-display-v4` 替代已弃用的旧 RC profile3，不保证向后兼容。revision/CAS、整体选择、格式、TTL、色灯、raw `display_value.set`及 MCU 读回规则仍见下文。Wi-Fi 配置版本与 UART 操作/schema 编号独立：OP24/25/26 与 raw API v3 不变。
 
-MQTT区域严格为**九键**：`slot`、`source:"mqtt"`、`device_id`、`field_id`、`type:"number"`、`unit`、`display`、`ttl_seconds`、`color`。不存metric、model或显示名称。SET接受连续或带冒号、任意大小写MAC，GET返回规范小写12位。field_id为1..32位ASCII `[a-z][a-z0-9_]*`；unit为0..24合法UTF-8字节，无C0/DEL。预期type/unit须与当前[schema2字段描述](mqtt.md#sensor-values-v2)一致，任意发布字段/单位不需要增加机型适配。
+MQTT 区域严格为**九键**：`slot`、`source:"mqtt"`、`device_id`、`field_id`、`type:"number"`、`unit`、`display`、`ttl_seconds`、`color`。不存 metric、model 或显示名称。SET 接受连续或带冒号、任意大小写 MAC，GET 返回规范小写 12 位。field_id 为 1..32 位 ASCII `[a-z][a-z0-9_]*`；unit 为 0..24 合法 UTF-8 字节，无 C0/DEL。预期 type/unit 须与当前[schema2 字段描述](mqtt.md#sensor-values-v2)一致，任意发布字段/单位不需要增加机型适配。
 
-none/local/api区域仍为含metric的严格**八键**，不用field_id/type。本地metric仍对应M1实际传感器；none/custom与raw API行为不变，MQTT发现不能改写本地硬件列表。PM只支持整数、甲醛五种显示模式不变。runtime单位允许通用MQTT字段有界UTF-8元数据，负数/不可显示值返回out_of_range而不是零。每个已接受boot/sequence是完整快照：不支持/缺失/格式错误/无效字段或预期单位不匹配立即撤销旧number候选，不删除配置、不把未知值当零；记录counter防旧数值重放，number兄弟相互独立。过期/离线不能续期。
+none/local/api 区域仍为含 metric 的严格**八键**，不用 field_id/type。本地 metric 仍对应 M1 实际传感器；none/custom 与 raw API 行为不变，MQTT 发现不能改写本地硬件列表。PM 只支持整数、甲醛五种显示模式不变。runtime 单位允许通用 MQTT 字段有界 UTF-8 元数据，负数/不可显示值返回 out_of_range 而不是零。每个已接受 boot/sequence 是完整快照：不支持/缺失/格式错误/无效字段或预期单位不匹配立即撤销旧 number 候选，不删除配置、不把未知值当零；记录 counter 防旧数值重放，number 兄弟相互独立。过期/离线不能续期。
 
-应用配置v11在冻结的v9/v10前缀后追加remote[2]。明确迁移已校验的旧MQTT metric/unit对：canonical旧metric写为field_id、canonical旧单位写为unit，保留revision、选择、双击和样式；这不恢复旧HTTP/feed schema。新MQTT写入在内部使用remote绑定，不用机型metric。none/local/api设置语义保留，运行期租约不持久化。不支持的布局应保护配置并说明恢复方式，不保证任意旧RC配置可用。display_source.get/set旧动作名只是当前schema4别名，不实现旧HTTP形状；仅旧profile只读投影不能启用新UART格式。
+应用配置 v11 在冻结的 v9/v10 前缀后追加 remote[2]。明确迁移已校验的旧 MQTT metric/unit 对：canonical 旧 metric 写为 field_id、canonical 旧单位写为 unit，保留 revision、选择、双击和样式；这不恢复旧 HTTP/feed schema。新 MQTT 写入在内部使用 remote 绑定，不用机型 metric。none/local/api 设置语义保留，运行期租约不持久化。不支持的布局应保护配置并说明恢复方式，不保证任意旧 RC 配置可用。display_source.get/set 旧动作名只是当前 schema4 别名，不实现旧 HTTP 形状；仅旧 profile 只读投影不能启用新 UART 格式。
 
-[SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [机器约定](contracts/m1-display-v4.json) · [样例](contracts/examples/m1-display-v4.json)。下方保留历史schema3/schema2细节，其中MQTT metric/model映射已弃用。
+[SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [机器约定](contracts/m1-display-v4.json) · [样例](contracts/examples/m1-display-v4.json)。下方保留历史 schema3/schema2 细节，其中 MQTT metric/model 映射已弃用。
 
 
 ## 接入
@@ -113,7 +113,7 @@ HTTP 和 TMCP 共用动作及 JSON 信封：
 
 ## DAIKIN 显式 full → hub 转换
 
-显式转换接口已随 v1.0.0-rc 预发布；下述设备 Web 密码可选行为属于面向 v1.0.0-rc.1 的未发布修复，不改写原 RC 标签或制品。仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
+仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
 
 设备 Web 密码可选：未设置时无需 Basic 认证；已有密码时仍必须以该密码通过 Basic `admin` 认证。向独立接口提交完整 `PHOTA001` 签名二进制文件；以下 `Authorization` 头仅在已设设备 Web 密码时必需：
 
@@ -262,9 +262,9 @@ v2 生效时读取 v3 只投影配置，不保存或切换：PM→integer；甲�
 
 local 指本机 M1，只允许温湿度、PM2.5、甲醛、CO₂、压力；没有传感器能力或新鲜样本时无效。mqtt 只消费同账号 [typed feed](mqtt.md#sensor-values-v1)，不接受任意 topic/URL/JSONPath。source=none 只允许 custom+空单位，不成为写入入口。未知字段、错误类型、单位不匹配、重复位置和 low>=high 均拒绝。
 
-每路只有三位非负数字。数值编码须落在0..999，否则仅该路回退；原气体/单位段是否显示由固件按真实位置、metric、单位及 scale1 推导。玻璃没有可选择的 W、℃、% 等单位字形，客户端须明确逻辑单位与倍率，见[表示边界](m1-display.md#display-representation)。
+每路只有三位非负数字。数值编码须落在 0..999，否则仅该路回退；原气体/单位段是否显示由固件按真实位置、metric、单位及 scale1 推导。玻璃没有可选择的 W、℃、% 等单位字形，客户端须明确逻辑单位与倍率，见[表示边界](m1-display.md#display-representation)。
 
-`display_data.set` 仅向 source=api 的位置写入短期 RAM 数据，必须匹配当前配置 revision、unit，且 TTL 不超过该路上限；可选 color 在本条租期内直接指定。正常写入需要 value、unit 和1..60秒 TTL。立即清除使用独立形状，不以伪零表示缺失：
+`display_data.set` 仅向 source=api 的位置写入短期 RAM 数据，必须匹配当前配置 revision、unit，且 TTL 不超过该路上限；可选 color 在本条租期内直接指定。正常写入需要 value、unit 和 1..60 秒 TTL。立即清除使用独立形状，不以伪零表示缺失：
 
 ```json
 {"request_id":"display_value_1","action":"display_data.set","params":{"revision":1,"slot":1,"value":45.6,"unit":"%","ttl_seconds":10,"color":"yellow"}}
@@ -293,7 +293,7 @@ GET 的配置字段仍在根：revision、selected_source、double_click、lanes
 
 配置保存后独立 GET 核对 revision 和完整配置；数值写入后再 GET 核对该路 valid/value/unit/租期，MCU 确认仍须独立 UART 查询。旧 MCU 可保留 desired 配置，但不得声称双路已生效。失效不改持久选择，仅恢复对应原始读数；没有可靠离线事件时按 TTL 失效，不伪造 offline 判断。
 
-成功的新 SET 持久选择 dual；成功旧 CO₂ SET 选择 legacy并保留双路配置。profile 与配置同笔保存；CAS冲突或busy不提交候选配置。`accepted` / `storage_error` 遵循[存储提交结果](configuration.md#storage-commit-results)，不能仅凭 `storage_error` 断言 Flash 已回滚。两路配置追加到 M1 存储v9，v8迁移与备份兼容见[配置说明](configuration.md#m1-display-storage-v9)。
+成功的新 SET 持久选择 dual；成功旧 CO₂ SET 选择 legacy 并保留双路配置。profile 与配置同笔保存；CAS 冲突或 busy 不提交候选配置。`accepted` / `storage_error` 遵循[存储提交结果](configuration.md#storage-commit-results)，不能仅凭 `storage_error` 断言 Flash 已回滚。两路配置追加到 M1 存储 v9，v8 迁移与备份兼容见[配置说明](configuration.md#m1-display-storage-v9)。
 
 ## M1 传感器提醒
 

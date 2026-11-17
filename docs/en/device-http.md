@@ -111,7 +111,7 @@ Implementation: [DAIKIN status diagnostic](https://github.com/phicomm-io/iotclou
 
 ## Explicit DAIKIN full → hub conversion
 
-Explicit conversion was published in the v1.0.0-rc prerelease. The optional device Web password behavior below is an unreleased fix targeting v1.0.0-rc.1; the original RC tag and assets are not replaced. Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
+Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
 
 The device Web password is optional: no Basic authentication is required when none exists; an existing password still requires Basic `admin` authentication. Send a complete `PHOTA001` signed binary to the dedicated endpoint. The following `Authorization` header is required only when a device Web password exists:
 

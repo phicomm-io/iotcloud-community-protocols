@@ -8,7 +8,7 @@ TMCP (Tom MQTT Cloud Protocol) uses `protocol:"tmcp"`, `protocol_version:2`, `ve
 
 ## Generic device fields: sensor-values-v2
 
-The RC.1 implementation targets wire **schema2**. `sensor-values-v1` / schema1 from the old v1.0.0-rc are **deprecated**; RC.1 does not promise old-RC feed compatibility. This protocol is implemented but the revised RC.1 release is not yet public. The topic remains `phicomm/v2/<scope>/sensor/<device_id>/state`, non-retained, under the authenticated account. Device model never chooses accepted fields.
+Wire **schema2** is current. `sensor-values-v1` / schema1 are deprecated and old data sources are not guaranteed to remain compatible. The topic is the same-account, non-retained `phicomm/v2/<scope>/sensor/<device_id>/state`; available fields do not depend on the device model.
 
 ```json
 {"schema":2,"device_id":"001122334455","model":"custom_meter","boot":123,"sequence":7,"sensors":{"load":{"name":"Load","type":"number","unit":"widgets/s","value":12.5,"valid":true,"age_ms":0},"future":{"name":"Future status","type":"string","unit":"","value":"ready","valid":true,"age_ms":0}}}

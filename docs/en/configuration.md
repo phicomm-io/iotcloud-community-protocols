@@ -2,6 +2,8 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/configuration/)
 
+This page defines the full backup and restore envelope, language selection rules and OTA routing conditions. Read it before changing a backup format or adding a migration.
+
 ## Full backups
 
 When a v1 device declares `config_backup:1`, use password-protected LAN HTTP for full backups. Files contain Wi-Fi and MQTT credentials. v0.9.x public configuration exports are partial backups and cannot be restored as full snapshots. M1 sensor MCU music is separate from Wi-Fi configuration.

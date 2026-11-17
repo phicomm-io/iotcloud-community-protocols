@@ -8,7 +8,7 @@ TMCP（Tom MQTT Cloud Protocol）使用 `protocol:"tmcp"`、`protocol_version:2`
 
 ## 通用设备字段：sensor-values-v2
 
-本轮 RC.1 实现使用 **schema2**。旧 v1.0.0-rc 的 `sensor-values-v1` / schema1 标为 **deprecated（弃用）**，RC.1 不保证兼容旧 RC 数据源。该接口已实现，但调整后的 RC.1 尚未公开发布。主题仍为同账号非 retained 的 `phicomm/v2/<scope>/sensor/<device_id>/state`，不根据设备机型选择可用字段。
+当前使用 **schema2**。`sensor-values-v1` / schema1 已弃用，不保证兼容旧数据源。主题为同账号非 retained 的 `phicomm/v2/<scope>/sensor/<device_id>/state`，不根据设备机型选择可用字段。
 
 ```json
 {"schema":2,"device_id":"001122334455","model":"custom_meter","boot":123,"sequence":7,"sensors":{"load":{"name":"负载","type":"number","unit":"widgets/s","value":12.5,"valid":true,"age_ms":0},"future":{"name":"未来状态","type":"string","unit":"","value":"ready","valid":true,"age_ms":0}}}
@@ -27,13 +27,13 @@ TMCP（Tom MQTT Cloud Protocol）使用 `protocol:"tmcp"`、`protocol_version:2`
 | `valid`、`value` | 布尔有效性；false必须为null，number为true时必须是有限JSON数字且转换float32后仍有限。布尔、数字字符串、非有限或溢出数值均不算数字；允许负数 |
 | `age_ms` | 必填整数0..4294967295；有效字段必须小于20000ms，无效字段可报告更大帧龄 |
 
-名称、单位必须是合法UTF-8，无孤立代理项、ASCII C0控制字符U+0000..U+001F或DEL U+007F；字节上限不等于字符数量。响应包和字段描述允许追加扩展，配置写入仍严格拒绝未知字段。每次实时值都携带描述，避免独立发现缓存过期或描述/数值版本错配。发布者为真实测量或生效输出选择稳定字段ID及准确名称/单位；TC1功率、A1生效风机百分比仅是例子，不是接收白名单。描述不能把请求设置伪装为测量值。
+名称、单位必须是合法 UTF-8，无孤立代理项、ASCII C0 控制字符 U+0000..U+001F 或 DEL U+007F；字节上限不等于字符数量。响应包和字段描述允许追加扩展，配置写入仍严格拒绝未知字段。每次实时值都携带描述，避免独立发现缓存过期或描述/数值版本错配。发布者为真实测量或生效输出选择稳定字段 ID 及准确名称/单位；TC1 功率、A1 生效风机百分比仅是例子，不是接收白名单。描述不能把请求设置伪装为测量值。
 
-接收端先核对账号、主题身份、非retained实时来源、boot/sequence与时效，然后逐字段处理：未知type可为未来类型携带任意JSON值，但当前M1/前端必须**忽略其值**，不转换为数字或零。每个已接受的新boot/sequence都是**完整快照**：字段缺失、不支持、格式错误或无效时立即撤销旧number候选，不续有效数值租约；配置绑定保留，即使所有number消失也记录新boot/sequence，防旧数值帧重放恢复。空 `sensors:{}` 是合法完整快照，撤销全部旧number候选、保留配置并记录counter；一个不支持或无效字段不阻止同帧有效number兄弟字段使用。schema不合法的包不能作为有效样本证明。同一boot下重复/倒退序号、越权身份、retained、离线或过期来源均不能续期。
+接收端先核对账号、主题身份、非 retained 实时来源、boot/sequence 与时效，然后逐字段处理：未知 type 可为未来类型携带任意 JSON 值，但当前 M1/前端必须**忽略其值**，不转换为数字或零。每个已接受的新 boot/sequence 都是**完整快照**：字段缺失、不支持、格式错误或无效时立即撤销旧 number 候选，不续有效数值租约；配置绑定保留，即使所有 number 消失也记录新 boot/sequence，防旧数值帧重放恢复。空 `sensors:{}` 是合法完整快照，撤销全部旧 number 候选、保留配置并记录 counter；一个不支持或无效字段不阻止同帧有效 number 兄弟字段使用。schema 不合法的包不能作为有效样本证明。同一 boot 下重复/倒退序号、越权身份、retained、离线或过期来源均不能续期。
 
-M1的MQTT来源绑定 `device_id + field_id + 预期type + 预期unit`，不绑定model/name；当前只可选number。已识别样本无效或预期单位不匹配时不能驱动该区域。已接受的新完整快照中，字段缺失、不支持或单位变化立即使旧number候选失效，相应区域回退而保留配置；name变化只更新名称。发布时帧龄加本地经过时间须同时满足20秒feed上限和区域TTL。负数可作为有效数据缓存，但M1非负玻璃格式返回 `out_of_range`。单位是元数据，不会给固定玻璃增加字形。见[profile4](device-http.md#m1-generic-profile4)。
+M1 的 MQTT 来源绑定 `device_id + field_id + 预期type + 预期unit`，不绑定 model/name；当前只可选 number。已识别样本无效或预期单位不匹配时不能驱动该区域。已接受的新完整快照中，字段缺失、不支持或单位变化立即使旧 number 候选失效，相应区域回退而保留配置；name 变化只更新名称。发布时帧龄加本地经过时间须同时满足 20 秒 feed 上限和区域 TTL。负数可作为有效数据缓存，但 M1 非负玻璃格式返回 `out_of_range`。单位是元数据，不会给固定玻璃增加字形。见[profile4](device-http.md#m1-generic-profile4)。
 
-[规范定义](contracts/sensor-values-v2.json) · [Schema](contracts/schemas/sensor-values-v2.schema.json) · [正反样例](contracts/examples/sensor-values-v2.json)。本仓库校验器执行 `x-utf8Bytes` 与 `x-float32Finite`；通用JSON Schema工具须另做等价运行时检查。
+[规范定义](contracts/sensor-values-v2.json) · [Schema](contracts/schemas/sensor-values-v2.schema.json) · [正反样例](contracts/examples/sensor-values-v2.json)。本仓库校验器执行 `x-utf8Bytes` 与 `x-float32Finite`；通用 JSON Schema 工具须另做等价运行时检查。
 
 
 ## 设备主题
@@ -80,14 +80,14 @@ M1 只接受已配置来源、本账户的实时消息。忽略 retained 重放�
 
 ## 通用 typed feed：sensor-values-v1
 
-新增 profile `sensor-values-v1` 沿用上述账户作用域主题和 wire schema1，并定义可选的多物理量字段，不改变 `sensor-co2-v1` 的既有含义或把功率塞进 CO₂ 字段。消息必须非 retained；普通 retained device state 不能替代该 feed。`device_id` 必须匹配主题，不能改用 `id`。可选 `model` 只能为m1/daikin/tc1/a1，是元数据，不授予跨账户权限。声明model时已知metric必须属于该producer子集：M1为温湿度/PM2.5/甲醛/CO₂/压力，DAIKIN另可PM10/TVOC，TC1为power/energy，A1为fan_speed_percent。未知model或不匹配的已知metric不接纳为有效数据，也不续租。
+新增 profile `sensor-values-v1` 沿用上述账户作用域主题和 wire schema1，并定义可选的多物理量字段，不改变 `sensor-co2-v1` 的既有含义或把功率塞进 CO₂ 字段。消息必须非 retained；普通 retained device state 不能替代该 feed。`device_id` 必须匹配主题，不能改用 `id`。可选 `model` 只能为 m1/daikin/tc1/a1，是元数据，不授予跨账户权限。声明 model 时已知 metric 必须属于该 producer 子集：M1 为温湿度/PM2.5/甲醛/CO₂/压力，DAIKIN 另可 PM10/TVOC，TC1 为 power/energy，A1 为 fan_speed_percent。未知 model 或不匹配的已知 metric 不接纳为有效数据，也不续租。
 
 ```json
 {"schema":1,"device_id":"001122334455","model":"tc1","boot":123,"sequence":1,"sensors":{"power":{"valid":true,"value":12.3,"unit":"W","age_ms":100}}}
 {"schema":1,"device_id":"aabbccddeeff","model":"a1","boot":456,"sequence":2,"sensors":{"fan_speed_percent":{"valid":true,"value":60,"unit":"%","age_ms":0}}}
 ```
 
-每个已声明字段必须有 `valid`（严格布尔值）、`value`、`unit`、`age_ms`（严格非负整数）。valid=true 要求数值有限、单位严格匹配、源年龄小于20000ms并符合下表；valid=false 必须 value=null，不以0代替失效。消息至少含一种已知 metric；可忽略未知附加字段，但不得据此跳过已知字段的校验。
+每个已声明字段必须有 `valid`（严格布尔值）、`value`、`unit`、`age_ms`（严格非负整数）。valid=true 要求数值有限、单位严格匹配、源年龄小于 20000ms 并符合下表；valid=false 必须 value=null，不以 0 代替失效。消息至少含一种已知 metric；可忽略未知附加字段，但不得据此跳过已知字段的校验。
 
 | sensors 字段 | unit | 有效范围与语义 |
 | --- | --- | --- |
@@ -100,13 +100,13 @@ M1 只接受已配置来源、本账户的实时消息。忽略 retained 重放�
 | `tvoc` | `ppb` | 有限非负，以实际模块能力为准 |
 | `fan_speed_percent` | `%` | 0..100；A1 当前生效主风机输出 `effective_on ? effective_speed : 0`，对应 status.percentage；不是实测 RPM，fresh-air 变体也不代表新风 RPM |
 
-M1 的 local 来源可解析本机温湿度、PM2.5、甲醛与可选 SCD40 CO₂，并将本机 BMP3 压力换算为 Pa。本轮 M1 固件不在通用 `sensor/<device_id>/state` 主题发布这些读数；允许解析合法的 M1 typed 消息，不代表已有对应 producer。DAIKIN 按模块能力还可提供 PM10/TVOC；消费者须以真实字段和 valid 为准。TC1 未取得实际功率计算样本、样本异常或源年龄满20s时发布 power=null/valid=false；没有新脉冲不能不断把旧功率重标 age0，也不能用启动默认0宣称采样就绪。A1 使用当前生效输出快照，未就绪时同样为 null/false。
+M1 的 local 来源可解析本机温湿度、PM2.5、甲醛与可选 SCD40 CO₂，并将本机 BMP3 压力换算为 Pa。本轮 M1 固件不在通用 `sensor/<device_id>/state` 主题发布这些读数；允许解析合法的 M1 typed 消息，不代表已有对应 producer。DAIKIN 按模块能力还可提供 PM10/TVOC；消费者须以真实字段和 valid 为准。TC1 未取得实际功率计算样本、样本异常或源年龄满 20s 时发布 power=null/valid=false；没有新脉冲不能不断把旧功率重标 age0，也不能用启动默认 0 宣称采样就绪。A1 使用当前生效输出快照，未就绪时同样为 null/false。
 
-boot、sequence 为1..4294967295的严格 JSON 整数，不接受字符串或浮点token；发布计数器递增，uint32回绕跳过0。消费者在同boot下用带回绕的顺序比较，重复/倒序不续租；新boot退休旧boot，有限 RAM 缓存拒绝最近退出boot的重放。uint32不能通过有符号32位 JSON 构造错误地输出负数。
+boot、sequence 为 1..4294967295 的严格 JSON 整数，不接受字符串或浮点 token；发布计数器递增，uint32 回绕跳过 0。消费者在同 boot 下用带回绕的顺序比较，重复/倒序不续租；新 boot 退休旧 boot，有限 RAM 缓存拒绝最近退出 boot 的重放。uint32 不能通过有符号 32 位 JSON 构造错误地输出负数。
 
-租期从真实源年龄加接收后单调时间计算，必须同时小于20s与该路配置TTL。重复数据、retained重放、仅 availability=online 或 MQTT 重连不能把旧数值变新；重连清缓存等待新数据。已知无效新帧使对应 metric 失效，两个 lane 来自同一新帧时分别解析，不能因全局去重丢掉第二路。显示值仍不得反向发布成真实测量，避免回路。
+租期从真实源年龄加接收后单调时间计算，必须同时小于 20s 与该路配置 TTL。重复数据、retained 重放、仅 availability=online 或 MQTT 重连不能把旧数值变新；重连清缓存等待新数据。已知无效新帧使对应 metric 失效，两个 lane 来自同一新帧时分别解析，不能因全局去重丢掉第二路。显示值仍不得反向发布成真实测量，避免回路。
 
-该 profile 的结构与范围由 [Schema](contracts/schemas/sensor-values-v1.schema.json) 约束；账户、主题一致、replay、源健康、配置TTL与发布时效是运行时检查。此接口属于开发扩展，不能据此宣称全部旧固件或设备硬件已经实现。
+该 profile 的结构与范围由 [Schema](contracts/schemas/sensor-values-v1.schema.json) 约束；账户、主题一致、replay、源健康、配置 TTL 与发布时效是运行时检查。此接口属于开发扩展，不能据此宣称全部旧固件或设备硬件已经实现。
 
 ## 旧协议
 

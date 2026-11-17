@@ -2,6 +2,8 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/configuration/)
 
+本页定义完整备份与恢复的信封、语言选择规则，以及 OTA 分流条件。改备份格式或加迁移前先读这里。
+
 ## 完整备份
 
 v1 设备声明 `config_backup:1` 后，前端通过有密码的局域网 HTTP 下载或恢复完整配置。备份包含 Wi-Fi、MQTT 等敏感字段。v0.9.x 的公开配置导出是部分备份，不能按完整备份恢复。M1 传感器 MCU 音乐不在 Wi-Fi 配置内。
@@ -27,9 +29,9 @@ DAIKIN 使用独立 JSON 信封：`schema`、`model`、`variant`、`firmware`、
 
 ## M1 双路配置存储v9
 
-双路显示配置追加在原v8负载尾部，旧配置前缀与 CO₂ 字段偏移不变。v8启动迁移保留普通配置、旧 CO₂、阈值、蜂鸣器、automation与revision；默认仍选legacy profile，新双路两位置为none、无RAM租期。只有显式新SET才启用dual，迁移不自动接管显示。
+双路显示配置追加在原 v8 负载尾部，旧配置前缀与 CO₂ 字段偏移不变。v8 启动迁移保留普通配置、旧 CO₂、阈值、蜂鸣器、automation 与 revision；默认仍选 legacy profile，新双路两位置为 none、无 RAM 租期。只有显式新 SET 才启用 dual，迁移不自动接管显示。
 
-v8完整备份是明确的兼容例外：先校验原model/variant、v8精确长度、CRC及旧字段，再有界迁移到v9并初始化新尾段。v9备份继续要求v9精确长度与语义；未知未来版本拒绝。候选配置与profile同笔持久化，结果按下述提交边界判断；短期API数值和剩余租期不进入备份。
+v8 完整备份是明确的兼容例外：先校验原 model/variant、v8 精确长度、CRC 及旧字段，再有界迁移到 v9 并初始化新尾段。v9 备份继续要求 v9 精确长度与语义；未知未来版本拒绝。候选配置与 profile 同笔持久化，结果按下述提交边界判断；短期 API 数值和剩余租期不进入备份。
 
 <a id="m1-display-storage-v10"></a>
 
@@ -45,7 +47,7 @@ v8/v9 完整备份必须匹配各自历史原生长度及 padding、model/varian
 
 ## MiCO 存储提交结果
 
-以下适用于采用事务存储修复的 TC1 / A1 / M1 开发实现。CAS冲突或 `busy` 在写入前拒绝候选。更新已有有效配置且可确认候选尚未提交时，`storage_error` 恢复旧 RAM 配置，并保留至少一份旧有效配置副本。
+以下适用于采用事务存储修复的 TC1 / A1 / M1 开发实现。CAS 冲突或 `busy` 在写入前拒绝候选。更新已有有效配置且可确认候选尚未提交时，`storage_error` 恢复旧 RAM 配置，并保留至少一份旧有效配置副本。
 
 主分区完整内容和提交 CRC 尾记录均已确认后，配置已提交，返回 `accepted` 并保留新 RAM 配置；随后刷新第二副本失败不会把已提交配置报为失败，也不承诺此时双副本均健康。
 
@@ -77,4 +79,4 @@ Wi-Fi 固件、传感器 MCU 和前端制品分别记录版本。固件使用完
 
 ## 通用来源配置的破坏性升级
 
-RC.1使用display_profile schema4与sensor-values schema2；旧RC接口弃用，MQTT来源保存device_id/field_id/type/unit，不保存机型适配或显示名称。配置v11保留冻结的v9/v10前缀、追加remote[2]，仅将已校验canonical metric/unit对明确迁移为field_id/unit，保留revision/选择/样式；不恢复旧HTTP/feed schema。拒绝与恢复须保护未支持的存储布局。SET参数不带schema键，raw数字/18灯写入不变。详见[profile4](device-http.md#m1-generic-profile4)。RC.1尚未公开发布。
+RC.1 使用 display_profile schema4 与 sensor-values schema2；旧 RC 接口弃用，MQTT 来源保存 device_id/field_id/type/unit，不保存机型适配或显示名称。配置 v11 保留冻结的 v9/v10 前缀、追加 remote[2]，仅将已校验 canonical metric/unit 对明确迁移为 field_id/unit，保留 revision/选择/样式；不恢复旧 HTTP/feed schema。拒绝与恢复须保护未支持的存储布局。SET 参数不带 schema 键，raw 数字/18 灯写入不变。详见[profile4](device-http.md#m1-generic-profile4)。RC.1 尚未公开发布。

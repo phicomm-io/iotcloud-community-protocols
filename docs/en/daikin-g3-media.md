@@ -2,7 +2,7 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/daikin-g3-media/)
 
-Contract `daikin-g3-media-v1`: implemented, unreleased. Requires the BRY88BBA15G
+Contract `daikin-g3-media-v1`. Requires the BRY88BBA15G
 community ESP32 firmware and matching screen MCU firmware. Query
 `capabilities.get` and `status.get`: screen capabilities `MEDIA=0x400000`,
 `IMAGE=0x800000`, `BINARY_LINK=0x1000000` indicate push, image components and

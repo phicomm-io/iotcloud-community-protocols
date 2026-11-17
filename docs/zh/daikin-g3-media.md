@@ -2,8 +2,7 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/daikin-g3-media/)
 
-契约 `daikin-g3-media-v1`，状态：已实现，未发布。适用于 BRY88BBA15G
-社区 ESP32 固件和配套屏幕 MCU 固件。先查询 `capabilities.get` 和
+契约 `daikin-g3-media-v1`。适用于 BRY88BBA15G 社区 ESP32 固件和配套屏幕 MCU 固件。先查询 `capabilities.get` 和
 `status.get`：屏幕能力 `MEDIA=0x400000`、`IMAGE=0x800000`、
 `BINARY_LINK=0x1000000` 分别表示推送、图片组件和二进制串口支持。
 旧 MCU 不显示相关管理控件，原有 SCN3 布局保持可用。
@@ -137,7 +136,7 @@ reading/backoff）、frames、dropped、bytes、实际尺寸/帧率、像素 CRC
 通道为 link=0、command=1、reply=2、socket=3、socket_ack=4、socket_event=5。
 图片和 TCP 块最多 512 字节，单块确认/有限重试；session 隔离重启前数据，
 sequence 和内容校验处理重复。工厂 OTA 独占原始串口。
-错误码：0成功、1范围、2忙、3不存在、4 CRC、5格式、6解码、7离线。
+错误码：0 成功、1 范围、2 忙、3 不存在、4 CRC、5 格式、6 解码、7 离线。
 
 规范常量见 [机器可读契约](contracts/daikin-g3-media-v1.json)。
 
@@ -265,6 +264,6 @@ Guard 诊断 `0xe2` 版本 4 严格为 98 字节。前 82 字节沿用版本 3 �
 
 `screen.display.get` 在全局策略之外返回 `page_policy_supported`、`home_page_id` 和 `page_overrides`；普通状态不扩展这些字段。能力位 `SCREEN_CAP_PAGE_POLICY`（bit 28）支持新设置。主页绑定稳定的 SCN3 page.id，0 表示首个启用页面；双击返回主页，通知确认仍优先。
 
-每项覆盖包含 `{page_id, external_minutes, battery_minutes, idle_brightness}`；无条目则三项全部沿用全局。电池和外电延时各为0–1440分钟，0关闭待机超时；亮度0–100，0熄屏；全局定时计划仍优先。最多八项，页面ID唯一且必须存在。排序不改变绑定，删除清除覆盖，禁用保留覆盖；主页被禁用或删除则回到默认。
+每项覆盖包含 `{page_id, external_minutes, battery_minutes, idle_brightness}`；无条目则三项全部沿用全局。电池和外电延时各为 0–1440 分钟，0 关闭待机超时；亮度 0–100，0 熄屏；全局定时计划仍优先。最多八项，页面 ID 唯一且必须存在。排序不改变绑定，删除清除覆盖，禁用保留覆盖；主页被禁用或删除则回到默认。
 
-扩展设置请求同时包含两个新字段及旧有六字段；旧请求保留已保存的每页设置。旧MCU继续支持全局设置并接收368字节v1策略，新MCU接收472字节v2策略。旧持久记录以默认主页及继承方式载入。不变保存不递增revision，实际变化沿用事务持久化、重播和MCU revision读回。
+扩展设置请求同时包含两个新字段及旧有六字段；旧请求保留已保存的每页设置。旧 MCU 继续支持全局设置并接收 368 字节 v1 策略，新 MCU 接收 472 字节 v2 策略。旧持久记录以默认主页及继承方式载入。不变保存不递增 revision，实际变化沿用事务持久化、重播和 MCU revision 读回。
