@@ -32,6 +32,21 @@ Consumers use `protocols.lock.json` to pin a full specification commit and the S
 
 Update both languages, schemas, positive/negative examples and implementation references together. Automated checks cover format and boundaries. Physical display, buttons, recovery and resource budgets need the corresponding hardware evidence. Working branches, documentation publication and firmware releases are independent.
 
-The contracts list records actual roles and consumed branches, rather than claiming that one producer satisfies incompatible archived responses simultaneously. A new MCU producer with D13=2 replaces fixed-zero m1-uart-v2 with m1-uart-v3, while retaining compatible display-v1/buttons/alarm contracts. Wi-Fi consumers negotiating D13=0/2 may list both v2/v3 for their separate branches. A frontend retaining an older consumer contract does not produce UART responses. Implementation PRs identify each contract's role and negotiated branch.
+### What to change together
 
-A formatted MCU producer pins `m1-uart-v4`, which retains all v3 operations and D13=2 while adding decimal 24/25/26; it must not claim the old fixed-zero v2 producer contract. A Wi-Fi consumer retains each negotiated branch it uses and adds `m1-display-v3`; capabilities plus a read-only schema3 probe guard formatted writes. New strict HTTP actions avoid redefining frozen v2 payloads. Direct API digits/flags/lamps and local/MQTT physical conversion have separate input semantics. Publish the additive schema/vector set and update consumer commit/registry pins together; frozen artifact digests guard older definitions.
+| File | Purpose |
+| --- | --- |
+| `docs/zh/`, `docs/en/` prose | Fields, bounds and failure behaviour |
+| `contracts/schemas/*.schema.json` | Structural constraints |
+| `contracts/examples/*.json` | Positive and negative examples |
+| `contracts/vectors/*.json` | Frame-level test vectors (UART) |
+| `contracts/registry.json` | Interface IDs, status, producers and consumers |
+| `protocols.lock.json` (in each implementation repo) | Pins this repository's commit and index SHA-256 |
+
+Change the prose, schemas, examples and vectors in the same commit. Published filenames and bytes are never rewritten; new behaviour uses a new filename or schema version, and the old digests detect edits to existing definitions. Work branches, documentation publication and firmware release stay independent.
+
+### How the protocol lock states roles
+
+The contracts list in `protocols.lock.json` records who produces and who consumes each interface, and on which branch. An archived contract does not mean it is still produced. Each implementation PR states the role and branch behind every ID.
+
+For UART, the authoritative description of capability bytes and operation allocation is in [UART versions and extension frames](m1-uart.md).

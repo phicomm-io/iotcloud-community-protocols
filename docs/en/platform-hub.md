@@ -2,7 +2,9 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/platform-hub/)
 
-The hub baseline was published as the **v1.0.0-rc** prerelease. The optional device Web password, automatic local-device listing and read-only restart recovery described here were published in **v1.0.0-rc.1**. The original v1.0.0-rc does not include these fixes; its tag and assets remain unchanged. Prereleases, interface checks and documentation publication do not establish Apple Home pairing, physical output or long-running acceptance. Registry paths beginning `firmware/` identify the [firmware repository](https://github.com/phicomm-io/iotcloud-community-firmware). Consumers pin this specification through `protocols.lock.json` and record the implementation commit separately at delivery.
+The hub is an independent `variant:"hub"`; plain `full` remains the sensor variant. This page defines its account API, device onboarding, upstream routing and HomeKit bridge.
+
+The `firmware/` paths in the interface index refer to the [firmware repository](https://github.com/phicomm-io/iotcloud-community-firmware), pinned to this specification commit by `protocols.lock.json` in the implementation repository.
 
 ## Shared platform integration
 
@@ -154,3 +156,7 @@ Application OTA preserves the installed table, so stock devices retain their `0x
 Local Hub API/MQTT accepts only the local owner. The device's explicitly configured native upstream TMCP can still manage the hub device itself, including `config.set` / `system.reset`. This separate management trust entry does not grant a local owner Bearer session. HAP pairing credentials appear only in a healthy unpaired owner GET response, never in ordinary state, config or configuration backups.
 
 Implementation entry points: `firmware/DAIKIN/include/hub_{service,broker,transport,relay,home}.h`, `firmware/DAIKIN/src/{hub,home,http}.inc`, and the private HomeSpan adapter. Validation: `firmware/DAIKIN/tests/hub/`, `firmware/DAIKIN/tests/test_hub_mqtt.py`. See [schemas and examples](contracts.md). Record host tests, firmware builds, Apple Home pairing and physical-device acceptance separately.
+
+## Status
+
+The interface layer is prereleased. Apple Home pairing, physical output and long-running behaviour are not verified by this document and need per-device acceptance.

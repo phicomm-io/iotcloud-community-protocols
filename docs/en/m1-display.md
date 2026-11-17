@@ -2,11 +2,20 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/m1-display/)
 
-Formatting and individual-lamp contract `m1-display-v3` uses additive `m1-uart-v4`. Existing dual schema 2 and scalar schema 1 retain their meanings. These are development interfaces without a formal release.
+This page defines four generations of the display interface. Confirm which generation the device actually negotiates, then read only that section:
+
+| Generation | Where it applies | Section |
+| --- | --- | --- |
+| profile4 with generic fields | Current interface; the Wi-Fi side chooses sources, UART stays on schema3 | [Wi-Fi profile4 and UART versions](#wi-fi-profile4-and-uart-versions) |
+| Formatting and lamps `m1-display-v3` | Current UART display contract, with `m1-uart-v4` | [M1 display v3](#m1-display-v3) |
+| Dual schema 2 | Compatibility contract, still maintained | [Dual schema 2 compatibility](#compatible-dual-lane-schema-2) |
+| scalar schema 1 | Compatibility contract, still maintained | [scalar schema 1 compatibility](#compatible-scalar-schema-1) |
+
+A device must advertise the capability before any write; never infer MCU support for a generation from an HTTP or UART version number alone.
 
 ## Wi-Fi profile4 and UART versions
 
-RC.1 uses [generic profile4](device-http.md#m1-generic-profile4) and [sensor-values-v2](mqtt.md#sensor-values-v2). MQTT binds device identity plus field_id/type/unit, without TC1/A1 model adapters. Old-RC profile3/schema1 feeds are deprecated with no compatibility guarantee. The glass formats, raw API and UART schema3 below retain their existing definitions; profile4 adds no UART opcode. RC.1 is not yet publicly released.
+Current builds use [generic profile4](device-http.md#m1-generic-profile4) and [sensor-values-v2](mqtt.md#sensor-values-v2). MQTT binds device identity plus `field_id`/`type`/`unit`, without TC1/A1 model adapters. Old profile3/schema1 feeds are deprecated with no compatibility guarantee. The glass formats, raw API and UART schema3 below retain their existing definitions; profile4 adds no UART opcode.
 
 ## M1 display v3
 

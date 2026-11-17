@@ -2,7 +2,9 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/platform-hub/)
 
-中枢基础功能已随 **v1.0.0-rc** 预发布；本页新增的可选设备 Web 密码、本机设备自动列出及重启后只读恢复行为已随 **v1.0.0-rc.1** 预发布。原 v1.0.0-rc 不包含这些修复，标签与制品保持不变。预发布、接口检查或文档发布均不代表 Apple Home 配对、物理输出或长期运行已经验收。接口索引中的 `firmware/` 路径对应 [固件仓库](https://github.com/phicomm-io/iotcloud-community-firmware)，由实现仓库的 `protocols.lock.json` 固定本规范提交；交付时另记录实际实现提交。
+中枢是 `variant:"hub"` 的独立变体，普通 `full` 仍为传感器版本。本页定义它的账户 API、设备接入、上游路由与 HomeKit 桥接。
+
+接口索引中的 `firmware/` 路径对应 [固件仓库](https://github.com/phicomm-io/iotcloud-community-firmware)，由实现仓库的 `protocols.lock.json` 固定本规范提交。
 
 ## 管理平台接入面
 
@@ -156,3 +158,7 @@ PUT 使用 `enabled`、`mappings` 和启用时的 `api_key`。空字符串 `api_
 本地 Hub API/MQTT 只接受本地 owner。设备主动配置的原有上游 TMCP 仍可管理中枢本机，包括 `config.set` / `system.reset`；这是另一处管理信任入口，不会获得本地 owner Bearer 会话。HAP 配对码仅在未配对且健康时由本地 owner GET 获取，不进入普通 state、config 或配置备份。
 
 实现入口：`firmware/DAIKIN/include/hub_{service,broker,transport,relay,home}.h`、`firmware/DAIKIN/src/{hub,home,http}.inc`、私有 HomeSpan 适配。验证入口：`firmware/DAIKIN/tests/hub/` 与 `firmware/DAIKIN/tests/test_hub_mqtt.py`。机器参数定义及正反例见 [Schema 与样例](contracts.md)。主机测试、固件构建、Apple Home 配对及实机验收分别记录。
+
+## 状态
+
+接口层已预发布；Apple Home 配对、物理输出与长期运行不在此文档的验证范围内，需按实际设备单独验收。
