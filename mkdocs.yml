@@ -35,12 +35,13 @@ nav:
   - 设备接口:
       - HTTP 与命令: device-http.md
       - MQTT 与传感器: mqtt.md
+      - 配置、备份与升级: configuration.md
       - 采样年龄与 PM 节能: sensor-age.md
-      - 大金 G3 推送与摄像头: daikin-g3-media.md
-      - 备份、语言与升级: configuration.md
   - MCU 协议:
       - UART 与能力查询: m1-uart.md
       - 显示源与按钮事件: m1-display.md
-  - 平台与中枢:
+  - 大金与中枢:
+      - G3 推送、摄像头与屏幕: daikin-g3-media.md
       - 平台接口与中枢: platform-hub.md
+  - 约定文件:
       - Schema 与样例: contracts.md

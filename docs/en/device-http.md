@@ -4,20 +4,7 @@
 
 These are Wi-Fi firmware endpoints. Platform accounts use the separate `/api/auth/...` API described under [platform integration](platform-hub.md).
 
-<a id="m1-generic-profile4"></a>
-
-## M1 generic field profile4
-
-`display_profile.get` reports schema4; `display_profile.set` keeps its action name and **must not include a `schema` key**. This is `m1-display-v4`, replacing the deprecated old-RC profile3 without a backwards-compatibility guarantee. The revision/CAS, selection, display modes, TTL, lamps, raw `display_value.set` and MCU readback rules remain as documented below. The Wi-Fi profile version is independent of UART operation/schema numbering: existing OP24/25/26 and raw API v3 are unchanged.
-
-A MQTT lane has exactly **nine** keys: `slot`, `source:"mqtt"`, `device_id`, `field_id`, `type:"number"`, `unit`, `display`, `ttl_seconds`, `color`. No `metric`, model or display name is stored. SET accepts compact or colon-separated MACs in either case; GET returns canonical lower12. `field_id` is1..32 ASCII `[a-z][a-z0-9_]*`; unit is0..24 valid UTF-8 bytes without C0/DEL. The expected type and unit must match the current [schema2 descriptor](mqtt.md#sensor-values-v2); arbitrary publisher fields/units do not require a firmware model adapter.
-
-`none` / `local` / `api` lanes retain exactly the eight keys containing `metric` instead of `field_id`/`type`. Local metrics still name M1's actual local sensors; none/custom and raw API behavior are unchanged. MQTT discovery cannot alter this local hardware list. PM's integer-only glass and the five HCHO modes remain unchanged. Runtime unit metadata is bounded arbitrary UTF-8 for generic MQTT fields; negative/unrepresentable values report `out_of_range` rather than becoming zero. Every accepted boot/sequence is a complete snapshot: unsupported/missing/malformed/invalid fields or an expected-unit mismatch immediately revoke the old numeric candidate, without deleting the configured source or turning unknown values into zero. Record counters to prevent old numeric replay; numeric siblings remain independent. Stale/offline sources cannot renew a lane lease.
-
-Application config v11 appends remote[2] after the frozen v9/v10 prefix. An explicit migration of validated old MQTT metric/unit pairs stores the canonical old metric as field_id and its canonical unit, preserving revision, selection, double-click and style; it does not restore the old HTTP/feed schema. New MQTT writes use the generic remote binding internally rather than model-specific metrics. none/local/api settings retain their original meaning. Runtime leases are not persistent. Unsupported layouts must protect stored configuration and explain recovery; arbitrary old RC configuration acceptance is not guaranteed. The display_source.get/set action names are aliases of the current schema4 interface, not compatibility implementations of old HTTP shapes. A legacy profile projection alone cannot enable the new UART formatted profile.
-
-[Profile SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [Contract](contracts/m1-display-v4.json) · [Examples](contracts/examples/m1-display-v4.json). The sections below retain historical schema3/schema2 details; their MQTT metric/model mapping is deprecated.
-
+The first half of this page is the HTTP contract every device shares; the second half holds the M1 and DAIKIN extensions. Read Access and Command envelope first, then jump to your model.
 
 ## Access
 
@@ -51,98 +38,20 @@ HTTP and TMCP use the same actions and JSON envelope:
 
 Match replies by `request_id`. Use the stable `code` for control flow and localized `message` for display. `ok` indicates a successful query; `accepted` indicates an accepted operation. Treat errors such as `invalid_params`, `busy`, `unsupported` and `conflict` as failures. Read `capabilities.actions` for the actual action list.
 
-## DAIKIN partition diagnostics
+<a id="m1-generic-profile4"></a>
 
-DAIKIN firmware supporting this extension includes read-only `status.ota_partitions` in its status object. In a `status.get {}` command reply, the path is `data.ota_partitions`. This diagnostic field is optional; clients must handle its absence on other models or older firmware.
+## M1 generic field profile4
 
-| Field | JSON type and meaning |
-| --- | --- |
-| `running` | String or null; label of the running application partition, or null when unavailable |
-| `running_size` | Nonnegative integer; running application partition capacity in bytes; 0 when `running:null` |
-| `next` | String or null; label of the SDK-selected next OTA target partition, or null when no target is available |
-| `next_size` | Nonnegative integer; OTA target partition capacity in bytes; 0 when `next:null` |
-| `entries` | Array of objects enumerating all SDK-visible application and data partitions in the device's installed partition table |
-| `entries[].label` | String; partition label |
-| `entries[].type` / `entries[].subtype` | Nonnegative integers; ESP-IDF partition type/subtype identifiers |
-| `entries[].address` | Nonnegative integer; partition starting byte offset in Flash |
-| `entries[].size` | Nonnegative integer; partition capacity in bytes |
+`display_profile.get` reports schema4; `display_profile.set` keeps its action name and **must not include a `schema` key**. This is `m1-display-v4`, replacing the deprecated old-RC profile3 without a backwards-compatibility guarantee. The revision/CAS, selection, display modes, TTL, lamps, raw `display_value.set` and MCU readback rules remain as documented below. The Wi-Fi profile version is independent of UART operation/schema numbering: existing OP24/25/26 and raw API v3 are unchanged.
 
-All numbers are JSON decimal numbers, not hexadecimal strings. Labels, counts and capacities come from the installed partition table, independently of the build CSV; do not assume labels are always `app0` / `app1`. The object contains no Flash contents or credentials. It describes the current layout without switching OTA layouts or rewriting the partition table, and does not establish that an image is installed or suitable to write.
+A MQTT lane has exactly **nine** keys: `slot`, `source:"mqtt"`, `device_id`, `field_id`, `type:"number"`, `unit`, `display`, `ttl_seconds`, `color`. No `metric`, model or display name is stored. SET accepts compact or colon-separated MACs in either case; GET returns canonical lower12. `field_id` is1..32 ASCII `[a-z][a-z0-9_]*`; unit is0..24 valid UTF-8 bytes without C0/DEL. The expected type and unit must match the current [schema2 descriptor](mqtt.md#sensor-values-v2); arbitrary publisher fields/units do not require a firmware model adapter.
 
-Implementation: `otaPartitionStatus()` and `state()` in `firmware/DAIKIN/src/commands.inc`.
+`none` / `local` / `api` lanes retain exactly the eight keys containing `metric` instead of `field_id`/`type`. Local metrics still name M1's actual local sensors; none/custom and raw API behavior are unchanged. MQTT discovery cannot alter this local hardware list. PM's integer-only glass and the five HCHO modes remain unchanged. Runtime unit metadata is bounded arbitrary UTF-8 for generic MQTT fields; negative/unrepresentable values report `out_of_range` rather than becoming zero. Every accepted boot/sequence is a complete snapshot: unsupported/missing/malformed/invalid fields or an expected-unit mismatch immediately revoke the old numeric candidate, without deleting the configured source or turning unknown values into zero. Record counters to prevent old numeric replay; numeric siblings remain independent. Stale/offline sources cannot renew a lane lease.
 
-Optional sibling status fields `minimum_free_memory` (lowest free heap since boot) and `max_free_block` (largest currently allocatable contiguous heap block) are nonnegative integers in bytes, alongside `free_memory`; clients must handle their absence.
+Application config v11 appends remote[2] after the frozen v9/v10 prefix. An explicit migration of validated old MQTT metric/unit pairs stores the canonical old metric as field_id and its canonical unit, preserving revision, selection, double-click and style; it does not restore the old HTTP/feed schema. New MQTT writes use the generic remote binding internally rather than model-specific metrics. none/local/api settings retain their original meaning. Runtime leases are not persistent. Unsupported layouts must protect stored configuration and explain recovery; arbitrary old RC configuration acceptance is not guaranteed. The display_source.get/set action names are aliases of the current schema4 interface, not compatibility implementations of old HTTP shapes. A legacy profile projection alone cannot enable the new UART formatted profile.
 
-### Hub byte-addressable heap
+[Profile SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [Contract](contracts/m1-display-v4.json) · [Examples](contracts/examples/m1-display-v4.json). The sections below retain historical schema3/schema2 details; their MQTT metric/model mapping is deprecated.
 
-Supporting DAIKIN `hub` firmware adds three optional, read-only nonnegative JSON integers under the status object's `hub`, or `data.hub` in a `status.get {}` reply. All sizes are bytes and use the combined ESP-IDF capabilities `MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT`: internal memory accessible through byte reads and writes.
-
-| Field in `data.hub` | Meaning |
-| --- | --- |
-| `free_byte_heap` | Total currently free heap with these capabilities |
-| `largest_byte_block` | Largest currently allocatable contiguous block with these capabilities |
-| `min_byte_heap` | SDK low-water statistic since boot: the sum of matching regions' minimum free sizes |
-
-Regional low-water marks can occur at different times, so `min_byte_heap` need not equal the lowest simultaneous total. The existing sibling `free_memory`, `minimum_free_memory` and `max_free_block` retain their original ESP getter semantics; they are not aliases for these capability-specific values. Clients must tolerate missing `hub` or missing fields on older firmware and other variants. Do not apply these ESP32 meanings to other device models.
-
-See the [fixed implementation](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/commands.inc#L63-L67), [SDK heap reference](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/mem_alloc.html) and [Hub connection admission](platform-hub.md#hub-memory-diagnostics). These optional diagnostics do not change required contract fields or consumer pins.
-
-### Reset reason
-
-DAIKIN firmware supporting this diagnostic may include read-only `status.reset_reason`, or `data.reset_reason` in a `status.get {}` reply. It is a nonnegative JSON integer from `unsigned(esp_reset_reason())`, describing the last reset. Older firmware may omit the field; absence means the diagnostic is unavailable.
-
-The following values belong to ESP-IDF 4.4.7's `esp_reset_reason_t` for DAIKIN's ESP32. They are not a shared reset-reason enumeration across device models or SDKs. Preserve unrecognized values as unknown diagnostics. See the [official SDK reference](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/system.html#reset-reason) and [version-pinned enum definition](https://github.com/espressif/esp-idf/blob/38eeba213aa695aabfd6d89aa9f5078dbe5a94c3/components/esp_system/include/esp_system.h#L41-L53).
-
-| Number | SDK enum | Meaning |
-| --- | --- | --- |
-| 0 | `ESP_RST_UNKNOWN` | Undetermined reason |
-| 1 | `ESP_RST_POWERON` | Power-on event |
-| 2 | `ESP_RST_EXT` | External-pin reset; not applicable to ESP32 |
-| 3 | `ESP_RST_SW` | Software restart through `esp_restart()` |
-| 4 | `ESP_RST_PANIC` | Exception or panic |
-| 5 | `ESP_RST_INT_WDT` | Interrupt watchdog |
-| 6 | `ESP_RST_TASK_WDT` | Task watchdog |
-| 7 | `ESP_RST_WDT` | Other watchdog |
-| 8 | `ESP_RST_DEEPSLEEP` | Wake from deep sleep |
-| 9 | `ESP_RST_BROWNOUT` | Brownout reset |
-| 10 | `ESP_RST_SDIO` | SDIO reset |
-
-Implementation: [DAIKIN status diagnostic](https://github.com/phicomm-io/iotcloud-community-firmware/blob/508dfed3597bb64bdfb3f29e10f2ee46c90189c2/DAIKIN/src/commands.inc#L28). This optional diagnostic does not change required contract fields or require consumers to update their existing specification pin.
-
-## Explicit DAIKIN full → hub conversion
-
-Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
-
-The device Web password is optional: no Basic authentication is required when none exists; an existing password still requires Basic `admin` authentication. Send a complete `PHOTA001` signed binary to the dedicated endpoint. The following `Authorization` header is required only when a device Web password exists:
-
-```http
-POST /api/v1/ota/convert
-Authorization: Basic <base64(admin:device-Web-password)>
-Content-Type: application/octet-stream
-X-IoTCloud-Target-Variant: hub
-X-IoTCloud-Confirm: full-to-hub
-
-<complete PHOTA001 signed binary>
-```
-
-Both confirmation header values must match exactly. When a device Web password exists, local Hub owner sessions and upstream account sessions cannot replace device Basic authentication. The current configuration must be healthy, with no active OTA, pending command or scheduled reboot; configuration recovery blocks conversion.
-
-Check application payload size against the actual next OTA partition, independently of the build CSV. The application prefix must match DAIKIN hardware, project and target `hub` identity at fixed offsets; finding identity strings elsewhere is insufficient. Check the fixed prefix and authenticate the envelope against a trusted signing key before erasing the inactive slot. After receiving the complete file, verify the signed payload digest by reading the entire staged payload from Flash, then read and verify the fixed identity again. Select the new boot partition only after every check passes.
-
-| Positive/negative case | Result |
-| --- | --- |
-| Supporting `full`, authenticated if a password exists, correct confirmation headers, healthy and idle, signed Hub image fits and passes all checks | HTTP 202, `{"code":"accepted"}`; schedule reboot |
-| No device Web password is configured | No Basic authentication required; confirmation headers, healthy/idle checks, signature and target validation still apply |
-| Device Web password exists but Basic authentication is missing or incorrect | HTTP 401, `unauthorized` |
-| Missing or incorrect confirmation header values | HTTP 400, `invalid_params` |
-| Configuration recovery is active | HTTP 409, `migration_required` |
-| Active OTA, pending command or scheduled reboot | HTTP 409, `busy` |
-| Running identity cannot select the explicit Full-to-Hub target | HTTP 409, `unsupported_conversion` |
-| Actual slot too small, missing/invalid signature, digest/readback mismatch or fixed identity is not the target Hub | HTTP 400, `invalid_image`; do not activate |
-| Different variant sent to ordinary `/api/v1/ota/upload` or `/api/v1/ota/upload-unsigned`, even with conversion headers | HTTP 400, `invalid_image`; ordinary endpoints preserve the running variant |
-| `hub` requests conversion to `full` | No conversion endpoint on Hub; reject cross-variant ordinary uploads because Hub's larger configuration is incompatible |
-
-Conversion preserves the partition table and ordinary configuration, including shared Wi-Fi, MQTT and device Web passwords. Initial Hub setup requires the original device Web password only when one exists; the separate local owner password requirements remain unchanged. HAP defaults off. Installing the image neither creates a local owner nor completes HomeKit pairing. Conversion does not enlarge OTA slots: a factory 1.5 MiB slot still rejects larger images. HTTP 202 confirms verification and a scheduled reboot; reconnect and read `info` / `status` with `firmware_variant:"hub"` to establish that Hub is running.
 
 ## M1 CO₂ source
 
@@ -319,3 +228,96 @@ Successful persistence returns `accepted` and the full configuration with increm
 | `unit` | `main_controller_raw_u16` |
 
 Wi-Fi persists desired settings, sends [OP `14`](m1-uart.md#op-14-optional-sensor-buzzer) after capability negotiation, then independently reads and verifies them. A write reply cannot set `buzzer_confirmed:true`. Threshold `uart_sent:true` also does not establish buzzer readback. Old MCUs still save desired settings but return `buzzer_supported:false`, `buzzer_confirmation:"requires_mcu_upgrade"` and null actual fields. Clients must distinguish desired OFF from actual unknown, without claiming that the buzzer was silenced.
+
+## DAIKIN partition diagnostics
+
+DAIKIN firmware supporting this extension includes read-only `status.ota_partitions` in its status object. In a `status.get {}` command reply, the path is `data.ota_partitions`. This diagnostic field is optional; clients must handle its absence on other models or older firmware.
+
+| Field | JSON type and meaning |
+| --- | --- |
+| `running` | String or null; label of the running application partition, or null when unavailable |
+| `running_size` | Nonnegative integer; running application partition capacity in bytes; 0 when `running:null` |
+| `next` | String or null; label of the SDK-selected next OTA target partition, or null when no target is available |
+| `next_size` | Nonnegative integer; OTA target partition capacity in bytes; 0 when `next:null` |
+| `entries` | Array of objects enumerating all SDK-visible application and data partitions in the device's installed partition table |
+| `entries[].label` | String; partition label |
+| `entries[].type` / `entries[].subtype` | Nonnegative integers; ESP-IDF partition type/subtype identifiers |
+| `entries[].address` | Nonnegative integer; partition starting byte offset in Flash |
+| `entries[].size` | Nonnegative integer; partition capacity in bytes |
+
+All numbers are JSON decimal numbers, not hexadecimal strings. Labels, counts and capacities come from the installed partition table, independently of the build CSV; do not assume labels are always `app0` / `app1`. The object contains no Flash contents or credentials. It describes the current layout without switching OTA layouts or rewriting the partition table, and does not establish that an image is installed or suitable to write.
+
+Implementation: `otaPartitionStatus()` and `state()` in `firmware/DAIKIN/src/commands.inc`.
+
+Optional sibling status fields `minimum_free_memory` (lowest free heap since boot) and `max_free_block` (largest currently allocatable contiguous heap block) are nonnegative integers in bytes, alongside `free_memory`; clients must handle their absence.
+
+### Hub byte-addressable heap
+
+Supporting DAIKIN `hub` firmware adds three optional, read-only nonnegative JSON integers under the status object's `hub`, or `data.hub` in a `status.get {}` reply. All sizes are bytes and use the combined ESP-IDF capabilities `MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT`: internal memory accessible through byte reads and writes.
+
+| Field in `data.hub` | Meaning |
+| --- | --- |
+| `free_byte_heap` | Total currently free heap with these capabilities |
+| `largest_byte_block` | Largest currently allocatable contiguous block with these capabilities |
+| `min_byte_heap` | SDK low-water statistic since boot: the sum of matching regions' minimum free sizes |
+
+Regional low-water marks can occur at different times, so `min_byte_heap` need not equal the lowest simultaneous total. The existing sibling `free_memory`, `minimum_free_memory` and `max_free_block` retain their original ESP getter semantics; they are not aliases for these capability-specific values. Clients must tolerate missing `hub` or missing fields on older firmware and other variants. Do not apply these ESP32 meanings to other device models.
+
+See the [fixed implementation](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/commands.inc#L63-L67), [SDK heap reference](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/mem_alloc.html) and [Hub connection admission](platform-hub.md#hub-memory-diagnostics). These optional diagnostics do not change required contract fields or consumer pins.
+
+### Reset reason
+
+DAIKIN firmware supporting this diagnostic may include read-only `status.reset_reason`, or `data.reset_reason` in a `status.get {}` reply. It is a nonnegative JSON integer from `unsigned(esp_reset_reason())`, describing the last reset. Older firmware may omit the field; absence means the diagnostic is unavailable.
+
+The following values belong to ESP-IDF 4.4.7's `esp_reset_reason_t` for DAIKIN's ESP32. They are not a shared reset-reason enumeration across device models or SDKs. Preserve unrecognized values as unknown diagnostics. See the [official SDK reference](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/system.html#reset-reason) and [version-pinned enum definition](https://github.com/espressif/esp-idf/blob/38eeba213aa695aabfd6d89aa9f5078dbe5a94c3/components/esp_system/include/esp_system.h#L41-L53).
+
+| Number | SDK enum | Meaning |
+| --- | --- | --- |
+| 0 | `ESP_RST_UNKNOWN` | Undetermined reason |
+| 1 | `ESP_RST_POWERON` | Power-on event |
+| 2 | `ESP_RST_EXT` | External-pin reset; not applicable to ESP32 |
+| 3 | `ESP_RST_SW` | Software restart through `esp_restart()` |
+| 4 | `ESP_RST_PANIC` | Exception or panic |
+| 5 | `ESP_RST_INT_WDT` | Interrupt watchdog |
+| 6 | `ESP_RST_TASK_WDT` | Task watchdog |
+| 7 | `ESP_RST_WDT` | Other watchdog |
+| 8 | `ESP_RST_DEEPSLEEP` | Wake from deep sleep |
+| 9 | `ESP_RST_BROWNOUT` | Brownout reset |
+| 10 | `ESP_RST_SDIO` | SDIO reset |
+
+Implementation: [DAIKIN status diagnostic](https://github.com/phicomm-io/iotcloud-community-firmware/blob/508dfed3597bb64bdfb3f29e10f2ee46c90189c2/DAIKIN/src/commands.inc#L28). This optional diagnostic does not change required contract fields or require consumers to update their existing specification pin.
+
+## Explicit DAIKIN full → hub conversion
+
+Supporting `full` firmware declares `data.ota_variant_conversion:"full-to-hub"` in `capabilities.get {}` replies. Do not attempt conversion without that declaration. Support does not establish that any Hub image fits the device's installed OTA slot.
+
+The device Web password is optional: no Basic authentication is required when none exists; an existing password still requires Basic `admin` authentication. Send a complete `PHOTA001` signed binary to the dedicated endpoint. The following `Authorization` header is required only when a device Web password exists:
+
+```http
+POST /api/v1/ota/convert
+Authorization: Basic <base64(admin:device-Web-password)>
+Content-Type: application/octet-stream
+X-IoTCloud-Target-Variant: hub
+X-IoTCloud-Confirm: full-to-hub
+
+<complete PHOTA001 signed binary>
+```
+
+Both confirmation header values must match exactly. When a device Web password exists, local Hub owner sessions and upstream account sessions cannot replace device Basic authentication. The current configuration must be healthy, with no active OTA, pending command or scheduled reboot; configuration recovery blocks conversion.
+
+Check application payload size against the actual next OTA partition, independently of the build CSV. The application prefix must match DAIKIN hardware, project and target `hub` identity at fixed offsets; finding identity strings elsewhere is insufficient. Check the fixed prefix and authenticate the envelope against a trusted signing key before erasing the inactive slot. After receiving the complete file, verify the signed payload digest by reading the entire staged payload from Flash, then read and verify the fixed identity again. Select the new boot partition only after every check passes.
+
+| Positive/negative case | Result |
+| --- | --- |
+| Supporting `full`, authenticated if a password exists, correct confirmation headers, healthy and idle, signed Hub image fits and passes all checks | HTTP 202, `{"code":"accepted"}`; schedule reboot |
+| No device Web password is configured | No Basic authentication required; confirmation headers, healthy/idle checks, signature and target validation still apply |
+| Device Web password exists but Basic authentication is missing or incorrect | HTTP 401, `unauthorized` |
+| Missing or incorrect confirmation header values | HTTP 400, `invalid_params` |
+| Configuration recovery is active | HTTP 409, `migration_required` |
+| Active OTA, pending command or scheduled reboot | HTTP 409, `busy` |
+| Running identity cannot select the explicit Full-to-Hub target | HTTP 409, `unsupported_conversion` |
+| Actual slot too small, missing/invalid signature, digest/readback mismatch or fixed identity is not the target Hub | HTTP 400, `invalid_image`; do not activate |
+| Different variant sent to ordinary `/api/v1/ota/upload` or `/api/v1/ota/upload-unsigned`, even with conversion headers | HTTP 400, `invalid_image`; ordinary endpoints preserve the running variant |
+| `hub` requests conversion to `full` | No conversion endpoint on Hub; reject cross-variant ordinary uploads because Hub's larger configuration is incompatible |
+
+Conversion preserves the partition table and ordinary configuration, including shared Wi-Fi, MQTT and device Web passwords. Initial Hub setup requires the original device Web password only when one exists; the separate local owner password requirements remain unchanged. HAP defaults off. Installing the image neither creates a local owner nor completes HomeKit pairing. Conversion does not enlarge OTA slots: a factory 1.5 MiB slot still rejects larger images. HTTP 202 confirms verification and a scheduled reboot; reconnect and read `info` / `status` with `firmware_variant:"hub"` to establish that Hub is running.

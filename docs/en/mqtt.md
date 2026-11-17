@@ -4,6 +4,25 @@
 
 TMCP (Tom MQTT Cloud Protocol) uses `protocol:"tmcp"`, `protocol_version:2`, `version:"v2"`. Normalize a MAC to 12 lowercase hex digits. Account scope is `u_` followed by the hex encoding of the MQTT username's UTF-8 bytes; a Broker with no username uses `local`.
 
+The contract has two layers: read "Device topics" to pick the topic, then choose the field format for your data source. Current builds use `sensor-values-v2`; `schema 1` and `sensor-values-v1` are kept for compatibility only and are marked deprecated in the registry.
+
+## Device topics
+
+Device root: `phicomm/v2/<scope>/<model>/<mac>`. Models include `tc1`, `m1`, `a1`, `daikin`, according to discovery.
+
+| Topic or suffix | Retain | Payload |
+| --- | --- | --- |
+| `phicomm/v2/<scope>/discovery/<mac>` | Yes | schema 1, model and full TMCP protocol markers |
+| `<root>/availability` | Yes / LWT | `online` / `offline` |
+| `<root>/state` | Yes | Device snapshot |
+| `<root>/capabilities` | Yes | Supported actions and metadata |
+| `<root>/command` | No | [Command envelope](device-http.md) |
+| `<root>/result` | No | Reply with the same `request_id` |
+
+Broker ACLs derive account ownership from authenticated connections and topic namespaces, not user fields in payloads. Only explicitly authorized devices are accessible. The same MAC can exist in separate accounts; it is not a globally unique platform key. Reject retained commands.
+
+Home Assistant discovery uses `homeassistant/<component>/<scope>/<model>_<mac>_<entity>/config`. Generic discovery subscriptions still require per-message account checks and grant no cross-account read or wildcard publishing. Changing language updates names while preserving entity IDs, topics and account keys.
+
 <a id="sensor-values-v2"></a>
 
 ## Generic device fields: sensor-values-v2
@@ -35,23 +54,6 @@ M1 MQTT sources bind `device_id + field_id + expected type + expected unit`, not
 
 [Normative contract](contracts/sensor-values-v2.json) · [Schema](contracts/schemas/sensor-values-v2.schema.json) · [Positive/negative examples](contracts/examples/sensor-values-v2.json). `x-utf8Bytes` and `x-float32Finite` are enforced by this repository validator; generic JSON Schema tools must implement equivalent runtime checks.
 
-
-## Device topics
-
-Device root: `phicomm/v2/<scope>/<model>/<mac>`. Models include `tc1`, `m1`, `a1`, `daikin`, according to discovery.
-
-| Topic or suffix | Retain | Payload |
-| --- | --- | --- |
-| `phicomm/v2/<scope>/discovery/<mac>` | Yes | schema 1, model and full TMCP protocol markers |
-| `<root>/availability` | Yes / LWT | `online` / `offline` |
-| `<root>/state` | Yes | Device snapshot |
-| `<root>/capabilities` | Yes | Supported actions and metadata |
-| `<root>/command` | No | [Command envelope](device-http.md) |
-| `<root>/result` | No | Reply with the same `request_id` |
-
-Broker ACLs derive account ownership from authenticated connections and topic namespaces, not user fields in payloads. Only explicitly authorized devices are accessible. The same MAC can exist in separate accounts; it is not a globally unique platform key. Reject retained commands.
-
-Home Assistant discovery uses `homeassistant/<component>/<scope>/<model>_<mac>_<entity>/config`. Generic discovery subscriptions still require per-message account checks and grant no cross-account read or wildcard publishing. Changing language updates names while preserving entity IDs, topics and account keys.
 
 ## Cross-device sensor schema 1
 

@@ -2,7 +2,26 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/mqtt/)
 
-TMCP（Tom MQTT Cloud Protocol）使用 `protocol:"tmcp"`、`protocol_version:2`、`version:"v2"`。设备 MAC 去掉分隔符，转为小写 12 位十六进制。账户 `scope` 是 `u_` 加 MQTT 用户名 UTF-8 字节的十六进制；无用户名的自建 Broker 使用 `local`。
+TMCPTMCP（Tom MQTT Cloud Protocol）使用 `protocol:"tmcp"`、`protocol_version:2`、`version:"v2"`。设备 MAC 去掉分隔符，转为小写 12 位十六进制。账户 `scope` 是 `u_` 加 MQTT 用户名 UTF-8 字节的十六进制；无用户名的自建 Broker 使用 `local`。
+
+主题与载荷分两层：先看「设备主题」确定往哪个主题发，再按数据源选字段格式。当前用 `sensor-values-v2`；`schema 1` 与 `sensor-values-v1` 仅为兼容保留，registry 已标 deprecated。
+
+## 设备主题
+
+设备根为 `phicomm/v2/<scope>/<model>/<mac>`。`model` 使用 `tc1`、`m1`、`a1` 或 `daikin`，以设备公告为准。
+
+| 主题或后缀 | Retain | 载荷 |
+| --- | --- | --- |
+| `phicomm/v2/<scope>/discovery/<mac>` | 是 | schema 1、model、完整 TMCP 协议标记 |
+| `<root>/availability` | 是 / LWT | `online` / `offline` |
+| `<root>/state` | 是 | 设备状态快照 |
+| `<root>/capabilities` | 是 | 动作列表及能力 |
+| `<root>/command` | 否 | [命令信封](device-http.md) |
+| `<root>/result` | 否 | 对应 `request_id` 的结果 |
+
+Broker 权限以主题中的账户归属为准，不信任载荷中的用户字段。只能访问本账户明确授权的设备；不同账户可拥有相同 MAC，不能仅以 MAC 做全局设备键。retained 命令必须拒绝。
+
+HA 发现主题为 `homeassistant/<component>/<scope>/<model>_<mac>_<entity>/config`。HA 通用发现订阅可以开放，但每条投递仍需检查账户归属；不得因此授予跨账户读取或通配发布。设备语言只改变实体名称，不能改变实体唯一标识、主题和账户键。
 
 <a id="sensor-values-v2"></a>
 
@@ -35,23 +54,6 @@ M1 的 MQTT 来源绑定 `device_id + field_id + 预期type + 预期unit`，不�
 
 [规范定义](contracts/sensor-values-v2.json) · [Schema](contracts/schemas/sensor-values-v2.schema.json) · [正反样例](contracts/examples/sensor-values-v2.json)。本仓库校验器执行 `x-utf8Bytes` 与 `x-float32Finite`；通用 JSON Schema 工具须另做等价运行时检查。
 
-
-## 设备主题
-
-设备根为 `phicomm/v2/<scope>/<model>/<mac>`。`model` 使用 `tc1`、`m1`、`a1` 或 `daikin`，以设备公告为准。
-
-| 主题或后缀 | Retain | 载荷 |
-| --- | --- | --- |
-| `phicomm/v2/<scope>/discovery/<mac>` | 是 | schema 1、model、完整 TMCP 协议标记 |
-| `<root>/availability` | 是 / LWT | `online` / `offline` |
-| `<root>/state` | 是 | 设备状态快照 |
-| `<root>/capabilities` | 是 | 动作列表及能力 |
-| `<root>/command` | 否 | [命令信封](device-http.md) |
-| `<root>/result` | 否 | 对应 `request_id` 的结果 |
-
-Broker 权限以主题中的账户归属为准，不信任载荷中的用户字段。只能访问本账户明确授权的设备；不同账户可拥有相同 MAC，不能仅以 MAC 做全局设备键。retained 命令必须拒绝。
-
-HA 发现主题为 `homeassistant/<component>/<scope>/<model>_<mac>_<entity>/config`。HA 通用发现订阅可以开放，但每条投递仍需检查账户归属；不得因此授予跨账户读取或通配发布。设备语言只改变实体名称，不能改变实体唯一标识、主题和账户键。
 
 ## 跨设备传感器 schema 1
 
