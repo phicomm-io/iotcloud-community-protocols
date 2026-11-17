@@ -14,7 +14,15 @@
     "default": true,
     "MD013": false,
     "MD033": {
-      "allowed_elements": ["a", "br", "img", "sup", "sub", "details", "summary"]
+      "allowed_elements": [
+        "a",
+        "br",
+        "img",
+        "sup",
+        "sub",
+        "details",
+        "summary"
+      ]
     },
     "MD024": {
       "siblings_only": true
