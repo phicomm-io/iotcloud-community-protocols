@@ -79,4 +79,4 @@ Wi-Fi 固件、传感器 MCU 和前端制品分别记录版本。固件使用完
 
 ## 通用来源配置的破坏性升级
 
-RC.1 使用 display_profile schema4 与 sensor-values schema2；旧 RC 接口弃用，MQTT 来源保存 device_id/field_id/type/unit，不保存机型适配或显示名称。配置 v11 保留冻结的 v9/v10 前缀、追加 remote[2]，仅将已校验 canonical metric/unit 对明确迁移为 field_id/unit，保留 revision/选择/样式；不恢复旧 HTTP/feed schema。拒绝与恢复须保护未支持的存储布局。SET 参数不带 schema 键，raw 数字/18 灯写入不变。详见[profile4](device-http.md#m1-generic-profile4)。RC.1 尚未公开发布。
+display_profile 使用 schema4、sensor-values 使用 schema2；旧 RC 接口弃用，MQTT 来源保存 device_id/field_id/type/unit，不保存机型适配或显示名称。配置 v11 保留冻结的 v9/v10 前缀、追加 remote[2]，仅将已校验 canonical metric/unit 对明确迁移为 field_id/unit，保留 revision/选择/样式；不恢复旧 HTTP/feed schema。拒绝与恢复须保护未支持的存储布局。SET 参数不带 schema 键，raw 数字/18 灯写入不变。详见[profile4](device-http.md#m1-generic-profile4)。
