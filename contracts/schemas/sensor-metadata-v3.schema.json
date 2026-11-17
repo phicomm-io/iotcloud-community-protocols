@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema",
+    "device_id",
+    "boot",
+    "descriptor_revision",
+    "fields"
+  ],
+  "properties": {
+    "schema": {
+      "const": 3,
+      "type": "integer"
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{12}$"
+    },
+    "boot": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "descriptor_revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "fields": {
+      "type": "object",
+      "maxProperties": 16,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,31}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "unit"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$",
+            "x-utf8Bytes": {
+              "minimum": 1,
+              "maximum": 64
+            }
+          },
+          "type": {
+            "const": "number"
+          },
+          "unit": {
+            "type": "string",
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$",
+            "x-utf8Bytes": {
+              "minimum": 0,
+              "maximum": 24
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

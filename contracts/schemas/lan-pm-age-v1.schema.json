@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "boot",
+    "sequence",
+    "fields",
+    "co2_supported",
+    "values",
+    "ages"
+  ],
+  "properties": {
+    "boot": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "fields": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 31
+    },
+    "co2_supported": {
+      "type": "boolean"
+    },
+    "values": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "integer",
+        "minimum": -2147483648,
+        "maximum": 2147483647
+      }
+    },
+    "ages": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4294967295
+      }
+    },
+    "pm25_max_age_ms": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3600000
+    }
+  },
+  "additionalProperties": false
+}

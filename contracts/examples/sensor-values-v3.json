@@ -1,0 +1,264 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "schema": "sensor-values-v3",
+      "name": "thirty minute night PM",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "pm25": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 1800000,
+            "max_age_ms": 3600000
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "sensor-values-v3",
+      "name": "zero",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "pm25": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 1800000,
+            "max_age_ms": 0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v3",
+      "name": "above upper bound",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "pm25": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 1800000,
+            "max_age_ms": 3600001
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v3",
+      "name": "float token",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "pm25": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 1800000,
+            "max_age_ms": 120000.0
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v3",
+      "name": "string",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "pm25": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 1800000,
+            "max_age_ms": "120000"
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v3",
+      "name": "one hour expires",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "pm25": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 3600000,
+            "max_age_ms": 3600000
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v3",
+      "name": "non PM cannot extend",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "temperature": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 1800000,
+            "max_age_ms": 3600000
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v3",
+      "name": "old source without extension",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "pm25": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 1800000
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "sensor-values-v3",
+      "name": "unextended fresh sample",
+      "data": {
+        "schema": 3,
+        "device_id": "001122334455",
+        "boot": 1,
+        "sequence": 1,
+        "descriptor_revision": 1,
+        "sensors": {
+          "pm25": {
+            "valid": true,
+            "value": 25,
+            "age_ms": 0
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "daikin-pm-power-v1",
+      "name": "disabled default",
+      "data": {
+        "section": "pm_power",
+        "values": {
+          "enabled": false,
+          "start_minute": 1380,
+          "end_minute": 420,
+          "timezone_minutes": 480
+        }
+      },
+      "valid": true
+    },
+    {
+      "schema": "daikin-pm-power-v1",
+      "name": "out of range minute",
+      "data": {
+        "section": "pm_power",
+        "values": {
+          "enabled": false,
+          "start_minute": 1440,
+          "end_minute": 420,
+          "timezone_minutes": 480
+        }
+      },
+      "valid": false
+    },
+    {
+      "schema": "lan-pm-age-v1",
+      "name": "night PM25 native body",
+      "data": {
+        "boot": 1,
+        "sequence": 1,
+        "fields": 4,
+        "co2_supported": false,
+        "values": [
+          0,
+          0,
+          25000,
+          0,
+          0
+        ],
+        "ages": [
+          0,
+          0,
+          1800000,
+          0,
+          0
+        ],
+        "pm25_max_age_ms": 3600000
+      },
+      "valid": true
+    },
+    {
+      "schema": "lan-pm-age-v1",
+      "name": "no added PM10 slot",
+      "data": {
+        "boot": 1,
+        "sequence": 1,
+        "fields": 4,
+        "co2_supported": false,
+        "values": [
+          0,
+          0,
+          25000,
+          0,
+          0,
+          1
+        ],
+        "ages": [
+          0,
+          0,
+          1800000,
+          0,
+          0
+        ],
+        "pm25_max_age_ms": 3600000
+      },
+      "valid": false
+    }
+  ]
+}

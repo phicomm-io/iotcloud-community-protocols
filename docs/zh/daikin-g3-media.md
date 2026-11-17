@@ -2,11 +2,19 @@
 
 [English](https://phicomm-io.github.io/iotcloud-community-protocols/en/daikin-g3-media/)
 
-契约 `daikin-g3-media-v1`，状态：已实现，未发布。适用于 BRY88BBA15G
-社区 ESP32 固件和配套屏幕 MCU 固件。先查询 `capabilities.get` 和
+契约 `daikin-g3-media-v1`。适用于 BRY88BBA15G 社区 ESP32 固件和配套屏幕 MCU 固件。先查询 `capabilities.get` 和
 `status.get`：屏幕能力 `MEDIA=0x400000`、`IMAGE=0x800000`、
 `BINARY_LINK=0x1000000` 分别表示推送、图片组件和二进制串口支持。
 旧 MCU 不显示相关管理控件，原有 SCN3 布局保持可用。
+
+这一页覆盖四块内容，按需跳到对应小节：
+
+| 内容 | 小节 |
+| --- | --- |
+| 推送通知、图源与队列策略 | 外部调用 · 临时图片 / 视频流通知 · 按推送 ID 更新 · 过期与队列满策略 |
+| 摄像头拉流 | 摄像头拉流 |
+| 屏幕待机与 TVOC 预热 | 主页与每页待机 · TVOC 测量预热 |
+| 串口链路本身 | 串口速率与恢复 · 串口接收丢失后的恢复 |
 
 ## 外部调用
 
@@ -85,75 +93,6 @@ python3 BRY88BBA15G/tools/screen_media.py --url http://device get push
 ```
 
 `IOTCLOUD_AUTH` 可提供已有的 `admin:密码`。CLI 自动等待每次 MCU 回执。
-
-## 摄像头拉流
-
-`screen.stream.set` 参数：`url` 必填（最多 383 字节），`username/password`
-各最多 63 字节，`width` 默认 320（1..480）、`height` 默认 240（1..854）、
-`fps` 默认 1（1..10）、`enabled` 默认 true、`verify_tls` 默认 true。
-HTTP/HTTPS URL 支持路径中的 `{width}/{height}/{fps}`；不支持 URL 内嵌凭据、
-IPv6 字面量、片段或重定向。省略 password 保留原密码，传空串清除。
-配置保存在 ESP NVS；查询只返回 `password_set`，不返回密码。
-发送 `url:"",enabled:false` 可清除摄像头地址及凭据；清除后须先配置有效地址才能启动。
-
-```python
-{"action":"screen.stream.set", "request_id":"camera-1", "params":{
- "url":"http://camera/mjpeg?w={width}&h={height}&fps={fps}",
- "width":320,"height":240,"fps":1,"enabled":True,"verify_tls":True}}
-```
-
-屏幕 MCU 组装 HTTP 请求，处理 Basic / Digest MD5（qop=auth 或旧式无 qop）、
-multipart MJPEG、HTTP chunked 及单 JPEG 响应，校验并通过硬件解码为 RGB565。
-ESP32 只提供有流控的 DNS/TCP/TLS 字节透传。源端实际帧尺寸须不大于请求尺寸；
-URL 参数是否生效取决于源服务。`fps` 是请求上限，实际帧率取决于 JPEG 大小、
-串口速率和 MCU 绘制耗时。MCU 按设定间隔跳过过快帧；源服务应按设备可持续的
-帧率输出，避免 TCP 缓存使画面延迟。可从默认 1 FPS 开始，依据 `get` 的实际帧率调整。
-RTSP/H.264 摄像头需先由摄像头服务器转为指定尺寸的 MJPEG。
-
-在“屏幕→服务→摄像头”配置地址，点击“添加摄像头页面”，保存布局。
-新页面使用完整 4×6 网格，原页面保留；也可添加图片组件并选择 contain/cover。
-SCN3 仍为 9520 字节，组件 `type=8`，组件内偏移 86/87 分别为
-`image_source=0` / `image_fit=0 contain,1 cover`。最多八页、32 组件。
-
-仅在图片组件所在页面可见、屏幕亮起、无推送遮挡及无 OTA 时拉流。
-隐藏/休眠立即关闭连接；失败按 1..30 秒退避。`screen.stream.start/stop`
-无参数，持久化启停状态；`get` 返回配置及 `state`（off/paused/connecting/
-reading/backoff）、frames、dropped、bytes、实际尺寸/帧率、像素 CRC 和错误码。
-默认校验 TLS 证书；测试自签名源可显式关闭校验。
-
-## 串口速率与恢复
-
-`screen.link.get` 返回配置、实际速率、会话、CRC/帧错误、重传与回退计数。
-其中 `framing` 细分超时与格式错误，并报告最近错误的帧长度、声明长度及头部是否有效。
-`set` 接受 `mode:"fixed"|"auto"`、`rate`、`max_rate`、`apply_now`。
-支持 115200、230400、460800、921600；默认固定 115200。auto 从上限向下尝试。
-切换仅发生在 MCU 恢复阶段：清空发送、旧速率 READY、新速率 CRC 探测、双向确认；
-超时回退 115200。`apply_now:true` 重启屏幕 MCU 进入恢复协商；否则下次恢复生效。
-高波特率持有 ESP APB/禁轻睡眠锁；正常运行不自行升速，单端重启会重新同步。
-
-新增二进制帧使用零分隔及转义：`00 → DB DC`、`DB → DB DD`。
-未转义内容为 `"GM",version=1,channel,u32LE session,u32LE sequence,u16LE length,`
-`payload,CRC32LE`；CRC 覆盖头和载荷，载荷最多 1152 字节。
-通道为 link=0、command=1、reply=2、socket=3、socket_ack=4、socket_event=5。
-图片和 TCP 块最多 512 字节，单块确认/有限重试；session 隔离重启前数据，
-sequence 和内容校验处理重复。工厂 OTA 独占原始串口。
-错误码：0成功、1范围、2忙、3不存在、4 CRC、5格式、6解码、7离线。
-
-规范常量见 [机器可读契约](contracts/daikin-g3-media-v1.json)。
-
-媒体操作码为 begin=1、chunk=2、commit=3、cancel=4、push=5、dismiss=6、
-query=7、stream_config=8、stream_start=9、stream_stop=10、select=11、push_url=12。
-select 的操作码后带一个 u8 展示页号。地址推送需能力位 25（33554432）：
-16 字节原推送头后接 519 字节现有图源配置，再接标题和正文；image_id 必须为 0。
-媒体状态版本 3 长 352 字节，后接 44 字节流状态：44 字节头、4 个 17 字节图片记录、
-16 个 10 字节队列记录（u32 id、u32 image_id、u8 state、u8 地址图源标志）、
-16 个 5 字节历史记录。头字节 22/23 为展示页/队列数，24/25 为 JPEG 标志，
-26..27 为解码耗时毫秒（u16LE），28..31 为容量/版本；偏移 32/36/40 的 LE32
-依次为合并后的最近推送 ID、图源错误、当前剩余毫秒。流状态偏移 40 为通知 ID（0 为页面）。
-其后可附加 64 字节解码诊断（16 个 LE32）：SR、IR、CR、CFG、码流地址、输出
-地址、CODLEN、CLKEN1、PRSTR1、前两个 RGB565 像素、前 512 字节像素 CRC32、
-启动前 SR、启动前 IR、耗时、扫描数据 CRC32、扫描偏移。
-ESP 在分步升级期间也接受早期 172 字节及 v2 的 364/428 字节状态快照。
 
 ## 临时图片 / 视频流通知
 
@@ -244,6 +183,95 @@ python3 BRY88BBA15G/tools/screen_media.py --url http://device update 2001 --text
 `queue[].expires_in_ms` 返回剩余硬过期毫秒数（0 表示未启用），硬过期记为 `expired`，显示时长结束仍为 `timedout`。历史最多 16 条，去重保留窗口也受此限制；应用应给新事件使用新 ID，更新只对仍在队列中的 ID 生效。通知及策略不跨 MCU 重启保存。
 
 UART 扩展 `MEDIA_PUSH_POLICY=14` 的前 16 字节沿用 PUSH，随后为 TTL LE32、overflow 字节和 URL 标志；可选 519 字节图源配置后跟标题/正文。`MEDIA_PUSH_UPDATE` 掩码位 14 表示 TTL，在原 18 字节头后附 LE32，然后才是可选图源和文字。状态版本 4 的队列项由 10 字节增至 14 字节，末尾附剩余 TTL。新 ESP 仍转换读取旧版状态，不支持能力位时拒绝新选项。
+
+## 摄像头拉流
+
+`screen.stream.set` 参数：`url` 必填（最多 383 字节），`username/password`
+各最多 63 字节，`width` 默认 320（1..480）、`height` 默认 240（1..854）、
+`fps` 默认 1（1..10）、`enabled` 默认 true、`verify_tls` 默认 true。
+HTTP/HTTPS URL 支持路径中的 `{width}/{height}/{fps}`；不支持 URL 内嵌凭据、
+IPv6 字面量、片段或重定向。省略 password 保留原密码，传空串清除。
+配置保存在 ESP NVS；查询只返回 `password_set`，不返回密码。
+发送 `url:"",enabled:false` 可清除摄像头地址及凭据；清除后须先配置有效地址才能启动。
+
+```python
+{"action":"screen.stream.set", "request_id":"camera-1", "params":{
+ "url":"http://camera/mjpeg?w={width}&h={height}&fps={fps}",
+ "width":320,"height":240,"fps":1,"enabled":True,"verify_tls":True}}
+```
+
+屏幕 MCU 组装 HTTP 请求，处理 Basic / Digest MD5（qop=auth 或旧式无 qop）、
+multipart MJPEG、HTTP chunked 及单 JPEG 响应，校验并通过硬件解码为 RGB565。
+ESP32 只提供有流控的 DNS/TCP/TLS 字节透传。源端实际帧尺寸须不大于请求尺寸；
+URL 参数是否生效取决于源服务。`fps` 是请求上限，实际帧率取决于 JPEG 大小、
+串口速率和 MCU 绘制耗时。MCU 按设定间隔跳过过快帧；源服务应按设备可持续的
+帧率输出，避免 TCP 缓存使画面延迟。可从默认 1 FPS 开始，依据 `get` 的实际帧率调整。
+RTSP/H.264 摄像头需先由摄像头服务器转为指定尺寸的 MJPEG。
+
+在“屏幕→服务→摄像头”配置地址，点击“添加摄像头页面”，保存布局。
+新页面使用完整 4×6 网格，原页面保留；也可添加图片组件并选择 contain/cover。
+SCN3 仍为 9520 字节，组件 `type=8`，组件内偏移 86/87 分别为
+`image_source=0` / `image_fit=0 contain,1 cover`。最多八页、32 组件。
+
+仅在图片组件所在页面可见、屏幕亮起、无推送遮挡及无 OTA 时拉流。
+隐藏/休眠立即关闭连接；失败按 1..30 秒退避。`screen.stream.start/stop`
+无参数，持久化启停状态；`get` 返回配置及 `state`（off/paused/connecting/
+reading/backoff）、frames、dropped、bytes、实际尺寸/帧率、像素 CRC 和错误码。
+默认校验 TLS 证书；测试自签名源可显式关闭校验。
+
+## 主页与每页待机
+
+`screen.display.get` 在全局策略之外返回 `page_policy_supported`、`home_page_id` 和 `page_overrides`；普通状态不扩展这些字段。能力位 `SCREEN_CAP_PAGE_POLICY`（bit 28）支持新设置。主页绑定稳定的 SCN3 page.id，0 表示首个启用页面；双击返回主页，通知确认仍优先。
+
+每项覆盖包含 `{page_id, external_minutes, battery_minutes, idle_brightness}`；无条目则三项全部沿用全局。电池和外电延时各为 0–1440 分钟，0 关闭待机超时；亮度 0–100，0 熄屏；全局定时计划仍优先。最多八项，页面 ID 唯一且必须存在。排序不改变绑定，删除清除覆盖，禁用保留覆盖；主页被禁用或删除则回到默认。
+
+扩展设置请求同时包含两个新字段及旧有六字段；旧请求保留已保存的每页设置。旧 MCU 继续支持全局设置并接收 368 字节 v1 策略，新 MCU 接收 472 字节 v2 策略。旧持久记录以默认主页及继承方式载入。不变保存不递增 revision，实际变化沿用事务持久化、重播和 MCU revision 读回。
+
+## TVOC 测量预热
+
+G3 业务状态可包含 `tvoc_warmup_seconds_remaining`（0–3600 的整数，单位秒，或 null）。此只读扩展来自 MCU 实际测量阶段计时，与手动校准会话独立。正数表示剩余预热时间；零表示预热计时结束，仍需有效传感器样本才显示浓度。null 或字段缺失表示剩余时间未知，包括停止测量或 MCU 快照已满 20 秒。ESP 按源快照的单调时钟年龄扣减，最小为零。网页也按本地单调时间推进倒计时，连续 20 秒没有新响应后隐藏。旧客户端可忽略该可选字段；样本有效性与浓度单位保持原定义。
+
+`screen.settings.set {"tvoc_warmup_minutes":N}` 设置测量预热：-1 表示原厂自动（默认），1–60 表示自定义分钟。零、小数和越界值均拒绝，不能跳过预热。ESP 沿用屏幕设置的事务存储保存，在 MCU 启动或会话变化后重播。`screen.settings.get` 返回已保存与实际设置；成功需对应请求 ACK 和实际读回确认。修改后按本次测量启动以来的时间重算剩余时间，不重启测量、不改变手动校准。预热计时结束仍不会把无效样本改为有效。
+
+## 串口速率与恢复
+
+`screen.link.get` 返回配置、实际速率、会话、CRC/帧错误、重传与回退计数。
+其中 `framing` 细分超时与格式错误，并报告最近错误的帧长度、声明长度及头部是否有效。
+`set` 接受 `mode:"fixed"|"auto"`、`rate`、`max_rate`、`apply_now`。
+支持 115200、230400、460800、921600；默认固定 115200。auto 从上限向下尝试。
+切换仅发生在 MCU 恢复阶段：清空发送、旧速率 READY、新速率 CRC 探测、双向确认；
+超时回退 115200。`apply_now:true` 重启屏幕 MCU 进入恢复协商；否则下次恢复生效。
+高波特率持有 ESP APB/禁轻睡眠锁；正常运行不自行升速，单端重启会重新同步。
+
+新增二进制帧使用零分隔及转义：`00 → DB DC`、`DB → DB DD`。
+未转义内容为 `"GM",version=1,channel,u32LE session,u32LE sequence,u16LE length,`
+`payload,CRC32LE`；CRC 覆盖头和载荷，载荷最多 1152 字节。
+通道为 link=0、command=1、reply=2、socket=3、socket_ack=4、socket_event=5。
+图片和 TCP 块最多 512 字节，单块确认/有限重试；session 隔离重启前数据，
+sequence 和内容校验处理重复。工厂 OTA 独占原始串口。
+错误码：0 成功、1 范围、2 忙、3 不存在、4 CRC、5 格式、6 解码、7 离线。
+
+规范常量见 [机器可读契约](contracts/daikin-g3-media-v1.json)。
+
+媒体操作码为 begin=1、chunk=2、commit=3、cancel=4、push=5、dismiss=6、
+query=7、stream_config=8、stream_start=9、stream_stop=10、select=11、push_url=12。
+select 的操作码后带一个 u8 展示页号。地址推送需能力位 25（33554432）：
+16 字节原推送头后接 519 字节现有图源配置，再接标题和正文；image_id 必须为 0。
+媒体状态版本 3 长 352 字节，后接 44 字节流状态：44 字节头、4 个 17 字节图片记录、
+16 个 10 字节队列记录（u32 id、u32 image_id、u8 state、u8 地址图源标志）、
+16 个 5 字节历史记录。头字节 22/23 为展示页/队列数，24/25 为 JPEG 标志，
+26..27 为解码耗时毫秒（u16LE），28..31 为容量/版本；偏移 32/36/40 的 LE32
+依次为合并后的最近推送 ID、图源错误、当前剩余毫秒。流状态偏移 40 为通知 ID（0 为页面）。
+其后可附加 64 字节解码诊断（16 个 LE32）：SR、IR、CR、CFG、码流地址、输出
+地址、CODLEN、CLKEN1、PRSTR1、前两个 RGB565 像素、前 512 字节像素 CRC32、
+启动前 SR、启动前 IR、耗时、扫描数据 CRC32、扫描偏移。
+ESP 在分步升级期间也接受早期 172 字节及 v2 的 364/428 字节状态快照。
+
+## 串口接收丢失后的恢复
+
+稳定默认仍为固定 115200 波特率。检测到 UART 硬件接收溢出或接收环丢字节后，由接收任务丢弃已损坏的缓存片段，并吞至下一个零分隔符重新同步。媒体头、CRC、会话和序号校验保持不变。这用于检测丢失后的恢复，不保证高波特率不丢数据。
+
+Guard 诊断 `0xe2` 版本 4 严格为 98 字节。前 82 字节沿用版本 3 布局，仅版本字节 1 改为 4；随后依次追加四个小端 uint32：偏移 82 的 `hardware_rx_overruns`（观察到的 RXOV 次数，不代表丢字节数）、86 的 `ring_dropped_bytes`、90 的 `rx_loss_resets`、94 的 `last_rx_loss_ms`（开机单调毫秒，尚未丢失时为零）。新 ESP 严格接受版本 3/82 字节或版本 4/98 字节，四个丢失字段仅在版本 4 的显式维护查询 `screen.recovery.get` 和 `screen.boot.result.get` 中返回，普通业务状态仍仅保留原有 20 项；既有 CRC、会话和诊断时效校验继续生效。旧 ESP 可以忽略版本 4 诊断通知，媒体串口格式不变。
 
 ## 运动检测接入例程
 

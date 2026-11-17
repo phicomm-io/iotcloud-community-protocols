@@ -4,20 +4,7 @@
 
 以下为 Wi-Fi 固件的设备接口。管理平台的账户 API 使用独立的 `/api/auth/...`，见 [平台接口](platform-hub.md)。
 
-<a id="m1-generic-profile4"></a>
-
-## M1 通用字段 profile4
-
-`display_profile.get` 返回schema4；`display_profile.set`动作名保持不变，**SET不得带schema键**。新 `m1-display-v4` 替代已弃用的旧RC profile3，不保证向后兼容。revision/CAS、整体选择、格式、TTL、色灯、raw `display_value.set`及MCU读回规则仍见下文。Wi-Fi配置版本与UART操作/schema编号独立：OP24/25/26与raw API v3不变。
-
-MQTT区域严格为**九键**：`slot`、`source:"mqtt"`、`device_id`、`field_id`、`type:"number"`、`unit`、`display`、`ttl_seconds`、`color`。不存metric、model或显示名称。SET接受连续或带冒号、任意大小写MAC，GET返回规范小写12位。field_id为1..32位ASCII `[a-z][a-z0-9_]*`；unit为0..24合法UTF-8字节，无C0/DEL。预期type/unit须与当前[schema2字段描述](mqtt.md#sensor-values-v2)一致，任意发布字段/单位不需要增加机型适配。
-
-none/local/api区域仍为含metric的严格**八键**，不用field_id/type。本地metric仍对应M1实际传感器；none/custom与raw API行为不变，MQTT发现不能改写本地硬件列表。PM只支持整数、甲醛五种显示模式不变。runtime单位允许通用MQTT字段有界UTF-8元数据，负数/不可显示值返回out_of_range而不是零。每个已接受boot/sequence是完整快照：不支持/缺失/格式错误/无效字段或预期单位不匹配立即撤销旧number候选，不删除配置、不把未知值当零；记录counter防旧数值重放，number兄弟相互独立。过期/离线不能续期。
-
-应用配置v11在冻结的v9/v10前缀后追加remote[2]。明确迁移已校验的旧MQTT metric/unit对：canonical旧metric写为field_id、canonical旧单位写为unit，保留revision、选择、双击和样式；这不恢复旧HTTP/feed schema。新MQTT写入在内部使用remote绑定，不用机型metric。none/local/api设置语义保留，运行期租约不持久化。不支持的布局应保护配置并说明恢复方式，不保证任意旧RC配置可用。display_source.get/set旧动作名只是当前schema4别名，不实现旧HTTP形状；仅旧profile只读投影不能启用新UART格式。
-
-[SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [机器约定](contracts/m1-display-v4.json) · [样例](contracts/examples/m1-display-v4.json)。下方保留历史schema3/schema2细节，其中MQTT metric/model映射已弃用。
-
+本页前半是每台设备共用的 HTTP 约定，后半是 M1 与 DAIKIN 的机型扩展。先读「接入」和「命令信封」，再按你的机型跳到对应小节。
 
 ## 接入
 
@@ -51,100 +38,19 @@ HTTP 和 TMCP 共用动作及 JSON 信封：
 
 调用方用 `request_id` 匹配结果，按稳定的 `code` 判断成功或错误；`message` 是可翻译文案。`ok` 表示查询成功，`accepted` 表示接受操作。错误如 `invalid_params`、`busy`、`unsupported`、`conflict` 不得作为成功处理。完整动作列表取设备 `capabilities.actions`。
 
-## DAIKIN 分区诊断
+<a id="m1-generic-profile4"></a>
 
-支持此扩展的 DAIKIN 固件在状态对象中提供只读 `status.ota_partitions`；`status.get {}` 的命令应答位置为 `data.ota_partitions`。这是可选诊断字段，客户端须兼容其他机型或旧固件未返回该对象。
+## M1 通用字段 profile4
 
-| 字段 | JSON 类型与含义 |
-| --- | --- |
-| `running` | 字符串或 null；当前运行应用分区的 label，无法取得时为 null |
-| `running_size` | 非负整数；当前运行应用分区容量，单位字节；`running:null` 时为 0 |
-| `next` | 字符串或 null；SDK 选择的下次 OTA 目标分区 label，无可用目标时为 null |
-| `next_size` | 非负整数；该 OTA 目标分区容量，单位字节；`next:null` 时为 0 |
-| `entries` | 对象数组；完整枚举设备实际安装分区表中 SDK 可见的应用和数据分区 |
-| `entries[].label` | 字符串；分区 label |
-| `entries[].type` / `entries[].subtype` | 非负整数；ESP-IDF 分区类型/子类型编号 |
-| `entries[].address` | 非负整数；分区起始 Flash 字节偏移 |
-| `entries[].size` | 非负整数；分区容量，单位字节 |
+`display_profile.get` 返回 schema4；`display_profile.set`动作名保持不变，**SET 不得带 schema 键**。新 `m1-display-v4` 替代已弃用的旧 RC profile3，不保证向后兼容。revision/CAS、整体选择、格式、TTL、色灯、raw `display_value.set`及 MCU 读回规则仍见下文。Wi-Fi 配置版本与 UART 操作/schema 编号独立：OP24/25/26 与 raw API v3 不变。
 
-数值均为 JSON 十进制数字，不是十六进制字符串。分区名称、数量和容量来自设备已安装的分区表，独立于构建使用的 CSV；不能假定名称一定为 `app0` / `app1`。该对象不包含 Flash 内容或凭据，只描述现状，不切换 OTA 布局、不改写分区表，也不代表某个镜像已安装或适合写入。
+MQTT 区域严格为**九键**：`slot`、`source:"mqtt"`、`device_id`、`field_id`、`type:"number"`、`unit`、`display`、`ttl_seconds`、`color`。不存 metric、model 或显示名称。SET 接受连续或带冒号、任意大小写 MAC，GET 返回规范小写 12 位。field_id 为 1..32 位 ASCII `[a-z][a-z0-9_]*`；unit 为 0..24 合法 UTF-8 字节，无 C0/DEL。预期 type/unit 须与当前[schema2 字段描述](mqtt.md#sensor-values-v2)一致，任意发布字段/单位不需要增加机型适配。
 
-实现入口：`firmware/DAIKIN/src/commands.inc` 的 `otaPartitionStatus()` 与 `state()`。
+none/local/api 区域仍为含 metric 的严格**八键**，不用 field_id/type。本地 metric 仍对应 M1 实际传感器；none/custom 与 raw API 行为不变，MQTT 发现不能改写本地硬件列表。PM 只支持整数、甲醛五种显示模式不变。runtime 单位允许通用 MQTT 字段有界 UTF-8 元数据，负数/不可显示值返回 out_of_range 而不是零。每个已接受 boot/sequence 是完整快照：不支持/缺失/格式错误/无效字段或预期单位不匹配立即撤销旧 number 候选，不删除配置、不把未知值当零；记录 counter 防旧数值重放，number 兄弟相互独立。过期/离线不能续期。
 
-与 `free_memory` 同级的可选状态字段 `minimum_free_memory`（启动以来最低空闲堆）和 `max_free_block`（当前最大可分配连续堆块）均为以字节计的非负整数；客户端须兼容字段缺失。
+应用配置 v11 在冻结的 v9/v10 前缀后追加 remote[2]。明确迁移已校验的旧 MQTT metric/unit 对：canonical 旧 metric 写为 field_id、canonical 旧单位写为 unit，保留 revision、选择、双击和样式；这不恢复旧 HTTP/feed schema。新 MQTT 写入在内部使用 remote 绑定，不用机型 metric。none/local/api 设置语义保留，运行期租约不持久化。不支持的布局应保护配置并说明恢复方式，不保证任意旧 RC 配置可用。display_source.get/set 旧动作名只是当前 schema4 别名，不实现旧 HTTP 形状；仅旧 profile 只读投影不能启用新 UART 格式。
 
-<a id="hub-byte-addressable-heap"></a>
-
-### 中枢可按字节访问的堆
-
-支持此扩展的大金 `hub` 固件在状态对象的 `hub` 中增加三个可选、只读的非负 JSON 整数，`status.get {}` 响应中位于 `data.hub`。单位均为字节，统计范围为 ESP-IDF 组合能力 `MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT`，即内部且支持按字节读写的内存。
-
-| `data.hub` 中的字段 | 含义 |
-| --- | --- |
-| `free_byte_heap` | 当前该能力范围的空闲堆总量 |
-| `largest_byte_block` | 当前该能力范围可分配的最大连续块 |
-| `min_byte_heap` | SDK 自启动以来的低水位统计，即符合条件的各内存区域最低空闲量之和 |
-
-各区域的低水位可能发生在不同时刻，因此 `min_byte_heap` 不一定等于某一时刻最低的空闲总量。既有同级 `free_memory`、`minimum_free_memory` 和 `max_free_block` 保留原 ESP getter 语义，不是这些按能力统计字段的别名。旧固件或其他变体可能缺少 `hub` 或其中字段，客户端须兼容；其他机型不能直接套用这些 ESP32 含义。
-
-见[固定实现](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/commands.inc#L63-L67)、[SDK 堆参考](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/mem_alloc.html)与[中枢连接准入说明](platform-hub.md#hub-memory-diagnostics)。这些可选诊断不改变必需合同字段或消费者 pin。
-
-### 复位原因
-
-支持此诊断的大金固件可返回只读 `status.reset_reason`，在 `status.get {}` 响应中位于 `data.reset_reason`。它是 `unsigned(esp_reset_reason())` 提供的非负 JSON 整数，表示上次复位原因。旧固件可能省略该字段，缺失时表示此诊断不可用。
-
-以下数字对应大金 ESP32 所用 ESP-IDF 4.4.7 的 `esp_reset_reason_t`，不是跨机型或跨 SDK 共用的复位原因枚举。无法识别的数值按未知诊断保留。见[官方 SDK 参考](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/system.html#reset-reason)与[固定版本枚举定义](https://github.com/espressif/esp-idf/blob/38eeba213aa695aabfd6d89aa9f5078dbe5a94c3/components/esp_system/include/esp_system.h#L41-L53)。
-
-| 数字 | SDK 枚举 | 含义 |
-| --- | --- | --- |
-| 0 | `ESP_RST_UNKNOWN` | 原因无法确定 |
-| 1 | `ESP_RST_POWERON` | 上电 |
-| 2 | `ESP_RST_EXT` | 外部引脚复位，不适用于 ESP32 |
-| 3 | `ESP_RST_SW` | 经 `esp_restart()` 触发的软件复位 |
-| 4 | `ESP_RST_PANIC` | 异常或 panic |
-| 5 | `ESP_RST_INT_WDT` | 中断看门狗 |
-| 6 | `ESP_RST_TASK_WDT` | 任务看门狗 |
-| 7 | `ESP_RST_WDT` | 其他看门狗 |
-| 8 | `ESP_RST_DEEPSLEEP` | 从深度睡眠唤醒 |
-| 9 | `ESP_RST_BROWNOUT` | 欠压复位 |
-| 10 | `ESP_RST_SDIO` | SDIO 复位 |
-
-实现见[大金状态诊断](https://github.com/phicomm-io/iotcloud-community-firmware/blob/508dfed3597bb64bdfb3f29e10f2ee46c90189c2/DAIKIN/src/commands.inc#L28)。此可选诊断不改变必需合同字段，消费者现有规范 pin 无需因此更新。
-
-## DAIKIN 显式 full → hub 转换
-
-显式转换接口已随 v1.0.0-rc 预发布；下述设备 Web 密码可选行为属于面向 v1.0.0-rc.1 的未发布修复，不改写原 RC 标签或制品。仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
-
-设备 Web 密码可选：未设置时无需 Basic 认证；已有密码时仍必须以该密码通过 Basic `admin` 认证。向独立接口提交完整 `PHOTA001` 签名二进制文件；以下 `Authorization` 头仅在已设设备 Web 密码时必需：
-
-```http
-POST /api/v1/ota/convert
-Authorization: Basic <base64(admin:设备Web密码)>
-Content-Type: application/octet-stream
-X-IoTCloud-Target-Variant: hub
-X-IoTCloud-Confirm: full-to-hub
-
-<完整 PHOTA001 签名二进制文件>
-```
-
-两个确认头的值必须精确匹配；已设设备 Web 密码时，不能使用本地 Hub owner 或上游账户会话代替设备 Basic 认证。设备当前配置必须健康，且没有进行中的 OTA、待处理命令或已安排的重启；配置恢复期间禁止转换。
-
-设备使用实际下一 OTA 槽容量检查应用负载，不采用构建 CSV 的假定容量。应用前缀必须在固定偏移匹配 DAIKIN 硬件、项目与目标 `hub` 身份，不能通过搜索散落字符串识别镜像。擦除非运行槽前，先检查固定前缀并以可信密钥认证签名封套。完整接收后，从 Flash 读回整个暂存负载并校验签名覆盖的摘要，再读回并核对固定身份，全部通过后才选择新启动分区。
-
-| 正反例 | 结果 |
-| --- | --- |
-| 已声明能力的 `full`，已设密码时认证通过、确认头正确，健康且空闲，签名 Hub 镜像装得下且全部校验通过 | HTTP 202，`{"code":"accepted"}`；安排重启 |
-| 设备未设置 Web 密码 | 无需 Basic 认证；仍须确认头、健康/空闲检查、签名与目标校验全部通过 |
-| 已设 Web 密码，但 Basic 认证缺失或错误 | HTTP 401，`unauthorized` |
-| 确认头的值缺失或错误 | HTTP 400，`invalid_params` |
-| 当前处于配置恢复 | HTTP 409，`migration_required` |
-| 进行中的 OTA、待处理命令或已安排的重启 | HTTP 409，`busy` |
-| 当前运行身份不能选择显式 Full-to-Hub 目标 | HTTP 409，`unsupported_conversion` |
-| 镜像超过实际槽容量、缺失/错误签名、摘要或 Flash 读回不一致、固定身份不是目标 Hub | HTTP 400，`invalid_image`；不激活镜像 |
-| 普通 `/api/v1/ota/upload` 或 `/api/v1/ota/upload-unsigned` 提交不同 variant，即使附带转换头 | HTTP 400，`invalid_image`；普通入口始终保持当前 variant |
-| `hub` 请求转换为 `full` | Hub 不提供转换接口，普通接口拒绝跨 variant；Hub 大配置与 Full 不兼容 |
-
-转换不改写分区表或普通配置，保留共用的 Wi-Fi、MQTT 和设备 Web 密码。首次 Hub 初始化仅在已有设备 Web 密码时要求原密码认证；独立本地 owner 密码要求不变，HAP 默认关闭；安装新镜像不等于已创建本地 owner 或完成 HomeKit 配对。转换也不扩大 OTA 槽：原厂 1.5 MiB 槽仍不能接受超出该容量的镜像。HTTP 202 只确认校验通过并安排重启；重新连接后，读取 `info` / `status` 的 `firmware_variant:"hub"` 才能确认 Hub 已运行。
+[SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [机器约定](contracts/m1-display-v4.json) · [样例](contracts/examples/m1-display-v4.json)。下方保留历史 schema3/schema2 细节，其中 MQTT metric/model 映射已弃用。
 
 ## M1 CO₂ 来源
 
@@ -262,9 +168,9 @@ v2 生效时读取 v3 只投影配置，不保存或切换：PM→integer；甲�
 
 local 指本机 M1，只允许温湿度、PM2.5、甲醛、CO₂、压力；没有传感器能力或新鲜样本时无效。mqtt 只消费同账号 [typed feed](mqtt.md#sensor-values-v1)，不接受任意 topic/URL/JSONPath。source=none 只允许 custom+空单位，不成为写入入口。未知字段、错误类型、单位不匹配、重复位置和 low>=high 均拒绝。
 
-每路只有三位非负数字。数值编码须落在0..999，否则仅该路回退；原气体/单位段是否显示由固件按真实位置、metric、单位及 scale1 推导。玻璃没有可选择的 W、℃、% 等单位字形，客户端须明确逻辑单位与倍率，见[表示边界](m1-display.md#display-representation)。
+每路只有三位非负数字。数值编码须落在 0..999，否则仅该路回退；原气体/单位段是否显示由固件按真实位置、metric、单位及 scale1 推导。玻璃没有可选择的 W、℃、% 等单位字形，客户端须明确逻辑单位与倍率，见[表示边界](m1-display.md#display-representation)。
 
-`display_data.set` 仅向 source=api 的位置写入短期 RAM 数据，必须匹配当前配置 revision、unit，且 TTL 不超过该路上限；可选 color 在本条租期内直接指定。正常写入需要 value、unit 和1..60秒 TTL。立即清除使用独立形状，不以伪零表示缺失：
+`display_data.set` 仅向 source=api 的位置写入短期 RAM 数据，必须匹配当前配置 revision、unit，且 TTL 不超过该路上限；可选 color 在本条租期内直接指定。正常写入需要 value、unit 和 1..60 秒 TTL。立即清除使用独立形状，不以伪零表示缺失：
 
 ```json
 {"request_id":"display_value_1","action":"display_data.set","params":{"revision":1,"slot":1,"value":45.6,"unit":"%","ttl_seconds":10,"color":"yellow"}}
@@ -293,7 +199,7 @@ GET 的配置字段仍在根：revision、selected_source、double_click、lanes
 
 配置保存后独立 GET 核对 revision 和完整配置；数值写入后再 GET 核对该路 valid/value/unit/租期，MCU 确认仍须独立 UART 查询。旧 MCU 可保留 desired 配置，但不得声称双路已生效。失效不改持久选择，仅恢复对应原始读数；没有可靠离线事件时按 TTL 失效，不伪造 offline 判断。
 
-成功的新 SET 持久选择 dual；成功旧 CO₂ SET 选择 legacy并保留双路配置。profile 与配置同笔保存；CAS冲突或busy不提交候选配置。`accepted` / `storage_error` 遵循[存储提交结果](configuration.md#storage-commit-results)，不能仅凭 `storage_error` 断言 Flash 已回滚。两路配置追加到 M1 存储v9，v8迁移与备份兼容见[配置说明](configuration.md#m1-display-storage-v9)。
+成功的新 SET 持久选择 dual；成功旧 CO₂ SET 选择 legacy 并保留双路配置。profile 与配置同笔保存；CAS 冲突或 busy 不提交候选配置。`accepted` / `storage_error` 遵循[存储提交结果](configuration.md#storage-commit-results)，不能仅凭 `storage_error` 断言 Flash 已回滚。两路配置追加到 M1 存储 v9，v8 迁移与备份兼容见[配置说明](configuration.md#m1-display-storage-v9)。
 
 ## M1 传感器提醒
 
@@ -321,3 +227,98 @@ GET 的配置字段仍在根：revision、selected_source、double_click、lanes
 | `unit` | `main_controller_raw_u16` |
 
 Wi-Fi 端先保存期望值，再按 MCU 能力发送 [OP `14`](m1-uart.md#op-14)，最后独立只读核对；写应答不产生 `buzzer_confirmed:true`。阈值 `uart_sent:true` 同样不代表蜂鸣器读回。旧 MCU 仍可保存期望设置，但 `buzzer_supported:false`、`buzzer_confirmation:"requires_mcu_upgrade"`，实际字段均为 null。客户端应保留“期望 OFF、实际未知”的区别，不宣称关闭成功。
+
+## DAIKIN 分区诊断
+
+支持此扩展的 DAIKIN 固件在状态对象中提供只读 `status.ota_partitions`；`status.get {}` 的命令应答位置为 `data.ota_partitions`。这是可选诊断字段，客户端须兼容其他机型或旧固件未返回该对象。
+
+| 字段 | JSON 类型与含义 |
+| --- | --- |
+| `running` | 字符串或 null；当前运行应用分区的 label，无法取得时为 null |
+| `running_size` | 非负整数；当前运行应用分区容量，单位字节；`running:null` 时为 0 |
+| `next` | 字符串或 null；SDK 选择的下次 OTA 目标分区 label，无可用目标时为 null |
+| `next_size` | 非负整数；该 OTA 目标分区容量，单位字节；`next:null` 时为 0 |
+| `entries` | 对象数组；完整枚举设备实际安装分区表中 SDK 可见的应用和数据分区 |
+| `entries[].label` | 字符串；分区 label |
+| `entries[].type` / `entries[].subtype` | 非负整数；ESP-IDF 分区类型/子类型编号 |
+| `entries[].address` | 非负整数；分区起始 Flash 字节偏移 |
+| `entries[].size` | 非负整数；分区容量，单位字节 |
+
+数值均为 JSON 十进制数字，不是十六进制字符串。分区名称、数量和容量来自设备已安装的分区表，独立于构建使用的 CSV；不能假定名称一定为 `app0` / `app1`。该对象不包含 Flash 内容或凭据，只描述现状，不切换 OTA 布局、不改写分区表，也不代表某个镜像已安装或适合写入。
+
+实现入口：`firmware/DAIKIN/src/commands.inc` 的 `otaPartitionStatus()` 与 `state()`。
+
+与 `free_memory` 同级的可选状态字段 `minimum_free_memory`（启动以来最低空闲堆）和 `max_free_block`（当前最大可分配连续堆块）均为以字节计的非负整数；客户端须兼容字段缺失。
+
+<a id="hub-byte-addressable-heap"></a>
+
+### 中枢可按字节访问的堆
+
+支持此扩展的大金 `hub` 固件在状态对象的 `hub` 中增加三个可选、只读的非负 JSON 整数，`status.get {}` 响应中位于 `data.hub`。单位均为字节，统计范围为 ESP-IDF 组合能力 `MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT`，即内部且支持按字节读写的内存。
+
+| `data.hub` 中的字段 | 含义 |
+| --- | --- |
+| `free_byte_heap` | 当前该能力范围的空闲堆总量 |
+| `largest_byte_block` | 当前该能力范围可分配的最大连续块 |
+| `min_byte_heap` | SDK 自启动以来的低水位统计，即符合条件的各内存区域最低空闲量之和 |
+
+各区域的低水位可能发生在不同时刻，因此 `min_byte_heap` 不一定等于某一时刻最低的空闲总量。既有同级 `free_memory`、`minimum_free_memory` 和 `max_free_block` 保留原 ESP getter 语义，不是这些按能力统计字段的别名。旧固件或其他变体可能缺少 `hub` 或其中字段，客户端须兼容；其他机型不能直接套用这些 ESP32 含义。
+
+见[固定实现](https://github.com/phicomm-io/iotcloud-community-firmware/blob/a555e6de08e40d44a4a6cf0896c7cc1581540f76/DAIKIN/src/commands.inc#L63-L67)、[SDK 堆参考](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/mem_alloc.html)与[中枢连接准入说明](platform-hub.md#hub-memory-diagnostics)。这些可选诊断不改变必需合同字段或消费者 pin。
+
+### 复位原因
+
+支持此诊断的大金固件可返回只读 `status.reset_reason`，在 `status.get {}` 响应中位于 `data.reset_reason`。它是 `unsigned(esp_reset_reason())` 提供的非负 JSON 整数，表示上次复位原因。旧固件可能省略该字段，缺失时表示此诊断不可用。
+
+以下数字对应大金 ESP32 所用 ESP-IDF 4.4.7 的 `esp_reset_reason_t`，不是跨机型或跨 SDK 共用的复位原因枚举。无法识别的数值按未知诊断保留。见[官方 SDK 参考](https://docs.espressif.com/projects/esp-idf/en/v4.4.7/esp32/api-reference/system/system.html#reset-reason)与[固定版本枚举定义](https://github.com/espressif/esp-idf/blob/38eeba213aa695aabfd6d89aa9f5078dbe5a94c3/components/esp_system/include/esp_system.h#L41-L53)。
+
+| 数字 | SDK 枚举 | 含义 |
+| --- | --- | --- |
+| 0 | `ESP_RST_UNKNOWN` | 原因无法确定 |
+| 1 | `ESP_RST_POWERON` | 上电 |
+| 2 | `ESP_RST_EXT` | 外部引脚复位，不适用于 ESP32 |
+| 3 | `ESP_RST_SW` | 经 `esp_restart()` 触发的软件复位 |
+| 4 | `ESP_RST_PANIC` | 异常或 panic |
+| 5 | `ESP_RST_INT_WDT` | 中断看门狗 |
+| 6 | `ESP_RST_TASK_WDT` | 任务看门狗 |
+| 7 | `ESP_RST_WDT` | 其他看门狗 |
+| 8 | `ESP_RST_DEEPSLEEP` | 从深度睡眠唤醒 |
+| 9 | `ESP_RST_BROWNOUT` | 欠压复位 |
+| 10 | `ESP_RST_SDIO` | SDIO 复位 |
+
+实现见[大金状态诊断](https://github.com/phicomm-io/iotcloud-community-firmware/blob/508dfed3597bb64bdfb3f29e10f2ee46c90189c2/DAIKIN/src/commands.inc#L28)。此可选诊断不改变必需合同字段，消费者现有规范 pin 无需因此更新。
+
+## DAIKIN 显式 full → hub 转换
+
+仅支持转换的 `full` 固件在 `capabilities.get {}` 响应中声明 `data.ota_variant_conversion:"full-to-hub"`；未声明时不得尝试。能力声明不保证任意 Hub 镜像均能装入当前设备的实际 OTA 槽。
+
+设备 Web 密码可选：未设置时无需 Basic 认证；已有密码时仍必须以该密码通过 Basic `admin` 认证。向独立接口提交完整 `PHOTA001` 签名二进制文件；以下 `Authorization` 头仅在已设设备 Web 密码时必需：
+
+```http
+POST /api/v1/ota/convert
+Authorization: Basic <base64(admin:设备Web密码)>
+Content-Type: application/octet-stream
+X-IoTCloud-Target-Variant: hub
+X-IoTCloud-Confirm: full-to-hub
+
+<完整 PHOTA001 签名二进制文件>
+```
+
+两个确认头的值必须精确匹配；已设设备 Web 密码时，不能使用本地 Hub owner 或上游账户会话代替设备 Basic 认证。设备当前配置必须健康，且没有进行中的 OTA、待处理命令或已安排的重启；配置恢复期间禁止转换。
+
+设备使用实际下一 OTA 槽容量检查应用负载，不采用构建 CSV 的假定容量。应用前缀必须在固定偏移匹配 DAIKIN 硬件、项目与目标 `hub` 身份，不能通过搜索散落字符串识别镜像。擦除非运行槽前，先检查固定前缀并以可信密钥认证签名封套。完整接收后，从 Flash 读回整个暂存负载并校验签名覆盖的摘要，再读回并核对固定身份，全部通过后才选择新启动分区。
+
+| 正反例 | 结果 |
+| --- | --- |
+| 已声明能力的 `full`，已设密码时认证通过、确认头正确，健康且空闲，签名 Hub 镜像装得下且全部校验通过 | HTTP 202，`{"code":"accepted"}`；安排重启 |
+| 设备未设置 Web 密码 | 无需 Basic 认证；仍须确认头、健康/空闲检查、签名与目标校验全部通过 |
+| 已设 Web 密码，但 Basic 认证缺失或错误 | HTTP 401，`unauthorized` |
+| 确认头的值缺失或错误 | HTTP 400，`invalid_params` |
+| 当前处于配置恢复 | HTTP 409，`migration_required` |
+| 进行中的 OTA、待处理命令或已安排的重启 | HTTP 409，`busy` |
+| 当前运行身份不能选择显式 Full-to-Hub 目标 | HTTP 409，`unsupported_conversion` |
+| 镜像超过实际槽容量、缺失/错误签名、摘要或 Flash 读回不一致、固定身份不是目标 Hub | HTTP 400，`invalid_image`；不激活镜像 |
+| 普通 `/api/v1/ota/upload` 或 `/api/v1/ota/upload-unsigned` 提交不同 variant，即使附带转换头 | HTTP 400，`invalid_image`；普通入口始终保持当前 variant |
+| `hub` 请求转换为 `full` | Hub 不提供转换接口，普通接口拒绝跨 variant；Hub 大配置与 Full 不兼容 |
+
+转换不改写分区表或普通配置，保留共用的 Wi-Fi、MQTT 和设备 Web 密码。首次 Hub 初始化仅在已有设备 Web 密码时要求原密码认证；独立本地 owner 密码要求不变，HAP 默认关闭；安装新镜像不等于已创建本地 owner 或完成 HomeKit 配对。转换也不扩大 OTA 槽：原厂 1.5 MiB 槽仍不能接受超出该容量的镜像。HTTP 202 只确认校验通过并安排重启；重新连接后，读取 `info` / `status` 的 `firmware_variant:"hub"` 才能确认 Hub 已运行。

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "section",
+    "values"
+  ],
+  "properties": {
+    "section": {
+      "const": "pm_power"
+    },
+    "values": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "start_minute",
+        "end_minute",
+        "timezone_minutes"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "start_minute": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1439
+        },
+        "end_minute": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1439
+        },
+        "timezone_minutes": {
+          "type": "integer",
+          "minimum": -720,
+          "maximum": 840
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

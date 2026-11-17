@@ -4,18 +4,24 @@
 
 Shared interfaces across Wi-Fi firmware, the M1 sensor MCU, device WebUI and management platform. Use these definitions to agree on formats, capabilities, failure handling and compatibility before changing implementations.
 
-| Work | Start here |
+| What you want to do | Start here |
 | --- | --- |
-| Cross-repository changes and storage formats | [Evolution and coordination](conventions.md) |
-| LAN control, WebUI and commands | [Device HTTP](device-http.md) |
-| MQTT, Home Assistant and external sensors | [MQTT and sensors](mqtt.md) |
-| Backups, language and OTA routing | [Configuration](configuration.md) |
-| M1 Wi-Fi / sensor MCU integration | [UART](m1-uart.md), [display sources and buttons](m1-display.md) |
-| Platform clients and DAIKIN hub | [Platform and hub](platform-hub.md) |
+| Add a cross-repository feature, change an interface or config format | [Evolution and coordination](conventions.md) |
+| Work on device HTTP, commands or the WebUI | [HTTP and commands](device-http.md) |
+| Connect MQTT, Home Assistant or external sensors | [MQTT and sensors](mqtt.md) |
+| Check sample freshness and night PM saving | [Sample age and PM power](sensor-age.md) |
+| Change the backup format, language or OTA routing | [Configuration, backup and updates](configuration.md) |
+| Integrate the two M1 MCUs over UART | [UART and capabilities](m1-uart.md) |
+| Change M1 display content, lamps or buttons | [Display sources and buttons](m1-display.md) |
+| Drive a DAIKIN G3 screen, images or streams | [G3 media, camera and screen](daikin-g3-media.md) |
+| Build a platform client or a hub build | [Platform API and hub](platform-hub.md) |
+| Find schemas, examples or test vectors | [Schemas and examples](contracts.md) |
 
-## Specification status
+## How to use these docs
 
-This is the development specification for v1.0.0. `implemented-unreleased` identifies development implementations without a formal release; `draft` identifies work awaiting implementation. See the [interface registry](contracts/registry.json) for status and implementation paths. Query capabilities on the actual device before enabling a feature.
+The prose defines field meanings, bounds and failure behaviour; the machine-readable definitions live under `contracts/`. Review both together, and settle the interface in this repository before changing an implementation; implementation PRs reference the same specification commit.
+
+This is the development specification for v1.0.0. Each interface's status, producers, consumers and implementation paths are in the [interface registry](contracts/registry.json): `implemented-unreleased` means a development implementation without a formal release, and `deprecated` is kept for compatibility only. Query capabilities on the actual device instead of inferring a feature from a version number.
 
 ## Implementations
 

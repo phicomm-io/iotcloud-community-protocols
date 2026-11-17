@@ -6,7 +6,7 @@ edit_uri: blob/main/docs/en/
 docs_dir: docs/en
 site_dir: build/en
 theme:
-  locale: en
+  language: en
 nav:
   - Development:
       - Overview: index.md
@@ -14,11 +14,13 @@ nav:
   - Device interfaces:
       - HTTP and commands: device-http.md
       - MQTT and sensors: mqtt.md
-      - Daikin G3 media and camera: daikin-g3-media.md
-      - Backups, language and updates: configuration.md
+      - Configuration, backup and updates: configuration.md
+      - Sample age and PM power: sensor-age.md
   - MCU protocols:
       - UART and capabilities: m1-uart.md
       - Display sources and buttons: m1-display.md
-  - Platform and hub:
+  - Daikin and hub:
+      - G3 media, camera and screen: daikin-g3-media.md
       - Platform API and hub: platform-hub.md
+  - Contract files:
       - Schemas and examples: contracts.md

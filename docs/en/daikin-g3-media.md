@@ -2,12 +2,21 @@
 
 [简体中文](https://phicomm-io.github.io/iotcloud-community-protocols/daikin-g3-media/)
 
-Contract `daikin-g3-media-v1`: implemented, unreleased. Requires the BRY88BBA15G
+Contract `daikin-g3-media-v1`. Requires the BRY88BBA15G
 community ESP32 firmware and matching screen MCU firmware. Query
 `capabilities.get` and `status.get`: screen capabilities `MEDIA=0x400000`,
 `IMAGE=0x800000`, `BINARY_LINK=0x1000000` indicate push, image components and
 binary UART support. Older MCUs retain their SCN3 layout; unsupported controls
 are hidden.
+
+This page covers four areas; jump to the one you need:
+
+| Area | Sections |
+| --- | --- |
+| Push notifications, image sources and queue policy | External API · Transient image / stream notifications · Update by notification ID · Expiry and full-queue policy |
+| Camera pull | Camera pull |
+| Screen standby and TVOC warmup | Home page and page standby · TVOC measurement warmup |
+| The UART link itself | UART rates and recovery · UART receive loss recovery |
 
 ## External API
 
@@ -97,92 +106,6 @@ python3 BRY88BBA15G/tools/screen_media.py --url http://device get push
 
 `IOTCLOUD_AUTH` supplies an existing `admin:password`. The CLI waits for every MCU
 receipt. Camera passwords come from `G3_CAMERA_PASSWORD`, not command arguments.
-
-## Camera pull
-
-`screen.stream.set`: required `url` (at most 383 bytes), `username/password`
-at most 63 bytes each; `width` default 320 (1..480), `height` default 240
-(1..854), `fps` default 1 (1..10), `enabled` default true, `verify_tls` default
-true. HTTP/HTTPS paths accept `{width}/{height}/{fps}`. Embedded credentials,
-IPv6 literals, fragments and redirects are unsupported. Omit password to retain
-it; an empty password clears it. ESP NVS persists configuration. Queries expose
-`password_set`, never the password.
-Send `url:"",enabled:false` to clear the source and credentials. Configure a valid
-URL before starting again.
-
-```python
-{"action":"screen.stream.set", "request_id":"camera-1", "params":{
- "url":"http://camera/mjpeg?w={width}&h={height}&fps={fps}",
- "width":320,"height":240,"fps":1,"enabled":True,"verify_tls":True}}
-```
-
-The screen MCU builds HTTP requests, handles Basic / Digest MD5 (qop=auth or
-legacy no-qop), multipart MJPEG, HTTP chunked and single JPEG responses, then
-validates and hardware-decodes to RGB565. ESP32 only relays bounded DNS/TCP/TLS
-bytes with credit. Actual source frames must fit requested dimensions; the
-source service determines whether URL parameters resize frames. `fps` is a
-requested ceiling; JPEG size, UART rate and MCU drawing time determine the
-actual rate. The MCU skips frames that arrive before its pacing deadline.
-Configure the source to produce a sustainable rate so TCP buffering does not
-delay the picture. Start at the default 1 FPS and adjust using the actual rate
-reported by `get`. RTSP/H.264 sources require a camera server that produces
-MJPEG at the desired resolution.
-
-Configure the source under Screen → Services → Camera; choose “Add camera page”
-and save the layout. This adds a full 4×6 grid page and preserves existing pages.
-Alternatively add an image component with contain/cover fit. SCN3 remains 9520
-bytes; component `type=8`, offsets 86/87 are `image_source=0` /
-`image_fit=0 contain,1 cover`. Maximum eight pages, 32 components.
-
-Pulling runs only while an image component is visible, the screen is awake and
-neither push nor OTA obscures it. Hidden/sleeping closes the connection; failures
-back off from 1 to 30 seconds. Parameterless `screen.stream.start/stop` persist
-the enabled flag. `get` returns configuration, state
-(off/paused/connecting/reading/backoff), frames, dropped, bytes, actual
-resolution/rate, pixel CRC and error. TLS verification defaults on; explicitly
-disable it for a test source with a self-signed certificate.
-
-## UART rates and recovery
-
-`screen.link.get` returns configured/actual rates, session, CRC/framing errors,
-retries and fallbacks. `framing` separates timeout/format errors and reports the
-last frame size, declared size and header validity. `set` accepts
-`mode:"fixed"|"auto"`, `rate`, `max_rate`, `apply_now`.
-Rates: 115200, 230400, 460800, 921600; default fixed 115200. Auto
-tries downward from its ceiling. Switching occurs only during MCU recovery:
-drain TX, READY at old rate, CRC probe at new rate, mutual confirmation;
-timeout falls back to 115200. `apply_now:true` restarts the screen MCU to enter
-recovery negotiation; otherwise settings apply at the next recovery. High rates
-hold ESP APB/no-light-sleep locks. Normal operation never upgrades rates on its
-own; a reboot of either endpoint resynchronizes.
-
-Binary frames use zero delimiters and escaping `00 → DB DC`, `DB → DB DD`.
-Unescaped content is `"GM",version=1,channel,u32LE session,u32LE sequence,`
-`u16LE length,payload,CRC32LE`; CRC covers header and payload, maximum payload
-1152 bytes. Channels: link=0, command=1, reply=2, socket=3, socket_ack=4,
-socket_event=5. Image/TCP chunks are at most 512 bytes with one outstanding
-credit and bounded retries. Session isolates old boots; sequence/content checks
-handle duplicates. Factory OTA has exclusive raw UART access.
-Results: 0 success, 1 range, 2 busy, 3 not found, 4 CRC, 5 format, 6 decode,
-7 offline. See the [machine-readable contract](contracts/daikin-g3-media-v1.json).
-
-Media opcodes are begin=1, chunk=2, commit=3, cancel=4, push=5, dismiss=6,
-query=7, stream_config=8, stream_start=9, stream_stop=10, select=11, push_url=12. Select has
-one u8 index after its opcode. URL push requires capability bit 25
-(33554432): its 16-byte push header is followed by the existing 519-byte
-stream configuration, then title and text. Nonzero `image_id` is rejected.
-Media status version 3 is 352 bytes followed by 44 bytes of stream status:
-base header 44 bytes; four image records of 17 bytes; sixteen queue records of
-10 bytes (u32 id, u32 image_id, u8 state, u8 URL source); sixteen history records
-of 5 bytes (u32 id, u8 state). Header bytes 22/23 are selected view / queue
-count, 24/25 JPEG flags, 26..27 decode time (u16LE), 28..31 capacities/version;
-u32LE offsets 32/36/40 are canonical last push ID, source error, active remaining
-milliseconds. Stream offset 40 is the owning notification ID (0 for page).
-An optional 64-byte decoder detail follows (16 LE32 values): SR, IR, CR, CFG,
-scan address, output address, CODLEN, CLKEN1, PRSTR1, first two RGB565 pixels,
-CRC32 of the first 512 output bytes, pre-start SR, pre-start IR, elapsed ms,
-scan CRC32 and scan offset. ESP also accepts the earlier 172-byte snapshot and
-v2 snapshots (364/428 bytes) during rolling upgrades.
 
 ## Transient image / stream notifications
 
@@ -283,6 +206,112 @@ Policies apply to new notices. ID updates, original-request retries and same-URL
 `queue[].expires_in_ms` reports remaining hard lifetime (0 means disabled). Hard expiry records `expired`; visible time completion remains `timedout`. History, and therefore the dedup window, is bounded to 16 entries. Use a new ID for a new event; update addresses queued IDs only. Notices and policies are transient across MCU reboots.
 
 UART `MEDIA_PUSH_POLICY=14` retains the first 16 PUSH bytes, then adds TTL LE32, overflow byte and URL flag; optional 519-byte source configuration precedes title/text. Update mask bit 14 adds TTL LE32 after the 18-byte header and before optional source/text. Status version 4 extends queue entries from 10 to 14 bytes with remaining TTL. New ESP firmware normalizes older status layouts and rejects new options without the capability bit.
+
+## Camera pull
+
+`screen.stream.set`: required `url` (at most 383 bytes), `username/password`
+at most 63 bytes each; `width` default 320 (1..480), `height` default 240
+(1..854), `fps` default 1 (1..10), `enabled` default true, `verify_tls` default
+true. HTTP/HTTPS paths accept `{width}/{height}/{fps}`. Embedded credentials,
+IPv6 literals, fragments and redirects are unsupported. Omit password to retain
+it; an empty password clears it. ESP NVS persists configuration. Queries expose
+`password_set`, never the password.
+Send `url:"",enabled:false` to clear the source and credentials. Configure a valid
+URL before starting again.
+
+```python
+{"action":"screen.stream.set", "request_id":"camera-1", "params":{
+ "url":"http://camera/mjpeg?w={width}&h={height}&fps={fps}",
+ "width":320,"height":240,"fps":1,"enabled":True,"verify_tls":True}}
+```
+
+The screen MCU builds HTTP requests, handles Basic / Digest MD5 (qop=auth or
+legacy no-qop), multipart MJPEG, HTTP chunked and single JPEG responses, then
+validates and hardware-decodes to RGB565. ESP32 only relays bounded DNS/TCP/TLS
+bytes with credit. Actual source frames must fit requested dimensions; the
+source service determines whether URL parameters resize frames. `fps` is a
+requested ceiling; JPEG size, UART rate and MCU drawing time determine the
+actual rate. The MCU skips frames that arrive before its pacing deadline.
+Configure the source to produce a sustainable rate so TCP buffering does not
+delay the picture. Start at the default 1 FPS and adjust using the actual rate
+reported by `get`. RTSP/H.264 sources require a camera server that produces
+MJPEG at the desired resolution.
+
+Configure the source under Screen → Services → Camera; choose “Add camera page”
+and save the layout. This adds a full 4×6 grid page and preserves existing pages.
+Alternatively add an image component with contain/cover fit. SCN3 remains 9520
+bytes; component `type=8`, offsets 86/87 are `image_source=0` /
+`image_fit=0 contain,1 cover`. Maximum eight pages, 32 components.
+
+Pulling runs only while an image component is visible, the screen is awake and
+neither push nor OTA obscures it. Hidden/sleeping closes the connection; failures
+back off from 1 to 30 seconds. Parameterless `screen.stream.start/stop` persist
+the enabled flag. `get` returns configuration, state
+(off/paused/connecting/reading/backoff), frames, dropped, bytes, actual
+resolution/rate, pixel CRC and error. TLS verification defaults on; explicitly
+disable it for a test source with a self-signed certificate.
+
+## Home page and page standby
+
+`screen.display.get` returns `page_policy_supported`, `home_page_id` and `page_overrides` in addition to the global policy. These fields are omitted from ordinary status. Capability `SCREEN_CAP_PAGE_POLICY` (bit 28) enables the extended settings. `home_page_id` binds to stable SCN3 page IDs; zero uses the first enabled page. Double-tapping returns to that page, while notification confirmation retains priority.
+
+Each override is `{page_id, external_minutes, battery_minutes, idle_brightness}`. No entry means inherit all three global values. Delays are 0–1440 minutes (zero disables idle timeout), brightness is 0–100 (zero turns off the backlight), and global weekly schedules still take priority. At most eight unique existing page IDs are accepted. Reordering pages preserves identity; deletion removes its override, while disabling preserves it. A disabled or deleted home falls back to the default.
+
+Extended set requests include both new fields plus the existing six fields. Legacy requests preserve saved page settings. Old MCUs keep the original global controls and receive the 368-byte v1 policy; capable MCUs receive the 472-byte v2 policy. Saved v1 records load with default home and inheritance. Unchanged saves do not advance revision; actual changes use existing transactional persistence and MCU revision readback.
+
+## TVOC measurement warmup
+
+G3 business status optionally includes `tvoc_warmup_seconds_remaining` (integer 0–3600, seconds, or null). This read-only extension uses the MCU measurement phase clock, independently of a manual calibration session. Positive values report remaining warmup; zero means the warmup elapsed and still requires a valid sensor sample. Null or a missing field means the remaining time is unknown, including stopped measurement or a MCU snapshot at least 20 seconds old. ESP subtracts the monotonic age of the source snapshot and clamps at zero. The WebUI also advances the countdown with local monotonic time and hides it after 20 seconds without a new response. Older clients can ignore this optional field; sensor validity and concentration units stay unchanged.
+
+`screen.settings.set {"tvoc_warmup_minutes":N}` configures measurement warmup: -1 selects factory automatic timing (default), and 1–60 selects custom minutes. Zero, fractions and values outside this range are rejected. The ESP saves this setting transactionally with existing screen settings and replays it after MCU startup/session change. `screen.settings.get` reports both saved and live settings; success requires the matching request ACK and live readback. Changing the time recalculates remaining time from the current measurement start, without restarting measurement or changing manual calibration. Elapsed warmup alone never turns an invalid sample valid.
+
+## UART rates and recovery
+
+`screen.link.get` returns configured/actual rates, session, CRC/framing errors,
+retries and fallbacks. `framing` separates timeout/format errors and reports the
+last frame size, declared size and header validity. `set` accepts
+`mode:"fixed"|"auto"`, `rate`, `max_rate`, `apply_now`.
+Rates: 115200, 230400, 460800, 921600; default fixed 115200. Auto
+tries downward from its ceiling. Switching occurs only during MCU recovery:
+drain TX, READY at old rate, CRC probe at new rate, mutual confirmation;
+timeout falls back to 115200. `apply_now:true` restarts the screen MCU to enter
+recovery negotiation; otherwise settings apply at the next recovery. High rates
+hold ESP APB/no-light-sleep locks. Normal operation never upgrades rates on its
+own; a reboot of either endpoint resynchronizes.
+
+Binary frames use zero delimiters and escaping `00 → DB DC`, `DB → DB DD`.
+Unescaped content is `"GM",version=1,channel,u32LE session,u32LE sequence,`
+`u16LE length,payload,CRC32LE`; CRC covers header and payload, maximum payload
+1152 bytes. Channels: link=0, command=1, reply=2, socket=3, socket_ack=4,
+socket_event=5. Image/TCP chunks are at most 512 bytes with one outstanding
+credit and bounded retries. Session isolates old boots; sequence/content checks
+handle duplicates. Factory OTA has exclusive raw UART access.
+Results: 0 success, 1 range, 2 busy, 3 not found, 4 CRC, 5 format, 6 decode,
+7 offline. See the [machine-readable contract](contracts/daikin-g3-media-v1.json).
+
+Media opcodes are begin=1, chunk=2, commit=3, cancel=4, push=5, dismiss=6,
+query=7, stream_config=8, stream_start=9, stream_stop=10, select=11, push_url=12. Select has
+one u8 index after its opcode. URL push requires capability bit 25
+(33554432): its 16-byte push header is followed by the existing 519-byte
+stream configuration, then title and text. Nonzero `image_id` is rejected.
+Media status version 3 is 352 bytes followed by 44 bytes of stream status:
+base header 44 bytes; four image records of 17 bytes; sixteen queue records of
+10 bytes (u32 id, u32 image_id, u8 state, u8 URL source); sixteen history records
+of 5 bytes (u32 id, u8 state). Header bytes 22/23 are selected view / queue
+count, 24/25 JPEG flags, 26..27 decode time (u16LE), 28..31 capacities/version;
+u32LE offsets 32/36/40 are canonical last push ID, source error, active remaining
+milliseconds. Stream offset 40 is the owning notification ID (0 for page).
+An optional 64-byte decoder detail follows (16 LE32 values): SR, IR, CR, CFG,
+scan address, output address, CODLEN, CLKEN1, PRSTR1, first two RGB565 pixels,
+CRC32 of the first 512 output bytes, pre-start SR, pre-start IR, elapsed ms,
+scan CRC32 and scan offset. ESP also accepts the earlier 172-byte snapshot and
+v2 snapshots (364/428 bytes) during rolling upgrades.
+
+## UART receive loss recovery
+
+The stable default remains fixed 115200 baud. An observed UART hardware overrun or receive-ring drop causes the receive owner to discard damaged buffered fragments and resynchronize through the next zero delimiter. The media header, CRC, session and sequence checks remain unchanged. This recovers after observed loss; it does not promise loss-free operation at higher baud rates.
+
+Guard diagnostic `0xe2` version 4 is exactly 98 bytes. Bytes 0..81 retain the version-3 layout (with byte 1 set to 4). Four little-endian uint32 values follow: `hardware_rx_overruns` at 82 (observed RXOV events, not lost bytes), `ring_dropped_bytes` at 86, `rx_loss_resets` at 90 and `last_rx_loss_ms` at 94 (boot monotonic milliseconds, initially zero). New ESP firmware accepts exact version-3/82-byte or version-4/98-byte notices, and exposes the four loss fields only for version 4 in explicit maintenance queries `screen.recovery.get` and `screen.boot.result.get`. Ordinary business status retains only the original 20 diagnostic fields. Existing CRC/session/diagnostic age checks still apply. Older ESP firmware may ignore a version-4 diagnostic notice; no media-wire format changes are required.
 
 ## Motion-triggered integration examples
 
