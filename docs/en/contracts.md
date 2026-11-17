@@ -50,8 +50,6 @@ Current interfaces: [sensor-values-v2 contract](contracts/sensor-values-v2.json)
 
 From the repository root:
 
-
-
 ## Beyond the schemas
 
 ```sh

@@ -52,7 +52,6 @@ none/local/api 区域仍为含 metric 的严格**八键**，不用 field_id/type
 
 [SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [机器约定](contracts/m1-display-v4.json) · [样例](contracts/examples/m1-display-v4.json)。下方保留历史 schema3/schema2 细节，其中 MQTT metric/model 映射已弃用。
 
-
 ## M1 CO₂ 来源
 
 `co2_source.get {}` 返回：

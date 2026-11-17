@@ -54,7 +54,6 @@ M1 的 MQTT 来源绑定 `device_id + field_id + 预期type + 预期unit`，不�
 
 [规范定义](contracts/sensor-values-v2.json) · [Schema](contracts/schemas/sensor-values-v2.schema.json) · [正反样例](contracts/examples/sensor-values-v2.json)。本仓库校验器执行 `x-utf8Bytes` 与 `x-float32Finite`；通用 JSON Schema 工具须另做等价运行时检查。
 
-
 ## 跨设备传感器 schema 1
 
 主题：`phicomm/v2/<scope>/sensor/<device_id>/state`。发布者只报告真实采集数据；消费者不把转发到显示器的值再作为本机传感器发布。

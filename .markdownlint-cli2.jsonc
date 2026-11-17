@@ -1,0 +1,32 @@
+// MD013 off: Chinese prose is about 26 characters per 80 columns, so a column
+// limit would break a line per sentence. The files also disagree today
+// (daikin-g3-media.md is wrapped at 80, the rest are not).
+//
+// MD033 allows the hand-written <a id="..."> anchors that other repositories
+// link to; replacing them with heading anchors would break those links.
+//
+// MD051 off: markdownlint slugifies headings with Unicode-aware rules, while
+// mkdocs strips CJK characters from heading ids. The links resolve in the
+// published site (verified against build/site), so the rule reports false
+// positives for headings that contain Chinese.
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD033": {
+      "allowed_elements": ["a", "br", "img", "sup", "sub", "details", "summary"]
+    },
+    "MD024": {
+      "siblings_only": true
+    },
+    "MD041": false,
+    "MD051": false
+  },
+  "globs": [
+    "docs/zh/*.md",
+    "docs/en/*.md"
+  ],
+  "ignores": [
+    "build/**"
+  ]
+}

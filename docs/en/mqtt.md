@@ -54,7 +54,6 @@ M1 MQTT sources bind `device_id + field_id + expected type + expected unit`, not
 
 [Normative contract](contracts/sensor-values-v2.json) · [Schema](contracts/schemas/sensor-values-v2.schema.json) · [Positive/negative examples](contracts/examples/sensor-values-v2.json). `x-utf8Bytes` and `x-float32Finite` are enforced by this repository validator; generic JSON Schema tools must implement equivalent runtime checks.
 
-
 ## Cross-device sensor schema 1
 
 Topic: `phicomm/v2/<scope>/sensor/<device_id>/state`. Providers report physical measurements. A consumer must not republish display-forwarded values as its own physical sensor.

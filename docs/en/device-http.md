@@ -52,7 +52,6 @@ Application config v11 appends remote[2] after the frozen v9/v10 prefix. An expl
 
 [Profile SET schema4](contracts/schemas/m1-display-profile-set-v4.schema.json) · [GET schema4](contracts/schemas/m1-display-profile-state-v4.schema.json) · [Contract](contracts/m1-display-v4.json) · [Examples](contracts/examples/m1-display-v4.json). The sections below retain historical schema3/schema2 details; their MQTT metric/model mapping is deprecated.
 
-
 ## M1 CO₂ source
 
 `co2_source.get {}` returns:
